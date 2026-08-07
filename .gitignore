@@ -1,3 +1,15 @@
 .DS_Store
 *.log
 .vscode/
+
+# Media files - skip from repo
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.pdf
+*.mp4
+*.mp3
+Screenshot*/
