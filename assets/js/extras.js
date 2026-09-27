@@ -60,9 +60,14 @@
     const mine = -new Date().getTimezoneOffset();
     const diff = IST - mine;
     const fmt = m => { const h = Math.floor(Math.abs(m) / 60), r = Math.abs(m) % 60; return `${h ? h + 'h' : ''}${h && r ? ' ' : ''}${r ? r + 'm' : ''}`; };
-    const short = diff === 0 ? 'same time zone as you' : `${fmt(diff)} ${diff > 0 ? 'ahead of' : 'behind'} you`;
+    // Visitors already on IST (including me) just see the clock; everyone else gets the gap.
+    if (diff === 0) {
+      $$('[data-tzdiff], [data-tzdiff-long]').forEach(el => { el.textContent = ''; el.hidden = true; });
+      return;
+    }
+    const short = `${fmt(diff)} ${diff > 0 ? 'ahead of' : 'behind'} you`;
     $$('[data-tzdiff]').forEach(el => { el.textContent = short; });
-    $$('[data-tzdiff-long]').forEach(el => { el.textContent = diff === 0 ? ', same as you' : `, ${short}`; });
+    $$('[data-tzdiff-long]').forEach(el => { el.textContent = `, ${short}`; });
   })();
 
   /* ---------------- tokenizer hover ---------------- */
