@@ -583,6 +583,12 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 }
 .ask__chips button:hover { color: var(--fg); border-color: var(--line-3); }
 .ask__chips button.is-trick { border-style: dashed; }
+.ask__lineage { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: baseline; margin-top: 16px; font: 400 12px/1.5 var(--mono); color: var(--fg-3); }
+.ask__lineage > span { grid-row: span 2; color: var(--fg-4); }
+.ask__lineage a { width: fit-content; }
+.ask__lineage a { color: var(--fg-3); transition: color 0.2s; }
+.ask__lineage a b { font-weight: 500; color: var(--g); }
+.ask__lineage a:hover { color: var(--fg); }
 .ask__out { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
 .ask__answer { font-size: 19px; line-height: 1.5; letter-spacing: -0.01em; color: var(--fg); max-width: 44em; min-height: 1.5em; }
 .ask.is-refusing .ask__answer { color: var(--amber); }
@@ -922,6 +928,8 @@ kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; 
   .social b { font-size: 14px; word-break: break-all; }
   .lab__grid { grid-template-columns: 1fr; }
   .ask__note { text-align: left; }
+  .ask__lineage { grid-template-columns: 1fr; }
+  .ask__lineage > span { grid-row: auto; }
   .ask .index__caption { flex-direction: column; align-items: flex-start; gap: 6px; }
   .ask__why { grid-template-columns: 1fr; gap: 16px; }
   .ask__hits button { grid-template-columns: 40px minmax(0, 1fr); }
