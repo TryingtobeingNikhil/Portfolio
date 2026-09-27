@@ -280,6 +280,15 @@
     }).catch(() => { /* keep the static numbers */ });
   });
 
+  /* ---------------- demo recordings: play only while on screen ---------------- */
+  $$('video[data-autoplay]').forEach(v => {
+    if (reduce) { v.controls = true; return; } // no motion unless asked for
+    new IntersectionObserver(([en]) => {
+      if (en.isIntersecting) { if (v.preload !== 'auto') v.preload = 'auto'; v.play().catch(() => { v.controls = true; }); }
+      else v.pause();
+    }, { threshold: 0.35 }).observe(v);
+  });
+
   /* ---------------- KV cache simulator ---------------- */
   (function kvSim() {
     const grid = $('#kv-grid');

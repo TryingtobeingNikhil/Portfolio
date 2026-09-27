@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=25">
+  <link rel="stylesheet" href="./assets/css/main.css?v=27">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -350,17 +350,30 @@
             </div>
           </div>
 
-          <div class="feature__viz" id="kv-viz">
+          <div class="feature__viz feature__viz--split" id="kv-viz">
             <div class="viz__head">
               <span class="viz__label">kv pool · 64 blocks × 16 tokens</span>
               <span class="viz__live"><i class="led" aria-hidden="true"></i>live</span>
             </div>
-            <div class="kv-grid" id="kv-grid" role="img" aria-label="Animated simulation of a paged KV cache: sequences are admitted, grow by allocating non-contiguous 16-token blocks, get swapped to CPU under memory pressure, and free their blocks when finished."></div>
-            <div class="kv-status" aria-hidden="true">
-              <span>running <b data-k="run">0</b></span>
-              <span>blocks <b data-k="used">0</b>/64</span>
-              <span class="swap">swapped <b data-k="swap">0</b></span>
+            <div class="kv-mini">
+              <div class="kv-grid" id="kv-grid" role="img" aria-label="Animated simulation of a paged KV cache: sequences are admitted, grow by allocating non-contiguous 16-token blocks, get swapped to CPU under memory pressure, and free their blocks when finished."></div>
+              <div class="kv-status kv-status--stack" aria-hidden="true">
+                <span>running <b data-k="run">0</b></span>
+                <span>blocks <b data-k="used">0</b>/64</span>
+                <span class="swap">swapped <b data-k="swap">0</b></span>
+                <p class="kv-note">Blocks land anywhere in the pool; under pressure a sequence swaps to CPU instead of OOMing.</p>
+              </div>
             </div>
+            <figure class="demo">
+              <div class="demo__bar">
+                <span class="demo__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="demo__url">pageserve-phi.vercel.app</span>
+                <a href="https://pageserve-phi.vercel.app" target="_blank" rel="noopener">open ↗</a>
+              </div>
+              <video class="demo__video" muted loop playsinline preload="none" width="900" height="510" poster="./assets/video/pageserve-poster.jpg" aria-label="Screen recording scrolling through the PageServe site: scheduler, batching, KV cache, preemption, prefix caching and benchmark results" data-autoplay>
+                <source src="./assets/video/pageserve.mp4" type="video/mp4">
+              </video>
+            </figure>
           </div>
         </article>
 
@@ -645,7 +658,7 @@
 
   <script src="./assets/js/field.js?v=7" defer></script>
   <script src="./assets/js/trail.js?v=1" defer></script>
-  <script src="./assets/js/main.js?v=12" defer></script>
+  <script src="./assets/js/main.js?v=13" defer></script>
   <script src="./assets/data/articles.js?v=9" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
   <script src="./assets/js/extras.js?v=13" defer></script>
