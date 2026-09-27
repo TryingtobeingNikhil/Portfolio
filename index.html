@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=23">
+  <link rel="stylesheet" href="./assets/css/main.css?v=25">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -95,10 +95,17 @@
             <span class="status-pill__dim">Currently building PageServe ↗</span>
           </a>
 
-          <h1 class="hero__title">
-            <span class="line"><span data-decode>I build the parts of AI</span></span>
-            <span class="line"><span data-decode>most people</span> <span class="hero__key"><span data-decode>import.</span><i class="cursor" aria-hidden="true"></i></span></span>
+          <p class="hero__prompt" aria-hidden="true"><span class="p">›</span> nikhil.generate(<span class="s">"who are you?"</span>)</p>
+
+          <h1 class="hero__title" aria-label="Nikhil Mourya. I build the parts of AI most people import.">
+            <span class="line hero__name" aria-hidden="true"><span data-stream="Nik|hil| M|our|ya|.">Nikhil Mourya.</span></span>
+            <span class="line" aria-hidden="true"><span data-stream="I| build| the| parts| of| AI">I build the parts of AI</span></span>
+            <span class="line" aria-hidden="true"><span data-stream="most| people">most people</span> <span class="hero__key"><span data-stream="import|.">import.</span></span><i class="cursor" data-stream-cursor></i></span>
           </h1>
+
+          <p class="hero__gen" aria-hidden="true" title="TTFT is PageServe's measured mean under 4-way concurrent load. The stream is replayed slowly so it can be read.">
+            <span>ttft <b>20.9 ms</b></span><i>·</i><span><b data-gen-tokens>16</b> tokens</span><i>·</i><span>replayed at <b data-gen-rate>~13</b> tok/s</span>
+          </p>
 
           <p class="hero__lede">
             ML engineer working on <strong class="tok" tabindex="0" data-tokens="LL|M| inference| and| multi|-agent| systems">LLM inference and multi-agent systems</strong>. I wrote a vLLM-style serving engine with a paged KV cache,
@@ -638,7 +645,7 @@
 
   <script src="./assets/js/field.js?v=7" defer></script>
   <script src="./assets/js/trail.js?v=1" defer></script>
-  <script src="./assets/js/main.js?v=11" defer></script>
+  <script src="./assets/js/main.js?v=12" defer></script>
   <script src="./assets/data/articles.js?v=9" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
   <script src="./assets/js/extras.js?v=13" defer></script>

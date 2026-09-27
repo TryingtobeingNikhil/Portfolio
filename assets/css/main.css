@@ -262,16 +262,25 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 .status-pill__dim { color: var(--fg-3); font-weight: 400; }
 
 .hero__title {
-  font-size: clamp(40px, 4.1vw, 60px);
+  font-size: clamp(38px, 3.9vw, 56px);
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.045em;
 }
 .hero__title .line { display: block; white-space: nowrap; }
 .hero__key { color: var(--g); }
-[data-decode] .x { color: var(--g); opacity: 0.5; font-family: var(--mono); font-weight: 400; }
+.hero__prompt { margin-bottom: 18px; font: 400 14px/1.4 var(--mono); color: var(--fg-3); }
+.hero__prompt .p { color: var(--g); margin-right: 4px; }
+.hero__prompt .s { color: rgba(var(--g-rgb), 0.75); }
+.hero__name { color: var(--fg); }
+.tk-new { animation: tkIn 0.5s var(--ease); }
+@keyframes tkIn { from { color: var(--g); text-shadow: 0 0 18px rgba(var(--g-rgb), 0.6); } }
+.hero__gen { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-top: 18px; font: 400 12px/1.4 var(--mono); color: var(--fg-3); cursor: help; }
+.hero__gen b { font-weight: 500; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+.hero__gen span { white-space: nowrap; }
+.hero__gen i { font-style: normal; color: var(--fg-4); }
 
-.hero__lede { margin-top: 28px; max-width: 34em; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.65; color: var(--fg-2); }
+.hero__lede { margin-top: 22px; max-width: 34em; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.65; color: var(--fg-2); }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 
 /* Portrait */
