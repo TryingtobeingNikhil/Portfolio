@@ -136,6 +136,7 @@
       .then(d => {
         if (!d || !(d.visits > 0)) return;
         $('[data-visits-n]', box).textContent = d.visits.toLocaleString('en-US');
+        $('[data-visits-word]', box).textContent = d.visits === 1 ? 'visitor' : 'visitors';
         box.hidden = false;
       })
       .catch(() => { /* counter unavailable: stay hidden */ });
