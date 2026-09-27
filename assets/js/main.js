@@ -102,7 +102,7 @@
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      cell = w < 260 ? 2.2 : 1.6; // finer grid = more facial detail
+      cell = w < 220 ? 1.9 : 1.6; // finer grid = more facial detail
       const cols = Math.round(w / cell), rows = Math.round(h / cell);
       const off = document.createElement('canvas');
       off.width = cols; off.height = rows;

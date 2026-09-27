@@ -277,7 +277,7 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 /* Portrait */
 .portrait {
   justify-self: end;
-  width: 100%; max-width: 280px;
+  width: 100%; max-width: 240px;
   border-radius: var(--r);
   border: 1px solid var(--line-2);
   background: var(--bg-1);
@@ -292,6 +292,7 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 .portrait__bar { border-bottom: 1px solid var(--line); }
 .portrait__bar > span:first-child { display: inline-flex; align-items: center; gap: 8px; }
 .portrait__foot { border-top: 1px solid var(--line); color: var(--fg-3); }
+.portrait__foot { gap: 8px; padding: 0 12px; font-size: 10.5px; white-space: nowrap; }
 .portrait__img { position: relative; aspect-ratio: 4 / 5; background: #050606; }
 .portrait__img canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .portrait__img::after {
@@ -300,10 +301,10 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
     repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 3px),
     radial-gradient(ellipse at 50% 42%, transparent 68%, rgba(5, 6, 6, 0.3));
 }
-.loss { display: inline-flex; align-items: center; gap: 7px; }
-.loss svg { width: 52px; height: 14px; }
+.loss { display: inline-flex; align-items: center; gap: 6px; }
+.loss svg { flex: none; width: 38px; height: 14px; }
 .loss path { fill: none; stroke: var(--g); stroke-width: 1.2; }
-.loss b { font-weight: 400; color: var(--fg-2); font-variant-numeric: tabular-nums; min-width: 36px; text-align: right; }
+.loss b { font-weight: 400; color: var(--fg-2); font-variant-numeric: tabular-nums; min-width: 32px; text-align: right; }
 
 /* Facts row */
 .facts {
@@ -755,7 +756,8 @@ kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; 
   .hero__title { font-size: clamp(34px, 10vw, 48px); }
   .hero__title .line { white-space: normal; }
   .hero__field { opacity: 0.4; }
-  .portrait { max-width: 240px; }
+  .portrait { max-width: 210px; }
+  .loss > span { display: none; }
   .status-pill { white-space: nowrap; font-size: 12px; gap: 8px; padding: 0 12px 0 10px; }
   .facts { grid-template-columns: 1fr 1fr; gap: 20px 0; margin-top: 56px; }
   .feature__info { padding: 28px 22px; }
