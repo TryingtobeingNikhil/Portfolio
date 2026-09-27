@@ -588,6 +588,32 @@ a.hl:hover em { color: var(--fg-2); }
 [data-l="3"] { background: rgba(var(--g-rgb), 0.7); fill: rgba(var(--g-rgb), 0.7); }
 [data-l="4"] { background: var(--g); fill: var(--g); }
 
+/* spotify: last played / now playing */
+.spin { margin-top: 64px; }
+.spin__src { font: 400 12px/1 var(--mono); color: var(--fg-3); }
+.spin__row {
+  position: relative;
+  display: grid; grid-template-columns: 56px 1fr auto; gap: 16px; align-items: center;
+  padding: 14px 0; border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line);
+}
+.spin__row::before {
+  content: ''; position: absolute; inset: -1px -16px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03); opacity: 0; transition: opacity 0.2s; pointer-events: none;
+}
+.spin__row:hover::before { opacity: 1; }
+.spin__art { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; background: var(--bg-2); }
+.spin__meta { display: grid; gap: 2px; min-width: 0; }
+.spin__meta b { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.2s; }
+.spin__meta span { font-size: 14px; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spin__row:hover .spin__meta b { color: var(--g); }
+.spin__status { display: inline-flex; align-items: center; gap: 8px; font: 400 12px/1 var(--mono); color: var(--fg-3); white-space: nowrap; }
+.spin.is-live .spin__status { color: var(--g); }
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.eq i { width: 3px; height: 100%; border-radius: 1px; background: var(--g); transform-origin: bottom; animation: eq 0.9s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: -0.3s; }
+.eq i:nth-child(3) { animation-delay: -0.6s; }
+@keyframes eq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+
 /* lab */
 .lab__note { font-size: 14px; color: var(--fg-3); }
 .lab__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -779,6 +805,9 @@ kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; 
   .social:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
   .social b { font-size: 14px; word-break: break-all; }
   .lab__grid { grid-template-columns: 1fr; }
+  .spin__row { grid-template-columns: 48px 1fr; }
+  .spin__art { width: 48px; height: 48px; }
+  .spin__status { grid-column: 2; }
   .hl { font-size: 14.5px; }
   .footer__map { grid-template-columns: 1fr 1fr; }
   .cmdk { padding-top: 10vh; }

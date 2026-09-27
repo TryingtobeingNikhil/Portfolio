@@ -54,6 +54,46 @@
     });
   })();
 
+  /* ---------------- spotify: now playing / last played ---------------- */
+  // Data comes from the Netlify Function in netlify/functions/now-playing.mjs.
+  // If it isn't configured (or runs locally without Netlify), the block stays hidden.
+  (function spotify() {
+    const box = $('#spotify');
+    if (!box) return;
+    const ago = iso => {
+      const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+      if (s < 90) return 'just now';
+      const m = Math.round(s / 60); if (m < 60) return `${m} min ago`;
+      const h = Math.round(m / 60); if (h < 24) return `${h}h ago`;
+      const d = Math.round(h / 24); return `${d} day${d === 1 ? '' : 's'} ago`;
+    };
+    let timer = 0;
+    const load = () => fetch('/api/now-playing', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(t => {
+        if (!t || !t.title) throw new Error('empty');
+        $('[data-spin-heading]', box).textContent = t.playing ? 'Now playing' : 'Last played';
+        $('[data-spin-title]', box).textContent = t.title;
+        $('[data-spin-artist]', box).textContent = t.artist;
+        const art = $('[data-spin-art]', box);
+        if (t.art) { art.src = t.art; art.alt = t.album ? `${t.album} cover` : ''; }
+        const link = $('[data-spin-link]', box);
+        if (t.url && /^https:\/\/open\.spotify\.com\//.test(t.url)) link.href = t.url;
+        $('[data-spin-status]', box).innerHTML = t.playing
+          ? '<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>listening now'
+          : esc(t.playedAt ? ago(t.playedAt) : 'paused');
+        box.classList.toggle('is-live', !!t.playing);
+        box.hidden = false;
+        box.classList.add('is-in');
+        // refresh while the tab is open: every 30s when playing, 2 min otherwise
+        clearTimeout(timer);
+        timer = setTimeout(() => { if (!document.hidden) load(); }, t.playing ? 30000 : 120000);
+      })
+      .catch(() => { /* not configured or Spotify down: keep it hidden */ });
+    load();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && !box.hidden) load(); });
+  })();
+
   /* ---------------- your time vs mine ---------------- */
   (function tz() {
     const IST = 330; // minutes east of UTC (Asia/Kolkata)
