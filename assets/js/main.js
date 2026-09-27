@@ -78,111 +78,142 @@
   let acc = 150;
   $$('[data-decode]').forEach(el => { decode(el, acc); acc += el.textContent.length * 20; });
 
-  /* ---------------- phosphor portrait ---------------- */
-  // The photo is mapped onto a green CRT ramp, glyphs flicker over the bright
-  // regions, a scan line sweeps down, and the cursor decodes a ring of glyphs.
+  /* ---------------- particle portrait ---------------- */
+  // Carried over from the old site: every pixel is a small square particle.
+  // They fly in from random positions, spring back to their spot, and the
+  // cursor pushes them away. Moving particles glow green; the loop sleeps
+  // once everything has settled.
   (function portrait() {
     const canvas = $('#ascii');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const PX = 2;           // css px per luminance sample
-    const CELL = 10;        // glyph cell size
     const img = new Image();
     img.src = './assets/images/portrait.jpg';
-    let base = null, lum = null, w = 0, h = 0, gw = 0, gh = 0, running = false, visible = true, scan = -40;
-    let pointer = { x: -1, y: -1 };
+
+    let P = [], w = 0, h = 0, dpr = 1, cell = 2.2;
+    let raf = 0, visible = true, started = 0, time = 0, last = 0;
+    const mouse = { x: -9999, y: -9999, r: 58 };
 
     function build() {
       const rect = canvas.getBoundingClientRect();
       w = rect.width; h = rect.height;
       if (!w || !h) return false;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // phosphor duotone of the photo, rendered once at device resolution
-      const bc = document.createElement('canvas');
-      bc.width = canvas.width; bc.height = canvas.height;
-      const b = bc.getContext('2d', { willReadFrequently: true });
+
+      cell = w < 260 ? 3 : 2.2;
+      const cols = Math.round(w / cell), rows = Math.round(h / cell);
+      const off = document.createElement('canvas');
+      off.width = cols; off.height = rows;
+      const o = off.getContext('2d', { willReadFrequently: true });
       const k = img.width / 1123; // framing tuned on the 1123px original
-      const sx = 170 * k, sy = 80 * k, sw = 800 * k, sh = 1000 * k;
-      b.drawImage(img, sx, sy, sw, sh, 0, 0, bc.width, bc.height);
-      let px;
-      try { px = b.getImageData(0, 0, bc.width, bc.height); } catch (_) { return false; }
-      const d = px.data, n = d.length / 4;
-      const L = new Float32Array(n), hist = [];
-      for (let i = 0; i < n; i++) { const v = (d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11) / 255; L[i] = v; if (i % 13 === 0) hist.push(v); }
-      hist.sort((a, c) => a - c);
+      o.drawImage(img, 170 * k, 80 * k, 800 * k, 1000 * k, 0, 0, cols, rows);
+      let d;
+      try { d = o.getImageData(0, 0, cols, rows).data; } catch (_) { return false; }
+
+      // contrast-stretch luminance, then map onto the site's neutral ramp
+      const L = new Float32Array(cols * rows), hist = [];
+      for (let i = 0; i < L.length; i++) { L[i] = (d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11) / 255; if (i % 5 === 0) hist.push(L[i]); }
+      hist.sort((a, b) => a - b);
       const lo = hist[(hist.length * 0.02) | 0], hi = hist[(hist.length * 0.995) | 0];
-      for (let i = 0; i < n; i++) {
-        const t = Math.pow(Math.min(1, Math.max(0, (L[i] - lo) / (hi - lo))), 1.15);
-        let r, g, bl;
-        // near-neutral ramp with a faint green cast, so the photo stays the photo
-        if (t < 0.6) { const u = t / 0.6; r = 7 + 83 * u; g = 9 + 111 * u; bl = 9 + 89 * u; }
-        else { const u = (t - 0.6) / 0.4; r = 90 + 146 * u; g = 120 + 124 * u; bl = 98 + 138 * u; }
-        d[i * 4] = r; d[i * 4 + 1] = g; d[i * 4 + 2] = bl; d[i * 4 + 3] = 255;
+
+      const fresh = !P.length;
+      P = [];
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        const t = Math.pow(Math.min(1, Math.max(0, (L[y * cols + x] - lo) / (hi - lo))), 1.15);
+        let r, g, b;
+        if (t < 0.6) { const u = t / 0.6; r = 7 + 83 * u; g = 9 + 111 * u; b = 9 + 89 * u; }
+        else { const u = (t - 0.6) / 0.4; r = 90 + 146 * u; g = 120 + 124 * u; b = 98 + 138 * u; }
+        const ox = (x + 0.5) * cell, oy = (y + 0.5) * cell;
+        P.push({
+          ox, oy,
+          x: fresh && !reduce ? Math.random() * w : ox,
+          y: fresh && !reduce ? Math.random() * h : oy,
+          vx: 0, vy: 0, seed: Math.random() * 100, t,
+          c: `rgb(${r | 0},${g | 0},${b | 0})`,
+        });
       }
-      b.putImageData(px, 0, 0);
-      base = bc;
-      // coarse luminance grid for glyph placement
-      gw = Math.ceil(w / PX); gh = Math.ceil(h / PX);
-      lum = new Float32Array(gw * gh);
-      for (let y = 0; y < gh; y++) for (let x = 0; x < gw; x++) {
-        const i = Math.min(bc.height - 1, Math.round(y * PX * dpr)) * bc.width + Math.min(bc.width - 1, Math.round(x * PX * dpr));
-        lum[y * gw + x] = Math.min(1, Math.max(0, (L[i] - lo) / (hi - lo)));
-      }
-      ctx.font = `500 9px 'JetBrains Mono', ui-monospace, monospace`;
-      ctx.textBaseline = 'top';
       return true;
     }
 
-    const lumAt = (x, y) => lum[Math.min(gh - 1, (y / PX) | 0) * gw + Math.min(gw - 1, (x / PX) | 0)] || 0;
+    function frame(now) {
+      raf = 0;
+      if (!visible || document.hidden) return;
+      const dt = Math.min(now - (last || now), 50) / 1000;
+      last = now;
+      const f = dt * 60; // 1.0 at 60 fps
+      time += dt * 3;
+      const progress = Math.min(1, (now - started) / 2000); // 2s formation
+      const forming = progress < 1;
+      const fr = Math.pow(forming ? 0.92 : 0.85, f);
+      const size = cell * 0.95;
+      let energy = 0;
 
-    function draw() {
-      if (!base) return;
       ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(base, 0, 0, w, h);
-      // flickering glyph cells, weighted toward bright regions
-      for (let k = 0; k < 8; k++) {
-        const x = ((Math.random() * w) / CELL | 0) * CELL, y = ((Math.random() * h) / CELL | 0) * CELL;
-        if (lumAt(x, y) < 0.35) continue;
-        ctx.fillStyle = '#040806'; ctx.fillRect(x, y, CELL, CELL);
-        ctx.fillStyle = 'rgba(88, 242, 155, 0.9)'; ctx.fillText(rand(GLYPHS), x + 2, y + 1);
-      }
-      // scan line
-      ctx.fillStyle = 'rgba(88, 242, 155, 0.05)'; ctx.fillRect(0, scan - 24, w, 24);
-      ctx.fillStyle = 'rgba(88, 242, 155, 0.25)'; ctx.fillRect(0, scan, w, 1);
-      // cursor ring decodes into glyphs
-      if (pointer.x >= 0) {
-        for (let y = Math.max(0, pointer.y - 60); y < Math.min(h, pointer.y + 60); y += CELL) {
-          for (let x = Math.max(0, pointer.x - 60); x < Math.min(w, pointer.x + 60); x += CELL) {
-            const gx = (x / CELL | 0) * CELL, gy = (y / CELL | 0) * CELL;
-            const dd = Math.hypot(gx - pointer.x, gy - pointer.y);
-            if (dd > 56) continue;
-            ctx.fillStyle = 'rgba(4, 8, 6, 0.88)'; ctx.fillRect(gx, gy, CELL, CELL);
-            const v = lumAt(gx, gy);
-            ctx.fillStyle = `rgba(88, 242, 155, ${0.25 + v * 0.75})`;
-            ctx.fillText(v > 0.12 ? rand(GLYPHS) : '·', gx + 2, gy + 1);
-          }
+      for (let i = 0; i < P.length; i++) {
+        const p = P[i];
+        const dx = mouse.x - p.x, dy = mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouse.r && dist > 0.01) {
+          const force = (mouse.r - dist) / mouse.r;
+          p.vx -= (dx / dist) * force * 2.6 * f;
+          p.vy -= (dy / dist) * force * 2.6 * f;
         }
-      }
-    }
+        if (forming) {
+          p.vx += Math.sin(time + p.seed) * 0.2 * (1 - progress) * f;
+          p.vy += Math.cos(time + p.seed * 1.5) * 0.2 * (1 - progress) * f;
+          const spring = 0.08 * progress * progress;
+          p.vx += (p.ox - p.x) * spring * f;
+          p.vy += (p.oy - p.y) * spring * f;
+        } else {
+          p.vx += (p.ox - p.x) * 0.08 * f;
+          p.vy += (p.oy - p.y) * 0.08 * f;
+        }
+        p.vx *= fr; p.vy *= fr;
+        p.x += p.vx * f; p.y += p.vy * f;
 
-    function loop() {
-      if (!visible || document.hidden) { running = false; return; }
-      running = true;
-      scan = scan > h + 40 ? -40 : scan + 3;
-      draw();
-      setTimeout(() => requestAnimationFrame(loop), 60);
+        const speed = Math.abs(p.vx) + Math.abs(p.vy);
+        energy += speed + Math.abs(p.ox - p.x) + Math.abs(p.oy - p.y);
+        // moving particles pick up the signal colour
+        ctx.fillStyle = speed > 1.1 && !forming ? `rgba(88,242,155,${Math.min(0.9, 0.2 + speed * 0.12)})` : p.c;
+        ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
+      }
+
+      // sleep once settled and the cursor is away; wake on pointer move
+      if (!forming && mouse.x < -999 && energy / P.length < 0.004) return;
+      raf = requestAnimationFrame(frame);
     }
+    const wake = () => { if (!raf && P.length && visible && !reduce) { last = 0; raf = requestAnimationFrame(frame); } };
 
     const box = canvas.parentElement;
-    box.addEventListener('pointermove', e => { const r = canvas.getBoundingClientRect(); pointer = { x: e.clientX - r.left, y: e.clientY - r.top }; });
-    box.addEventListener('pointerleave', () => { pointer = { x: -1, y: -1 }; });
-    new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible && !running && base && !reduce) loop(); }).observe(canvas);
+    box.addEventListener('pointermove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+      wake();
+    });
+    box.addEventListener('pointerleave', () => { mouse.x = mouse.y = -9999; });
+
+    const drawStatic = () => {
+      const size = cell * 0.95;
+      ctx.clearRect(0, 0, w, h);
+      P.forEach(p => { ctx.fillStyle = p.c; ctx.fillRect(p.ox - size / 2, p.oy - size / 2, size, size); });
+    };
+    const go = () => {
+      if (!build()) return;
+      if (reduce) { drawStatic(); return; }
+      new IntersectionObserver(([en]) => {
+        visible = en.isIntersecting;
+        if (visible && !started) started = performance.now();
+        if (visible) wake();
+      }).observe(canvas);
+    };
     let rt;
-    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (build()) draw(); }, 150); });
-    const go = () => { if (!build()) return; draw(); if (!reduce) loop(); };
-    img.onload = () => (document.fonts ? document.fonts.ready.then(go) : go());
+    window.addEventListener('resize', () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => { if (build()) { if (reduce) drawStatic(); else wake(); } }, 150);
+    });
+    img.onload = go;
   })();
 
   /* ---------------- train/loss sparkline ---------------- */

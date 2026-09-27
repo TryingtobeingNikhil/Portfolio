@@ -276,7 +276,7 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 
 /* Portrait */
 .portrait {
-  justify-self: center;
+  justify-self: end;
   width: 100%; max-width: 280px;
   border-radius: var(--r);
   border: 1px solid var(--line-2);
