@@ -7,22 +7,34 @@
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   /* ---------------- writing, rendered from assets/data/articles.js ---------------- */
+  const compact = n => (n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M' : n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : String(n));
   (function articles() {
     const host = $('[data-articles]');
     const data = window.ARTICLES;
     if (!host || !Array.isArray(data)) return;
+    const views = items => items.reduce((n, a) => n + (a.views || 0), 0);
     const total = data.reduce((n, s) => n + s.items.length, 0);
-    host.innerHTML = data.map(s => `
+    const totalViews = data.reduce((n, s) => n + views(s.items), 0);
+    host.innerHTML = data.map(s => {
+      const count = s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length}`;
+      const v = views(s.items);
+      return `
       <div class="series__col">
-        <h4>${esc(s.series)} <span>${s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : s.items.length}</span></h4>
+        <h4>${esc(s.series)} <span>${count}${v ? ` · ${compact(v)} views` : ''}</span></h4>
         <ol>${s.items.map((a, i) => `
-          <li><a href="${esc(a.url)}" target="_blank" rel="noopener"${a.date ? ` title="${esc(a.date)}"` : ''}>
+          <li><a href="${esc(a.url)}" target="_blank" rel="noopener" title="${esc([a.date, a.views ? a.views.toLocaleString('en-US') + ' views' : ''].filter(Boolean).join(' · '))}">
             <span class="series__n">${s.numbered ? String(i + 1).padStart(2, '0') : esc(a.tag || '')}</span>
             <span class="series__t">${esc(a.title)}</span>
             <span class="series__go" aria-hidden="true">↗</span></a></li>`).join('')}
         </ol>
-      </div>`).join('');
+      </div>`;
+    }).join('');
     $$('[data-article-count]').forEach(el => { el.textContent = total; });
+    if (totalViews) $$('[data-article-views]').forEach(el => { el.textContent = compact(totalViews); });
+    $$('[data-series-views]').forEach(el => {
+      const s = data.find(x => x.series === el.dataset.seriesViews);
+      if (s && views(s.items)) el.textContent = compact(views(s.items));
+    });
   })();
 
   /* ---------------- quote strip, from assets/data/quotes.js ---------------- */

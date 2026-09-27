@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=17">
+  <link rel="stylesheet" href="./assets/css/main.css?v=19">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -130,7 +130,7 @@
         <dl class="facts">
           <div data-reveal style="--d:.05s"><dt>focus</dt><dd>LLM inference &amp; multi-agent systems</dd></div>
           <div data-reveal style="--d:.1s"><dt>building</dt><dd><a href="#projects">PageServe</a> &amp; <a href="#projects">RLForge</a></dd></div>
-          <div data-reveal style="--d:.15s"><dt>writing</dt><dd>Deep-dives on <a href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener">X</a></dd></div>
+          <div data-reveal style="--d:.15s"><dt>writing</dt><dd>Deep-dives on <a href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener">X</a><small class="facts__sub">1.9M impressions since July</small></dd></div>
           <div data-reveal style="--d:.2s"><dt>based</dt><dd>Jaipur · <b data-clock>--:--</b> IST<small class="tzdiff" data-tzdiff></small></dd></div>
         </dl>
       </div>
@@ -180,7 +180,9 @@
           <ul>
             <li><a class="hl" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener"><span>PageServe crossed <b data-stars="vLLM_Inference_Engine">97</b> stars and <b data-forks="vLLM_Inference_Engine">10</b> forks</span><em>GitHub</em></a></li>
             <li><a class="hl" href="https://x.com/GonnabeNikhil/status/2101327791258263694" target="_blank" rel="noopener"><span>"Build an LLM inference system yourself" reached 45.7K views</span><em>X</em></a></li>
-            <li><a class="hl" href="#writing"><span>Wrote <b data-article-count>19</b> build-along articles on inference engines and RL</span><em>Writing</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span><b>1.9M</b> impressions on X since July, building in public</span><em>X</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span><b>~120K</b> views on inference &amp; vLLM posts, <b>~20K</b> on RL</span><em>X</em></a></li>
+            <li><a class="hl" href="#writing"><span><b data-article-count>19</b> build-along articles on inference and RL, <b data-article-views>33.5K</b> views</span><em>Writing</em></a></li>
             <li><a class="hl" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener"><span>RLForge: 148/148 tests, zero dependencies, own autograd</span><em>GitHub</em></a></li>
             <li><a class="hl" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener"><span>Model-compression research collaboration with IIT Kharagpur</span><em>Research</em></a></li>
             <li><div class="hl"><span>Codeforces Specialist, 1400+</span><em>Codeforces</em></div></li>
@@ -304,7 +306,7 @@
             <div class="feature__links">
               <a class="btn btn--primary btn--sm" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener">GitHub ↗</a>
               <a class="btn btn--ghost btn--sm" href="https://pageserve-phi.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
-              <a class="textlink" href="https://x.com/i/article/2076614881672069120" target="_blank" rel="noopener">Read the series →</a>
+              <a class="textlink" href="https://x.com/i/article/2076614881672069120" target="_blank" rel="noopener">Read the series <span class="textlink__meta">· <span data-series-views="Inference engine">15.8K</span> views</span> →</a>
             </div>
           </div>
 
@@ -347,7 +349,7 @@
 
             <div class="feature__links">
               <a class="btn btn--primary btn--sm" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener">GitHub ↗</a>
-              <a class="textlink" href="https://x.com/i/article/2088559226566377472" target="_blank" rel="noopener">Read the series →</a>
+              <a class="textlink" href="https://x.com/i/article/2088559226566377472" target="_blank" rel="noopener">Read the series <span class="textlink__meta">· <span data-series-views="RLForge">8.9K</span> views</span> →</a>
             </div>
           </div>
 
@@ -456,6 +458,30 @@
             <h3>Lab</h3>
             <span class="lab__note">Small interactive toys for ideas I keep explaining</span>
           </div>
+          <div class="spec" id="spec">
+            <div class="spec__head">
+              <div>
+                <h4>Speculative decoding <span class="spec__tag">how fast inference cheats, honestly</span></h4>
+                <p>A small draft model guesses <b data-k-label>4</b> tokens ahead. The big model checks all of them in one forward pass, keeps the matching prefix, and fixes the first miss. Same output as normal decoding, fewer expensive passes.</p>
+              </div>
+              <button class="btn btn--ghost btn--sm" type="button" data-spec-run>Replay <span aria-hidden="true">↻</span></button>
+            </div>
+            <div class="spec__out" data-spec-out aria-hidden="true"></div>
+            <div class="spec__bottom">
+              <div class="spec__ctrl">
+                <label>draft length k <b data-kv>4</b><input type="range" min="1" max="8" step="1" value="4" data-spec-k aria-label="Draft length k"></label>
+                <label>draft acceptance α <b data-av>0.75</b><input type="range" min="0.3" max="0.95" step="0.05" value="0.75" data-spec-a aria-label="Draft acceptance rate alpha"></label>
+              </div>
+              <dl class="spec__stats">
+                <div><dt>target passes</dt><dd data-s-steps>–</dd></div>
+                <div><dt>tokens / pass</dt><dd data-s-tpp>–</dd></div>
+                <div><dt>expected (1−α<sup>k+1</sup>)/(1−α)</dt><dd data-s-exp>–</dd></div>
+                <div><dt>vs one token per pass</dt><dd data-s-speed>–</dd></div>
+              </dl>
+            </div>
+            <p class="spec__legend" aria-hidden="true"><span class="k-draft">drafted</span><span class="k-ok">accepted for free</span><span class="k-bad">rejected</span><span class="k-fix">from the target model</span></p>
+          </div>
+
           <div class="lab__grid">
             <div class="toy" id="toy-temp">
               <div class="toy__stage">
@@ -499,6 +525,7 @@
             <a class="textlink" href="https://x.com/GonnabeNikhil/articles" target="_blank" rel="noopener">All articles on X ↗</a>
           </div>
           <p class="writing__intro">I write up what I build, one part at a time: scheduler traces, memory bugs, the math that has to be exactly right.</p>
+          <p class="writing__stats"><span><b data-article-count>19</b> articles</span><span><b>1.9M</b> impressions since July</span><span><b>~120K</b> views on inference posts</span><span><b>~20K</b> on RL posts</span></p>
           <div class="series" data-articles>
             <noscript><p class="writing__intro"><a class="textlink" href="https://x.com/GonnabeNikhil/articles">Read all articles on X ↗</a></p></noscript>
           </div>
@@ -530,7 +557,7 @@
         </div>
 
         <div class="socials" data-reveal>
-          <a class="social" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span class="social__k">X / Twitter</span><b>@GonnabeNikhil <span aria-hidden="true">↗</span></b></a>
+          <a class="social" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span class="social__k">X / Twitter</span><b>@GonnabeNikhil <span aria-hidden="true">↗</span></b><small class="social__sub">3.1K followers</small></a>
           <a class="social" href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener"><span class="social__k">GitHub</span><b>TryingtobeingNikhil <span aria-hidden="true">↗</span></b></a>
           <a class="social" href="https://www.linkedin.com/in/nikhil-mourya-36913a300/" target="_blank" rel="noopener"><span class="social__k">LinkedIn</span><b>nikhil-mourya <span aria-hidden="true">↗</span></b></a>
           <a class="social" href="https://dev-path.site" target="_blank" rel="noopener"><span class="social__k">Product</span><b>DevPath <span aria-hidden="true">↗</span></b></a>
@@ -542,6 +569,15 @@
 
   <footer class="footer">
     <div class="wrap">
+      <section class="trace" id="trace" aria-labelledby="trace-title">
+        <div class="index__caption">
+          <h3 id="trace-title">This visit, traced</h3>
+          <span class="trace__note">Real timings from your browser's Performance API, drawn like an OpenTelemetry trace. Nothing leaves your machine.</span>
+        </div>
+        <p class="trace__sum" data-trace-sum>Waiting for the page to finish loading…</p>
+        <div class="trace__head" aria-hidden="true"><span>span</span><span>service</span><span class="trace__scale" data-trace-scale></span><span>ms</span></div>
+        <ol class="trace__rows" data-trace-rows></ol>
+      </section>
       <div class="footer__map">
         <div class="footer__sign">
           <p class="footer__name">Nikhil Mourya</p>
@@ -573,8 +609,9 @@
   <script src="./assets/js/field.js?v=7" defer></script>
   <script src="./assets/js/trail.js?v=1" defer></script>
   <script src="./assets/js/main.js?v=11" defer></script>
-  <script src="./assets/data/articles.js?v=7" defer></script>
+  <script src="./assets/data/articles.js?v=9" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=10" defer></script>
+  <script src="./assets/js/extras.js?v=11" defer></script>
+  <script src="./assets/js/showcase.js?v=2" defer></script>
 </body>
 </html>
