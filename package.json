@@ -1,0 +1,9 @@
+{
+  "name": "tryingtobenikhil-portfolio",
+  "private": true,
+  "type": "module",
+  "description": "Static site; dependencies here are only for Netlify Functions.",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.1"
+  }
+}

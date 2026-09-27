@@ -20,3 +20,4 @@ dist/
 !assets/images/portrait.jpg
 !assets/images/logo.png
 !assets/images/logo.ico
+node_modules/

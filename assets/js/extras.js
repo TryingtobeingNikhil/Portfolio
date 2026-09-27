@@ -20,7 +20,7 @@
       const v = views(s.items);
       return `
       <div class="series__col">
-        <h4>${esc(s.series)} <span>${count}${v ? ` · ${compact(v)} views` : ''}</span></h4>
+        <h4><span class="series__title">${esc(s.series)}</span><span class="series__meta">${count}${v ? ` · ${compact(v)} views` : ''}</span></h4>
         <ol>${s.items.map((a, i) => `
           <li><a href="${esc(a.url)}" target="_blank" rel="noopener" title="${esc([a.date, a.views ? a.views.toLocaleString('en-US') + ' views' : ''].filter(Boolean).join(' · '))}">
             <span class="series__n">${s.numbered ? String(i + 1).padStart(2, '0') : esc(a.tag || '')}</span>
@@ -104,6 +104,41 @@
       .catch(() => { /* not configured or Spotify down: keep it hidden */ });
     load();
     document.addEventListener('visibilitychange', () => { if (!document.hidden && !box.hidden) load(); });
+  })();
+
+  /* ---------------- signature, written when it scrolls into view ---------------- */
+  (function signature() {
+    const sig = $('#signature');
+    if (!sig) return;
+    const sign = () => sig.classList.add('is-signed');
+    if (reduce) { sign(); return; }
+    const start = () => new IntersectionObserver(([en], obs) => {
+      if (en.isIntersecting) { obs.disconnect(); setTimeout(sign, 150); }
+    }, { threshold: 0.6 }).observe(sig);
+    // wait for the script font, otherwise the first strokes are drawn in a fallback face
+    (document.fonts && document.fonts.load ? document.fonts.load("66px 'Mrs Saint Delafield'") : Promise.resolve()).then(start, start);
+  })();
+
+  /* ---------------- visitor counter (netlify/functions/visits.mjs) ---------------- */
+  (function visits() {
+    const box = $('[data-visits]');
+    if (!box) return;
+    const KEY = 'visit:last', WINDOW = 12 * 3600 * 1000;
+    let count = true;
+    try {
+      const last = +localStorage.getItem(KEY) || 0;
+      count = Date.now() - last > WINDOW;
+      if (count) localStorage.setItem(KEY, String(Date.now()));
+    } catch (_) { /* storage blocked: still show the total, just don't count */ count = false; }
+    if (navigator.webdriver) count = false; // bots and test runners don't count
+    fetch('/api/visits', { method: count ? 'POST' : 'GET', cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(d => {
+        if (!d || !(d.visits > 0)) return;
+        $('[data-visits-n]', box).textContent = d.visits.toLocaleString('en-US');
+        box.hidden = false;
+      })
+      .catch(() => { /* counter unavailable: stay hidden */ });
   })();
 
   /* ---------------- your time vs mine ---------------- */

@@ -24,8 +24,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=19">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/main.css?v=20">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -569,18 +569,15 @@
 
   <footer class="footer">
     <div class="wrap">
-      <section class="trace" id="trace" aria-labelledby="trace-title">
-        <div class="index__caption">
-          <h3 id="trace-title">This visit, traced</h3>
-          <span class="trace__note">Real timings from your browser's Performance API, drawn like an OpenTelemetry trace. Nothing leaves your machine.</span>
-        </div>
-        <p class="trace__sum" data-trace-sum>Waiting for the page to finish loading…</p>
-        <div class="trace__head" aria-hidden="true"><span>span</span><span>service</span><span class="trace__scale" data-trace-scale></span><span>ms</span></div>
-        <ol class="trace__rows" data-trace-rows></ol>
-      </section>
       <div class="footer__map">
         <div class="footer__sign">
-          <p class="footer__name">Nikhil Mourya</p>
+          <svg class="sig" id="signature" viewBox="0 0 330 120" role="img" aria-label="Nikhil Mourya">
+            <defs><clipPath id="sig-pen"><rect class="sig__pen" x="0" y="0" width="0" height="120"/></clipPath></defs>
+            <g clip-path="url(#sig-pen)">
+              <text class="sig__text" x="8" y="74">Nikhil Mourya</text>
+            </g>
+            <path class="sig__flourish" d="M18 92 C 90 104, 190 100, 262 88 S 318 70, 300 82" />
+          </svg>
           <p class="dim">Building the parts of AI most people import.</p>
           <button class="footer__cmd" type="button" data-cmdk><span class="on-kbd">Press <kbd>⌘</kbd><kbd>K</kbd> to search the site</span><span class="on-touch">Search the site →</span></button>
         </div>
@@ -590,7 +587,7 @@
       </div>
       <div class="footer__inner">
         <span>© 2026 Nikhil Mourya</span>
-        <span class="dim">Held together by coffee and hope</span>
+        <span class="dim">Held together by coffee and hope<span class="visits" data-visits hidden> · <b data-visits-n></b> visitors so far</span></span>
         <a href="#top">Back to top ↑</a>
       </div>
     </div>
@@ -611,7 +608,7 @@
   <script src="./assets/js/main.js?v=11" defer></script>
   <script src="./assets/data/articles.js?v=9" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=11" defer></script>
-  <script src="./assets/js/showcase.js?v=2" defer></script>
+  <script src="./assets/js/extras.js?v=12" defer></script>
+  <script src="./assets/js/showcase.js?v=3" defer></script>
 </body>
 </html>
