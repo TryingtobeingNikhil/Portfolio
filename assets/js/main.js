@@ -102,11 +102,12 @@
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      cell = w < 260 ? 3 : 2.2;
+      cell = w < 260 ? 2.2 : 1.6; // finer grid = more facial detail
       const cols = Math.round(w / cell), rows = Math.round(h / cell);
       const off = document.createElement('canvas');
       off.width = cols; off.height = rows;
       const o = off.getContext('2d', { willReadFrequently: true });
+      o.imageSmoothingQuality = 'high';
       const k = img.width / 1123; // framing tuned on the 1123px original
       o.drawImage(img, 170 * k, 80 * k, 800 * k, 1000 * k, 0, 0, cols, rows);
       let d;
@@ -121,10 +122,11 @@
       const fresh = !P.length;
       P = [];
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
-        const t = Math.pow(Math.min(1, Math.max(0, (L[y * cols + x] - lo) / (hi - lo))), 1.15);
+        const t = Math.pow(Math.min(1, Math.max(0, (L[y * cols + x] - lo) / (hi - lo))), 0.92);
         let r, g, b;
-        if (t < 0.6) { const u = t / 0.6; r = 7 + 83 * u; g = 9 + 111 * u; b = 9 + 89 * u; }
-        else { const u = (t - 0.6) / 0.4; r = 90 + 146 * u; g = 120 + 124 * u; b = 98 + 138 * u; }
+        // brighter, cleaner ramp: near-black shadows, neutral mids with a faint green cast, crisp highlights
+        if (t < 0.55) { const u = t / 0.55; r = 10 + 118 * u; g = 12 + 138 * u; b = 12 + 122 * u; }
+        else { const u = (t - 0.55) / 0.45; r = 128 + 118 * u; g = 150 + 100 * u; b = 134 + 112 * u; }
         const ox = (x + 0.5) * cell, oy = (y + 0.5) * cell;
         P.push({
           ox, oy,
@@ -147,7 +149,7 @@
       const progress = Math.min(1, (now - started) / 2000); // 2s formation
       const forming = progress < 1;
       const fr = Math.pow(forming ? 0.92 : 0.85, f);
-      const size = cell * 0.95;
+      const size = cell + 0.15; // slight overlap: no grid gaps
       let energy = 0;
 
       ctx.clearRect(0, 0, w, h);
@@ -195,7 +197,7 @@
     box.addEventListener('pointerleave', () => { mouse.x = mouse.y = -9999; });
 
     const drawStatic = () => {
-      const size = cell * 0.95;
+      const size = cell + 0.15; // slight overlap: no grid gaps
       ctx.clearRect(0, 0, w, h);
       P.forEach(p => { ctx.fillStyle = p.c; ctx.fillRect(p.ox - size / 2, p.oy - size / 2, size, size); });
     };

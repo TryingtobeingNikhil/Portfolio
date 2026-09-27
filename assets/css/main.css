@@ -297,8 +297,8 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 .portrait__img::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background:
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
-    radial-gradient(ellipse at 50% 42%, transparent 60%, rgba(5, 6, 6, 0.5));
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 42%, transparent 68%, rgba(5, 6, 6, 0.3));
 }
 .loss { display: inline-flex; align-items: center; gap: 7px; }
 .loss svg { width: 52px; height: 14px; }
