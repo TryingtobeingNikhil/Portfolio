@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=20">
+  <link rel="stylesheet" href="./assets/css/main.css?v=21">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -172,6 +172,34 @@
               <div><dt>reading</dt><dd>The Humans — Matt Haig</dd></div>
               <div><dt>status</dt><dd class="ok"><i class="led" aria-hidden="true"></i>Open to ML roles</dd></div>
             </dl>
+          </div>
+        </div>
+
+        <div class="ask" id="ask" data-reveal>
+          <div class="index__caption">
+            <h3>Ask this page</h3>
+            <span class="ask__note">BM25 over this page's own text, in your browser. No LLM, no API. Below the threshold, it refuses.</span>
+          </div>
+          <form class="ask__form" data-ask-form role="search">
+            <span class="ask__prompt" aria-hidden="true">›</span>
+            <input type="text" placeholder="Ask about Nikhil: projects, work, writing, reach…" aria-label="Ask a question about this page" autocomplete="off" spellcheck="false" data-ask-input>
+            <button class="btn btn--primary btn--sm" type="submit">Ask</button>
+          </form>
+          <div class="ask__chips">
+            <button type="button" data-ask-q="What is PageServe?">What is PageServe?</button>
+            <button type="button" data-ask-q="Where has he worked?">Where has he worked?</button>
+            <button type="button" data-ask-q="How big is his reach on X?">How big is his reach on X?</button>
+            <button type="button" data-ask-q="What's the diamond dependency bug?">What's the diamond bug?</button>
+            <button type="button" data-ask-q="Is he open to roles?">Is he open to roles?</button>
+            <button type="button" data-ask-q="What's the capital of France?" class="is-trick">What's the capital of France?</button>
+          </div>
+          <div class="ask__out" data-ask-out aria-live="polite" hidden>
+            <p class="ask__answer" data-ask-answer></p>
+            <p class="ask__src" data-ask-src></p>
+            <div class="ask__why">
+              <div class="ask__meter"><div class="ask__track"><i data-ask-fill></i><span class="ask__mark" aria-hidden="true"></span></div><p data-ask-verdict></p></div>
+              <ol class="ask__hits" data-ask-hits></ol>
+            </div>
           </div>
         </div>
 
@@ -610,5 +638,6 @@
   <script src="./assets/data/quotes.js?v=1" defer></script>
   <script src="./assets/js/extras.js?v=13" defer></script>
   <script src="./assets/js/showcase.js?v=3" defer></script>
+  <script src="./assets/js/ask.js?v=1" defer></script>
 </body>
 </html>

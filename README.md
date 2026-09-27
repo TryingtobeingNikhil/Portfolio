@@ -54,6 +54,7 @@ Then open http://localhost:5501.
 | `assets/js/main.js` | Nav, reveals, portrait, KV-cache demo, GitHub stars |
 | `assets/js/trail.js` | Binary 0/1 cursor trail (desktop only) |
 | `assets/js/showcase.js` | Speculative decoding demo (Lab) |
+| `assets/js/ask.js` | "Ask this page": BM25 search over the page with a refusal threshold |
 | `assets/js/extras.js` | Writing list, highlights, contributions, lab toys, ⌘K palette |
 | `assets/data/articles.js` | Article list |
 | `assets/data/quotes.js` | Quote bank |
