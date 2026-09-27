@@ -17,6 +17,10 @@ Netlify deploys every push to `main`.
 
 The Writing section, the series counts, the article total in Highlights and ⌘K search all update from that file.
 
+## Add a quote
+
+The footer shows a random quote from `assets/data/quotes.js` on every visit. Add a line with `text`, `by` and (optionally) `source`, set `mine: true` for your own favourites, then commit and push.
+
 ## Run it locally
 
 ```bash
@@ -35,5 +39,6 @@ Then open http://localhost:5501.
 | `assets/js/main.js` | Nav, reveals, portrait, KV-cache demo, GitHub stars |
 | `assets/js/extras.js` | Writing list, highlights, contributions, lab toys, ⌘K palette |
 | `assets/data/articles.js` | Article list |
+| `assets/data/quotes.js` | Footer quote bank |
 
 When you change CSS or JS, bump the `?v=` number on its `<script>`/`<link>` tag in `index.html` so browsers fetch the new file.

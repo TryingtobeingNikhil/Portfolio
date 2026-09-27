@@ -25,6 +25,35 @@
     $$('[data-article-count]').forEach(el => { el.textContent = total; });
   })();
 
+  /* ---------------- quote strip, from assets/data/quotes.js ---------------- */
+  (function quotes() {
+    const box = $('[data-quote]'), bank = window.QUOTES;
+    if (!box || !Array.isArray(bank) || !bank.length) return;
+    const text = $('[data-quote-text]', box), by = $('[data-quote-by]', box);
+    const KEY = 'quote:last';
+    let cur = -1;
+    try { cur = parseInt(sessionStorage.getItem(KEY) ?? '-1', 10); } catch (_) {}
+    const pickNext = () => {
+      if (bank.length === 1) return 0;
+      let i; do { i = Math.floor(Math.random() * bank.length); } while (i === cur);
+      return i;
+    };
+    const render = i => {
+      const q = bank[i];
+      text.textContent = q.text;
+      by.innerHTML = [q.by ? esc(q.by) : '', q.mine ? '<span class="mine">a favourite</span>' : ''].filter(Boolean).join(' · ') || '&nbsp;';
+      box.title = q.source || '';
+      cur = i;
+      try { sessionStorage.setItem(KEY, String(i)); } catch (_) {}
+    };
+    render(pickNext()); // new quote on every visit, never the same twice in a row
+    $('[data-quote-next]', box).addEventListener('click', () => {
+      if (reduce) { render(pickNext()); return; }
+      box.classList.add('is-swapping');
+      setTimeout(() => { render(pickNext()); box.classList.remove('is-swapping'); }, 300);
+    });
+  })();
+
   /* ---------------- your time vs mine ---------------- */
   (function tz() {
     const IST = 330; // minutes east of UTC (Asia/Kolkata)
