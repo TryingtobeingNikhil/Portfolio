@@ -37,6 +37,7 @@ Then open http://localhost:5501.
 | `assets/css/main.css` | Styles |
 | `assets/js/field.js` | Hero neural-net / matrix canvas |
 | `assets/js/main.js` | Nav, reveals, portrait, KV-cache demo, GitHub stars |
+| `assets/js/trail.js` | Binary 0/1 cursor trail (desktop only) |
 | `assets/js/extras.js` | Writing list, highlights, contributions, lab toys, ⌘K palette |
 | `assets/data/articles.js` | Article list |
 | `assets/data/quotes.js` | Footer quote bank |

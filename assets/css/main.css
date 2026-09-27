@@ -669,6 +669,9 @@ kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; 
 .contact__time { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; font: 400 13px/1.4 var(--mono); color: var(--fg-3); }
 .contact__time b { font-weight: 400; color: var(--fg); font-variant-numeric: tabular-nums; }
 
+/* binary cursor trail (assets/js/trail.js); below the palette, above the page */
+.cursor-trail { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 95; }
+
 /* quote row after Writing: same hairline language as the lists above */
 .quote {
   display: grid; grid-template-columns: auto 1fr auto; gap: 14px 18px; align-items: baseline;
