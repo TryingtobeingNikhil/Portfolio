@@ -1,8 +1,10 @@
 .DS_Store
 *.log
 .vscode/
+.claude/
+dist/
 
-# Media files - skip from repo
+# Media: ignored by default so screenshots and drafts never get pushed...
 *.png
 *.jpg
 *.jpeg
@@ -12,4 +14,9 @@
 *.pdf
 *.mp4
 *.mp3
-Screenshot*/
+*.webp
+
+# ...except the images the site actually uses
+!assets/images/portrait.jpg
+!assets/images/logo.png
+!assets/images/logo.ico
