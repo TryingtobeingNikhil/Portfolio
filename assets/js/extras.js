@@ -375,7 +375,7 @@
     $$('.card').forEach(c => { const a = $$('.card__top a', c).pop(); if (a) add('Projects', txt($('h3', c)), 'GitHub', open(a.href), txt($('.feature__kicker', c))); });
     $$('.ix').forEach(a => add('Projects', txt($('.ix__name', a)), 'GitHub', open(a.href), txt($('.ix__desc', a))));
     $$('.series__col').forEach(col => {
-      const series = txt($('h4', col)).replace(/\d+\s*parts?|\s\d+$/, '').trim();
+      const series = txt($('.series__title', col)) || txt($('h4', col));
       $$('a', col).forEach(a => add('Writing', txt($('.series__t', a)), series, open(a.href), 'article'));
     });
     $$('.social').forEach(a => add('Links', txt($('.social__k', a)), txt($('b', a)), open(a.href)));

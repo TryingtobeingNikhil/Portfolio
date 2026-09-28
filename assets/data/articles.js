@@ -35,6 +35,7 @@ window.ARTICLES = [
       { title: 'Replay buffer',                                 url: 'https://x.com/i/article/2093701924617121792', date: '2026-08-29', views: 3111 },
       { title: 'Agent, trainer and tabular Q-learning',         url: 'https://x.com/i/article/2101771071162867712', date: '2026-09-21', views: 721 },
       { title: 'Tensors: storage, shape, forward ops',          url: 'https://x.com/i/article/2103826733950767104', date: '2026-09-26', views: 1079 },
+      { title: 'The echo problem',                              url: 'https://x.com/GonnabeNikhil/status/2104464986248503616', date: '2026-09-28' },
     ],
   },
   {
