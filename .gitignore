@@ -22,4 +22,6 @@ dist/
 !assets/images/logo.ico
 !assets/video/pageserve.mp4
 !assets/video/pageserve-poster.jpg
+!assets/video/rlforge.mp4
+!assets/video/rlforge-poster.jpg
 node_modules/

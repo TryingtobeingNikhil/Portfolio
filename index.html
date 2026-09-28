@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=27">
+  <link rel="stylesheet" href="./assets/css/main.css?v=29">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -402,11 +402,12 @@
 
             <div class="feature__links">
               <a class="btn btn--primary btn--sm" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener">GitHub ↗</a>
+              <a class="btn btn--ghost btn--sm" href="https://rl-forge.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
               <a class="textlink" href="https://x.com/i/article/2088559226566377472" target="_blank" rel="noopener">Read the series <span class="textlink__meta">· <span data-series-views="RLForge">8.9K</span> views</span> →</a>
             </div>
           </div>
 
-          <div class="feature__viz">
+          <div class="feature__viz feature__viz--split">
             <div class="viz__head">
               <span class="viz__label">backward pass · diamond dependency</span>
               <span class="viz__live">tensor.cpp</span>
@@ -449,6 +450,16 @@
 <span class="term__line"><span class="p">$</span> <span class="c">./train --env gridworld --steps 20000</span></span>
 <span class="term__line">eval return <span class="m">-100.0</span> → <span class="ok">3.0</span> <span class="m"># optimal</span></span></pre>
             </div>
+            <figure class="demo">
+              <div class="demo__bar">
+                <span class="demo__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="demo__url">rl-forge.vercel.app</span>
+                <a href="https://rl-forge.vercel.app" target="_blank" rel="noopener">open ↗</a>
+              </div>
+              <video class="demo__video" muted loop playsinline preload="none" width="900" height="510" poster="./assets/video/rlforge-poster.jpg?v=1" aria-label="Screen recording scrolling through the RLForge site: a live GridWorld agent learning from -100 to the optimal return, the diamond-dependency bug, the build log, the test suite and the docs" data-autoplay>
+                <source src="./assets/video/rlforge.mp4?v=1" type="video/mp4">
+              </video>
+            </figure>
           </div>
         </article>
 

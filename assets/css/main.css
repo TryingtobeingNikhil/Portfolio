@@ -461,6 +461,8 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
 
 /* diamond graph */
 .graph { width: 100%; max-width: 300px; margin: auto; }
+.feature__viz--split .graph { max-width: 190px; margin: -6px auto -10px; }
+.feature__viz--split .term pre { padding: 9px 12px; font-size: 11px; line-height: 1.7; }
 .graph .edge { stroke: var(--line-3); stroke-width: 1.2; fill: none; }
 .graph .node rect { fill: var(--bg-1); stroke: var(--line-3); }
 .graph .node text { fill: var(--fg); font: 500 13px var(--mono); }
