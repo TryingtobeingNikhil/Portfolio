@@ -6,9 +6,9 @@
 import { getStore } from '@netlify/blobs';
 
 const KEY = 'visits';
-// Blobs belong to one Netlify site. The count on the previous site (Oct 2026) was 260,
-// so a fresh store starts from there instead of from zero.
-const CARRIED_OVER = 260;
+// Blobs belong to one Netlify site, so an empty store (a brand-new site) starts from
+// this number instead of zero. Once any visit has been stored, it no longer applies.
+const CARRIED_OVER = 5600;
 const json = body =>
   new Response(JSON.stringify(body), {
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
