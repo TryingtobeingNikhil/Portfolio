@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=29">
+  <link rel="stylesheet" href="./assets/css/main.css?v=30">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -586,10 +586,14 @@
         <div class="index writing" id="writing" data-reveal>
           <div class="index__caption">
             <h3>Writing</h3>
-            <a class="textlink" href="https://x.com/GonnabeNikhil/articles" target="_blank" rel="noopener">All articles on X ↗</a>
+            <span class="writing__links">
+              <button class="writing__add" type="button" data-publish-open hidden><span aria-hidden="true">+</span> Add article</button>
+              <a class="textlink" href="https://x.com/GonnabeNikhil/articles" target="_blank" rel="noopener">All articles on X ↗</a>
+            </span>
           </div>
           <p class="writing__intro">I write up what I build, one part at a time: scheduler traces, memory bugs, the math that has to be exactly right.</p>
           <p class="writing__stats"><span><b data-article-count>20</b> articles</span><span><b>~2M</b> impressions since July</span><span><b>~120K</b> views on inference posts</span><span><b>~20K</b> on RL posts</span></p>
+          <div class="latest" data-latest hidden></div>
           <div class="series" data-articles>
             <noscript><p class="writing__intro"><a class="textlink" href="https://x.com/GonnabeNikhil/articles">Read all articles on X ↗</a></p></noscript>
           </div>
@@ -667,13 +671,57 @@
     </div>
   </div>
 
-  <script src="./assets/js/field.js?v=7" defer></script>
-  <script src="./assets/js/trail.js?v=1" defer></script>
-  <script src="./assets/js/main.js?v=13" defer></script>
+  <!-- Private publishing panel: only opens for the site owner (see assets/js/publish.js) -->
+  <dialog class="publish" id="publish" aria-labelledby="publish-title">
+    <form class="publish__panel" data-publish-form novalidate>
+      <header class="publish__head">
+        <div>
+          <p class="publish__k">Writing · visible only to you</p>
+          <h2 id="publish-title" data-publish-title>Add an article</h2>
+        </div>
+        <button type="button" class="publish__x" data-publish-close aria-label="Close"><kbd>esc</kbd></button>
+      </header>
+
+      <div class="publish__body" data-step="unlock">
+        <label class="field"><span>Admin token</span><input type="password" name="token" autocomplete="current-password" spellcheck="false" placeholder="Paste your ADMIN_TOKEN"></label>
+        <p class="publish__hint">Checked against the server once, then remembered in this browser only.</p>
+      </div>
+
+      <div class="publish__body" data-step="edit" hidden>
+        <label class="field"><span>Link</span><input type="url" name="url" inputmode="url" spellcheck="false" placeholder="https://x.com/i/article/…"></label>
+        <label class="field"><span>Headline</span><input type="text" name="title" maxlength="200" placeholder="What the article is called"></label>
+        <div class="field-row">
+          <label class="field"><span>Series</span><select name="series"></select></label>
+          <label class="field" data-new-series hidden><span>New series name</span><input type="text" name="newSeries" maxlength="60"></label>
+          <label class="field" data-tag hidden><span>Tag <em>optional</em></span><input type="text" name="tag" maxlength="24" placeholder="Essay"></label>
+        </div>
+        <p class="publish__hint" data-publish-preview></p>
+        <label class="field"><span>In your words <em>optional</em></span><textarea name="note" rows="3" maxlength="400" placeholder="A line or two on what this one is about. Shown with the latest article."></textarea></label>
+        <div class="field-row">
+          <label class="field"><span>Date</span><input type="date" name="date"></label>
+          <label class="field"><span>Views <em>optional</em></span><input type="number" name="views" min="0" step="1" inputmode="numeric" placeholder="0"></label>
+        </div>
+      </div>
+
+      <div class="publish__list" data-publish-list hidden></div>
+
+      <footer class="publish__foot">
+        <p class="publish__msg" data-publish-msg role="status" aria-live="polite"></p>
+        <button type="button" class="textlink" data-publish-signout hidden>Sign out</button>
+        <button type="button" class="btn btn--ghost btn--sm" data-publish-cancel hidden>Cancel edit</button>
+        <button type="submit" class="btn btn--primary btn--sm" data-publish-submit>Unlock</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="./assets/js/field.js?v=8" defer></script>
+  <script src="./assets/js/trail.js?v=2" defer></script>
+  <script src="./assets/js/main.js?v=14" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=14" defer></script>
+  <script src="./assets/js/extras.js?v=15" defer></script>
   <script src="./assets/js/showcase.js?v=3" defer></script>
-  <script src="./assets/js/ask.js?v=1" defer></script>
+  <script src="./assets/js/ask.js?v=2" defer></script>
+  <script src="./assets/js/publish.js?v=1" defer></script>
 </body>
 </html>

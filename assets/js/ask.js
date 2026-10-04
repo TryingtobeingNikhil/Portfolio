@@ -52,6 +52,7 @@
   const clean = s => s.replace(/\s+/g, ' ').replace(/\s*↗\s*/g, ' ').trim();
   const txt = el => (el ? (el.innerText || el.textContent || '') : '');
   let index = null;
+  document.addEventListener('writing:render', () => { index = null; }); // newly added articles join the corpus
   function build() {
     const docs = [];
     const add = (el, text, title, boost = true) => {

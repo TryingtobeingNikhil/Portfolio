@@ -12,8 +12,12 @@
 
   const CELL = 22;
   const GLYPHS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ<>/{}[]=+*#%λΣ∂∇'.split('');
-  const SIGNAL = '88, 242, 155';
-  const DOT = 'rgba(236, 238, 237, 0.07)';
+  const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d; // palette lives in main.css :root
+  const SIGNAL = css('--accent-rgb', '88, 242, 155');
+  const GLYPH = css('--accent-2-rgb', SIGNAL);
+  const FG = css('--fg-rgb', '236, 238, 237');
+  const HI = css('--hi-rgb', '228, 255, 238');
+  const DOT = `rgba(${FG}, 0.07)`;
 
   let w = 0, h = 0, dpr = 1, cols = 0, rows = 0;
   let heat, glyph;            // per-cell activation [0..1] and glyph index
@@ -183,7 +187,7 @@
     ctx.lineWidth = 1;
     edges.forEach(e => {
       const a = nodes[e.a], b = nodes[e.b];
-      ctx.strokeStyle = e.lit > 0.05 ? `rgba(${SIGNAL}, ${e.lit * 0.35})` : 'rgba(236, 238, 237, 0.05)';
+      ctx.strokeStyle = e.lit > 0.05 ? `rgba(${SIGNAL}, ${e.lit * 0.35})` : `rgba(${FG}, 0.05)`;
       ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
     });
 
@@ -192,7 +196,7 @@
       const v = heat[i];
       if (v < 0.08) continue;
       const c = i % cols, r = (i / cols) | 0;
-      ctx.fillStyle = v > 0.72 ? `rgba(228, 255, 238, ${v})` : `rgba(${SIGNAL}, ${v * 0.9})`;
+      ctx.fillStyle = v > 0.72 ? `rgba(${HI}, ${v})` : `rgba(${GLYPH}, ${v * 0.9})`;
       ctx.fillText(GLYPHS[glyph[i]], c * CELL, r * CELL);
     }
 
@@ -214,9 +218,9 @@
         ctx.beginPath(); ctx.arc(n.x, n.y, r + 8 * n.fire, 0, Math.PI * 2); ctx.fill();
       }
       ctx.fillStyle = '#08090a';
-      ctx.strokeStyle = n.fire > 0.05 ? `rgba(${SIGNAL}, ${0.4 + n.fire * 0.6})` : 'rgba(236, 238, 237, 0.28)';
+      ctx.strokeStyle = n.fire > 0.05 ? `rgba(${SIGNAL}, ${0.4 + n.fire * 0.6})` : `rgba(${FG}, 0.28)`;
       ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = n.fire > 0.05 ? `rgba(${SIGNAL}, ${0.25 + n.fire * 0.75})` : 'rgba(236, 238, 237, 0.3)';
+      ctx.fillStyle = n.fire > 0.05 ? `rgba(${SIGNAL}, ${0.25 + n.fire * 0.75})` : `rgba(${FG}, 0.3)`;
       ctx.beginPath(); ctx.arc(n.x, n.y, 1.4 + n.fire, 0, Math.PI * 2); ctx.fill();
     });
   }

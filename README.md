@@ -3,7 +3,22 @@
 Personal site of Nikhil Mourya. Plain HTML, CSS and JS: no framework, no build step.
 Netlify deploys every push to `main`.
 
-## Add a new article
+## Add a new article (from the site)
+
+The quickest way: publish straight from the site, no commit needed.
+
+1. One-time setup: in Netlify, go to Site configuration → Environment variables and add `ADMIN_TOKEN`
+   with a long random value (for example the output of `openssl rand -hex 24`). Redeploy once.
+2. Open https://tryingtobenikhil.space/#publish and paste that token. It is checked by the server and
+   remembered in that browser only.
+3. From then on, Writing shows **+ Add article** (also in ⌘K). Paste the link and headline, pick the
+   series, optionally add a line in your own words, and press Publish. It is live for everyone immediately.
+
+Articles added this way live in Netlify Blobs (`netlify/functions/articles.mjs`), are merged into the
+series from `assets/data/articles.js`, and can be edited (views too) or deleted from the same panel.
+The newest article, from either source, gets the "Latest" row with your note.
+
+## Add a new article (in code)
 
 1. Open `assets/data/articles.js`.
 2. Copy an existing line into the right series and change the `title`, `url` and `date`.
@@ -58,6 +73,8 @@ Then open http://localhost:5501.
 | `assets/js/extras.js` | Writing list, highlights, contributions, lab toys, ⌘K palette |
 | `assets/data/articles.js` | Article list |
 | `assets/data/quotes.js` | Quote bank |
+| `assets/js/publish.js` | Private "Add article" panel (opens with `#publish`) |
+| `netlify/functions/articles.mjs` | Articles added from the site (Netlify Blobs) |
 | `netlify/functions/now-playing.mjs` | Spotify now playing / last played API |
 | `scripts/spotify-token.mjs` | One-time Spotify token helper |
 

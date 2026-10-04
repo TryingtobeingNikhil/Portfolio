@@ -107,6 +107,11 @@
     let P = [], w = 0, h = 0, dpr = 1, cell = 2.2;
     let raf = 0, visible = true, started = 0, time = 0, last = 0;
     const mouse = { x: -9999, y: -9999, r: 58 };
+    // colours come from the palette in main.css :root
+    const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d;
+    const rgb = (v, d) => css(v, d).split(',').map(Number);
+    const HOT = css('--accent-rgb', '88, 242, 155'); // moving particles take the accent
+    const LO = rgb('--portrait-lo', '10, 12, 12'), MID = rgb('--portrait-mid', '128, 150, 134'), HIGH = rgb('--portrait-hi', '246, 250, 246');
 
     function build() {
       const rect = canvas.getBoundingClientRect();
@@ -138,9 +143,9 @@
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
         const t = Math.pow(Math.min(1, Math.max(0, (L[y * cols + x] - lo) / (hi - lo))), 0.92);
         let r, g, b;
-        // brighter, cleaner ramp: near-black shadows, neutral mids with a faint green cast, crisp highlights
-        if (t < 0.55) { const u = t / 0.55; r = 10 + 118 * u; g = 12 + 138 * u; b = 12 + 122 * u; }
-        else { const u = (t - 0.55) / 0.45; r = 128 + 118 * u; g = 150 + 100 * u; b = 134 + 112 * u; }
+        // duotone from the palette: shadows → mids → highlights
+        const [A, B, u] = t < 0.55 ? [LO, MID, t / 0.55] : [MID, HIGH, (t - 0.55) / 0.45];
+        r = A[0] + (B[0] - A[0]) * u; g = A[1] + (B[1] - A[1]) * u; b = A[2] + (B[2] - A[2]) * u;
         const ox = (x + 0.5) * cell, oy = (y + 0.5) * cell;
         P.push({
           ox, oy,
@@ -192,7 +197,7 @@
         const speed = Math.abs(p.vx) + Math.abs(p.vy);
         energy += speed + Math.abs(p.ox - p.x) + Math.abs(p.oy - p.y);
         // moving particles pick up the signal colour
-        ctx.fillStyle = speed > 1.1 && !forming ? `rgba(88,242,155,${Math.min(0.9, 0.2 + speed * 0.12)})` : p.c;
+        ctx.fillStyle = speed > 1.1 && !forming ? `rgba(${HOT},${Math.min(0.9, 0.2 + speed * 0.12)})` : p.c;
         ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
       }
 

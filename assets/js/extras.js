@@ -4,37 +4,101 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d; // palette lives in main.css :root
+  const ACC = css('--accent-rgb', '88, 242, 155'), FG = css('--fg-rgb', '236, 238, 237');
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  /* ---------------- writing, rendered from assets/data/articles.js ---------------- */
+  /* ---------------- writing: assets/data/articles.js + articles added from the site ---------------- */
+  // Articles published with the private "Add article" button live in /api/articles
+  // (netlify/functions/articles.mjs) and are merged into the series here.
+  // assets/js/publish.js drives the button through window.WRITING.
   const compact = n => (n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M' : n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : String(n));
   (function articles() {
     const host = $('[data-articles]');
-    const data = window.ARTICLES;
-    if (!host || !Array.isArray(data)) return;
+    const base = window.ARTICLES;
+    if (!host || !Array.isArray(base)) return;
+    const latestBox = $('[data-latest]');
     const views = items => items.reduce((n, a) => n + (a.views || 0), 0);
-    const total = data.reduce((n, s) => n + s.items.length, 0);
-    const totalViews = data.reduce((n, s) => n + views(s.items), 0);
-    host.innerHTML = data.map(s => {
-      const count = s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length}`;
-      const v = views(s.items);
-      return `
-      <div class="series__col">
-        <h4><span class="series__title">${esc(s.series)}</span><span class="series__meta">${count}${v ? ` · ${compact(v)} views` : ''}</span></h4>
-        <ol>${s.items.map((a, i) => `
-          <li><a href="${esc(a.url)}" target="_blank" rel="noopener" title="${esc([a.date, a.views ? a.views.toLocaleString('en-US') + ' views' : ''].filter(Boolean).join(' · '))}">
-            <span class="series__n">${s.numbered ? String(i + 1).padStart(2, '0') : esc(a.tag || '')}</span>
-            <span class="series__t">${esc(a.title)}</span>
-            <span class="series__go" aria-hidden="true">↗</span></a></li>`).join('')}
-        </ol>
-      </div>`;
-    }).join('');
-    $$('[data-article-count]').forEach(el => { el.textContent = total; });
-    if (totalViews) $$('[data-article-views]').forEach(el => { el.textContent = compact(totalViews); });
-    $$('[data-series-views]').forEach(el => {
-      const s = data.find(x => x.series === el.dataset.seriesViews);
-      if (s && views(s.items)) el.textContent = compact(views(s.items));
-    });
+    const day = d => { const t = new Date(`${d}T00:00:00`); return isNaN(t) ? '' : t.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }); };
+    let extra = [];
+
+    // static series first, then each added article joins its series (or starts a new one)
+    function merged() {
+      const data = base.map(s => ({ ...s, items: s.items.map(a => ({ ...a })) }));
+      const seen = new Set(data.flatMap(s => s.items.map(a => a.url)));
+      extra.forEach(a => {
+        if (seen.has(a.url)) return;
+        seen.add(a.url);
+        let s = data.find(x => x.series.toLowerCase() === a.series.toLowerCase());
+        if (!s) data.push(s = { series: a.series, numbered: !a.tag, items: [] });
+        s.items.push({ ...a, live: true });
+      });
+      return data;
+    }
+
+    function render() {
+      const data = merged();
+      window.ARTICLES_MERGED = data;
+      const total = data.reduce((n, s) => n + s.items.length, 0);
+      const totalViews = data.reduce((n, s) => n + views(s.items), 0);
+      host.innerHTML = data.map(s => {
+        const count = s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length}`;
+        const v = views(s.items);
+        return `
+        <div class="series__col">
+          <h4><span class="series__title">${esc(s.series)}</span><span class="series__meta">${count}${v ? ` · ${compact(v)} views` : ''}</span></h4>
+          <ol>${s.items.map((a, i) => `
+            <li><a href="${esc(a.url)}" target="_blank" rel="noopener" title="${esc([a.date, a.views ? a.views.toLocaleString('en-US') + ' views' : ''].filter(Boolean).join(' · '))}">
+              <span class="series__n">${s.numbered ? String(i + 1).padStart(2, '0') : esc(a.tag || '')}</span>
+              <span class="series__t">${esc(a.title)}</span>
+              <span class="series__go" aria-hidden="true">↗</span></a></li>`).join('')}
+          </ol>
+        </div>`;
+      }).join('');
+
+      // the newest piece gets its own row, with the note written for it (if any)
+      if (latestBox) {
+        let best = null;
+        data.forEach(s => s.items.forEach((a, i) => {
+          const key = `${a.date || ''}|${a.added || ''}`;
+          if (!best || key > best.key) best = { a, s, i, key };
+        }));
+        if (best) {
+          const { a, s, i } = best;
+          const where = s.numbered ? `${s.series}, part ${i + 1}` : `${s.series}${a.tag ? ` · ${a.tag}` : ''}`;
+          latestBox.innerHTML = `
+            <a class="latest__row" href="${esc(a.url)}" target="_blank" rel="noopener">
+              <span class="latest__k"><b>Latest</b><i aria-hidden="true"></i>${esc(day(a.date))}</span>
+              <span class="latest__main">
+                <span class="latest__t">${esc(a.title)}</span>
+                ${a.note ? `<span class="latest__note">${esc(a.note)}</span>` : ''}
+              </span>
+              <span class="latest__where">${esc(where)}</span>
+              <span class="latest__go" aria-hidden="true">↗</span>
+            </a>`;
+          latestBox.hidden = false;
+        }
+      }
+
+      $$('[data-article-count]').forEach(el => { el.textContent = total; });
+      if (totalViews) $$('[data-article-views]').forEach(el => { el.textContent = compact(totalViews); });
+      $$('[data-series-views]').forEach(el => {
+        const s = data.find(x => x.series === el.dataset.seriesViews);
+        if (s && views(s.items)) el.textContent = compact(views(s.items));
+      });
+      document.dispatchEvent(new CustomEvent('writing:render'));
+    }
+
+    window.WRITING = {
+      set(items) { extra = Array.isArray(items) ? items : []; render(); },
+      extra: () => extra,
+      series: () => merged().map(s => ({ name: s.series, numbered: !!s.numbered })),
+    };
+    render();
+    fetch('/api/articles', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(d => { if (d && Array.isArray(d.items) && d.items.length) window.WRITING.set(d.items); })
+      .catch(() => { /* no function locally, or storage down: the static list stands */ });
   })();
 
   /* ---------------- quote strip, from assets/data/quotes.js ---------------- */
@@ -272,19 +336,19 @@
       for (let k = 1; k <= 7; k++) {
         const c = 0.35 * k * k;
         const rx = Math.sqrt((2 * c) / A) * (w / 9), ry = Math.sqrt((2 * c) / B) * (h / 3.4);
-        ctx.strokeStyle = `rgba(236, 238, 237, ${0.12 - k * 0.012})`;
+        ctx.strokeStyle = `rgba(${FG}, ${0.12 - k * 0.012})`;
         ctx.beginPath(); ctx.ellipse(w / 2, h / 2, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
       }
-      ctx.fillStyle = 'rgba(88, 242, 155, 0.9)';
+      ctx.fillStyle = `rgba(${ACC}, 0.9)`;
       ctx.beginPath(); ctx.arc(w / 2, h / 2, 2.5, 0, Math.PI * 2); ctx.fill();
       if (!path.length) return;
-      ctx.strokeStyle = 'rgba(88, 242, 155, 0.8)'; ctx.lineWidth = 1.4;
+      ctx.strokeStyle = `rgba(${ACC}, 0.8)`; ctx.lineWidth = 1.4;
       ctx.beginPath();
       path.forEach(([x, y], i) => { const [px, py] = toPx(x, y); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
       ctx.stroke();
       path.forEach(([x, y], i) => {
         const [px, py] = toPx(x, y);
-        ctx.fillStyle = i === path.length - 1 ? '#eceeed' : 'rgba(88, 242, 155, 0.7)';
+        ctx.fillStyle = i === path.length - 1 ? `rgb(${FG})` : `rgba(${ACC}, 0.7)`;
         ctx.beginPath(); ctx.arc(px, py, i === path.length - 1 ? 3.5 : 1.8, 0, Math.PI * 2); ctx.fill();
       });
     }
@@ -334,7 +398,7 @@
       spans.forEach((sp, k) => {
         sp.classList.toggle('is-q', k === q);
         sp.classList.toggle('is-masked', k > q);
-        sp.style.background = k <= q ? `rgba(88, 242, 155, ${(w[k] * 0.85).toFixed(3)})` : '';
+        sp.style.background = k <= q ? `rgba(${ACC}, ${(w[k] * 0.85).toFixed(3)})` : '';
         sp.style.color = k <= q && w[k] > 0.35 ? '#03140a' : '';
       });
       hint.textContent = top ? `"${words[q]}" looks most at "${words[top[1]]}" (${Math.round(top[0] * 100)}%)` : `"${words[q]}" can only see itself`;
@@ -363,24 +427,28 @@
     const email = ($('#copy-email') || {}).dataset?.email || '';
     const txt = el => (el ? el.textContent.replace(/\s+/g, ' ').replace('↗', '').trim() : '');
 
-    // Built from the page itself so the palette never drifts from the content.
-    const items = [];
+    // Built from the page itself (on every open) so the palette never drifts from the content.
+    let items = [];
     const add = (group, label, hint, run, keys = '') => items.push({ group, label, hint, run, hay: `${label} ${hint} ${keys}`.toLowerCase() });
     const go = hash => () => { const el = document.querySelector(hash); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
     const open = href => () => window.open(href, '_blank', 'noopener');
 
-    [['#about', 'About'], ['#experience', 'Experience'], ['#projects', 'Projects'], ['#lab', 'Lab'], ['#writing', 'Writing'], ['#contact', 'Contact']]
-      .forEach(([h, l]) => add('Sections', l, 'jump', go(h), 'section'));
-    $$('.feature').forEach(f => { const a = $('.feature__links a', f); if (a) add('Projects', txt($('.feature__name', f)), 'GitHub', open(a.href), txt($('.feature__kicker', f))); });
-    $$('.card').forEach(c => { const a = $$('.card__top a', c).pop(); if (a) add('Projects', txt($('h3', c)), 'GitHub', open(a.href), txt($('.feature__kicker', c))); });
-    $$('.ix').forEach(a => add('Projects', txt($('.ix__name', a)), 'GitHub', open(a.href), txt($('.ix__desc', a))));
-    $$('.series__col').forEach(col => {
-      const series = txt($('.series__title', col)) || txt($('h4', col));
-      $$('a', col).forEach(a => add('Writing', txt($('.series__t', a)), series, open(a.href), 'article'));
-    });
-    $$('.social').forEach(a => add('Links', txt($('.social__k', a)), txt($('b', a)), open(a.href)));
-    if (email) add('Actions', 'Copy email', email, () => navigator.clipboard?.writeText(email), 'mail contact');
-    add('Actions', 'Back to top', 'scroll', go('#top'), 'home');
+    const collect = () => {
+      items = [];
+      [['#about', 'About'], ['#experience', 'Experience'], ['#projects', 'Projects'], ['#lab', 'Lab'], ['#writing', 'Writing'], ['#contact', 'Contact']]
+        .forEach(([h, l]) => add('Sections', l, 'jump', go(h), 'section'));
+      $$('.feature').forEach(f => { const a = $('.feature__links a', f); if (a) add('Projects', txt($('.feature__name', f)), 'GitHub', open(a.href), txt($('.feature__kicker', f))); });
+      $$('.card').forEach(c => { const a = $$('.card__top a', c).pop(); if (a) add('Projects', txt($('h3', c)), 'GitHub', open(a.href), txt($('.feature__kicker', c))); });
+      $$('.ix').forEach(a => add('Projects', txt($('.ix__name', a)), 'GitHub', open(a.href), txt($('.ix__desc', a))));
+      $$('.series__col').forEach(col => {
+        const series = txt($('.series__title', col)) || txt($('h4', col));
+        $$('a', col).forEach(a => add('Writing', txt($('.series__t', a)), series, open(a.href), 'article'));
+      });
+      $$('.social').forEach(a => add('Links', txt($('.social__k', a)), txt($('b', a)), open(a.href)));
+      if (email) add('Actions', 'Copy email', email, () => navigator.clipboard?.writeText(email), 'mail contact');
+      add('Actions', 'Back to top', 'scroll', go('#top'), 'home');
+      if (window.PUBLISH && window.PUBLISH.isAdmin()) add('Actions', 'Add article', 'publish', () => window.PUBLISH.open(), 'new write post');
+    };
 
     let shown = [], sel = 0, lastFocus = null;
     const render = () => {
@@ -401,6 +469,7 @@
     };
     const show = () => {
       lastFocus = document.activeElement;
+      collect();
       dlg.hidden = false; input.value = ''; sel = 0; render();
       document.body.style.overflow = 'hidden';
       input.focus(); // synchronous, so keys typed right after ⌘K aren't lost
