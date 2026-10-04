@@ -110,8 +110,8 @@
     // colours come from the palette in main.css :root
     const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d;
     const rgb = (v, d) => css(v, d).split(',').map(Number);
-    const HOT = css('--accent-rgb', '88, 242, 155'); // moving particles take the accent
-    const LO = rgb('--portrait-lo', '10, 12, 12'), MID = rgb('--portrait-mid', '128, 150, 134'), HIGH = rgb('--portrait-hi', '246, 250, 246');
+    const HOT = css('--accent-rgb', '205, 176, 124'); // moving particles take the accent
+    const LO = rgb('--portrait-lo', '10, 10, 9'), MID = rgb('--portrait-mid', '126, 124, 119'), HIGH = rgb('--portrait-hi', '242, 238, 227');
 
     function build() {
       const rect = canvas.getBoundingClientRect();

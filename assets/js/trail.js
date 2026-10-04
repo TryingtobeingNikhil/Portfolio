@@ -21,7 +21,7 @@
     SPAWN_RADIUS: 16,
     ALPHA: 0.65,
     MOVE_THRESH: 2.5,    // px the smoothed cursor must move to spawn
-    COLOR: getComputedStyle(document.documentElement).getPropertyValue('--accent-2-rgb').trim() || '88, 242, 155', // palette in main.css
+    COLOR: getComputedStyle(document.documentElement).getPropertyValue('--accent-2-rgb').trim() || '205, 176, 124', // palette in main.css
   };
 
   const canvas = document.createElement('canvas');

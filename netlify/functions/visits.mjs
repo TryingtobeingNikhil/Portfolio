@@ -6,6 +6,9 @@
 import { getStore } from '@netlify/blobs';
 
 const KEY = 'visits';
+// Blobs belong to one Netlify site. The count on the previous site (Oct 2026) was 260,
+// so a fresh store starts from there instead of from zero.
+const CARRIED_OVER = 260;
 const json = body =>
   new Response(JSON.stringify(body), {
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -14,7 +17,7 @@ const json = body =>
 export default async req => {
   try {
     const store = getStore({ name: 'site-stats', consistency: 'strong' });
-    let visits = Number(await store.get(KEY)) || 0;
+    let visits = Number(await store.get(KEY)) || CARRIED_OVER;
     if (req.method === 'POST') {
       visits += 1;
       await store.set(KEY, String(visits));

@@ -5,7 +5,7 @@
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d; // palette lives in main.css :root
-  const ACC = css('--accent-rgb', '88, 242, 155'), FG = css('--fg-rgb', '236, 238, 237');
+  const ACC = css('--accent-rgb', '205, 176, 124'), FG = css('--fg-rgb', '236, 235, 230');
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   /* ---------------- writing: assets/data/articles.js + articles added from the site ---------------- */

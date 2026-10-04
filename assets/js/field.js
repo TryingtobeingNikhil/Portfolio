@@ -13,10 +13,10 @@
   const CELL = 22;
   const GLYPHS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ<>/{}[]=+*#%λΣ∂∇'.split('');
   const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d; // palette lives in main.css :root
-  const SIGNAL = css('--accent-rgb', '88, 242, 155');
+  const SIGNAL = css('--accent-rgb', '205, 176, 124');
   const GLYPH = css('--accent-2-rgb', SIGNAL);
-  const FG = css('--fg-rgb', '236, 238, 237');
-  const HI = css('--hi-rgb', '228, 255, 238');
+  const FG = css('--fg-rgb', '236, 235, 230');
+  const HI = css('--hi-rgb', '250, 244, 230');
   const DOT = `rgba(${FG}, 0.07)`;
 
   let w = 0, h = 0, dpr = 1, cols = 0, rows = 0;
