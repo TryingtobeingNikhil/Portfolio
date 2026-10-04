@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=31">
+  <link rel="stylesheet" href="./assets/css/main.css?v=32">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -62,7 +62,9 @@
       <nav class="nav__links" aria-label="Primary">
         <a href="#about">About</a>
         <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
+        <a href="#projects">Work</a>
+        <a href="#lab">Lab</a>
+        <a href="#writing">Writing</a>
         <a href="#contact">Contact</a>
       </nav>
 
@@ -74,8 +76,10 @@
     <div class="mobile-menu" id="mobile-menu" hidden>
       <a href="#about"><span>01</span>About</a>
       <a href="#experience"><span>02</span>Experience</a>
-      <a href="#projects"><span>03</span>Projects</a>
-      <a href="#contact"><span>04</span>Contact</a>
+      <a href="#projects"><span>03</span>Work</a>
+      <a href="#lab"><span>04</span>Lab</a>
+      <a href="#writing"><span>05</span>Writing</a>
+      <a href="#contact"><span>06</span>Contact</a>
       <button type="button" data-cmdk><span>⌘K</span>Search the site</button>
     </div>
   </header>
@@ -216,38 +220,54 @@
         </div>
 
         <div class="index highlights" data-reveal>
-          <div class="index__caption"><h3>Highlights</h3></div>
-          <ul>
-            <li><a class="hl" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener"><span>PageServe crossed <b data-stars="vLLM_Inference_Engine">97</b> stars and <b data-forks="vLLM_Inference_Engine">10</b> forks</span><em>GitHub</em></a></li>
-            <li><a class="hl" href="https://x.com/GonnabeNikhil/status/2101327791258263694" target="_blank" rel="noopener"><span>"Build an LLM inference system yourself" reached 45.7K views</span><em>X</em></a></li>
-            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span><b>~2M</b> impressions on X since July, building in public</span><em>X</em></a></li>
-            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span><b>~120K</b> views on inference &amp; vLLM posts, <b>~20K</b> on RL</span><em>X</em></a></li>
-            <li><a class="hl" href="#writing"><span><b data-article-count>20</b> build-along articles on inference and RL, <b data-article-views>33.5K</b> views</span><em>Writing</em></a></li>
-            <li><a class="hl" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener"><span>RLForge: 148/148 tests, zero dependencies, own autograd</span><em>GitHub</em></a></li>
-            <li><a class="hl" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener"><span>Model-compression research collaboration with IIT Kharagpur</span><em>Research</em></a></li>
-            <li><div class="hl"><span>Codeforces Specialist, 1400+</span><em>Codeforces</em></div></li>
-            <li><div class="hl"><span>Finalist, Smart India Hackathon 2024</span><em>SIH</em></div></li>
-            <li><div class="hl"><span>Finalist, IIIT Delhi 2023, ResNet-50 at 94% accuracy</span><em>IIIT Delhi</em></div></li>
-          </ul>
-        </div>
-
-        <div class="contrib" id="contrib" data-reveal hidden>
           <div class="index__caption">
-            <h3>Contributions</h3>
-            <a class="textlink" href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener">@TryingtobeingNikhil ↗</a>
+            <h3>Highlights</h3>
+            <span class="hl__cmd" aria-hidden="true">$ git log --oneline --highlights</span>
           </div>
-          <p class="contrib__total"><b data-contrib-total>…</b> contributions in the last year</p>
-          <div class="contrib__scroll"><svg class="contrib__svg" id="contrib-svg" role="img" aria-label="GitHub contribution calendar for the last year"></svg></div>
-          <div class="contrib__legend" aria-hidden="true">less <i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> more</div>
+          <ul class="gitlog" data-gitlog>
+            <li><a class="hl" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>feat(pageserve):</i> <span class="hl__text">PageServe crossed <b data-stars="vLLM_Inference_Engine">97</b> stars and <b data-forks="vLLM_Inference_Engine">10</b> forks</span></span><em>GitHub</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil/status/2101327791258263694" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>perf(writing):</i> <span class="hl__text">"Build an LLM inference system yourself" reached 45.7K views</span></span><em>X</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>docs(reach):</i> <span class="hl__text"><b>~2M</b> impressions on X since July, building in public</span></span><em>X</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>docs(reach):</i> <span class="hl__text"><b>~120K</b> views on inference &amp; vLLM posts, <b>~20K</b> on RL</span></span><em>X</em></a></li>
+            <li><a class="hl" href="#writing"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>docs(writing):</i> <span class="hl__text"><b data-article-count>20</b> build-along articles on inference and RL, <b data-article-views>33.5K</b> views</span></span><em>Writing</em></a></li>
+            <li data-more><a class="hl" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>test(rlforge):</i> <span class="hl__text">RLForge: 148/148 tests, zero dependencies, own autograd</span></span><em>GitHub</em></a></li>
+            <li data-more><a class="hl" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>research(iit-kgp):</i> <span class="hl__text">Model-compression research collaboration with IIT Kharagpur</span></span><em>Research</em></a></li>
+            <li data-more><div class="hl"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>rank(cf):</i> <span class="hl__text">Codeforces Specialist, 1400+</span></span><em>Codeforces</em></div></li>
+            <li data-more><div class="hl"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>ship(sih):</i> <span class="hl__text">Finalist, Smart India Hackathon 2024</span></span><em>SIH</em></div></li>
+            <li data-more><div class="hl"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>ship(iiitd):</i> <span class="hl__text">Finalist, IIIT Delhi 2023, ResNet-50 at 94% accuracy</span></span><em>IIIT Delhi</em></div></li>
+          </ul>
+          <button class="gitlog__more" type="button" data-gitlog-more aria-expanded="false">git log --all <span data-gitlog-n></span></button>
         </div>
 
-        <div class="spin" id="spotify" data-reveal hidden>
-          <div class="index__caption"><h3 data-spin-heading>Last played</h3><span class="spin__src">on Spotify</span></div>
-          <a class="spin__row" data-spin-link href="https://open.spotify.com" target="_blank" rel="noopener">
-            <img class="spin__art" data-spin-art src="data:," alt="" width="56" height="56" loading="lazy">
-            <span class="spin__meta"><b data-spin-title></b><span data-spin-artist></span></span>
-            <span class="spin__status" data-spin-status></span>
-          </a>
+        <div class="now" id="now" data-reveal>
+          <div class="index__caption">
+            <h3>Right now</h3>
+            <span class="now__note">live, while you read</span>
+          </div>
+          <div class="now__grid">
+            <div class="now__cell">
+              <span class="now__k"><i class="led" aria-hidden="true"></i>Jaipur · <b data-clock>--:--</b> IST</span>
+              <b class="now__v" data-now-mood>Probably building something</b>
+              <span class="now__sub" data-now-sub>Replies usually within a day</span>
+            </div>
+            <a class="now__cell" data-commit href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener" hidden>
+              <span class="now__k">Last commit · <span data-commit-ago></span></span>
+              <b class="now__v" data-commit-msg></b>
+              <span class="now__sub" data-commit-repo></span>
+            </a>
+            <a class="now__cell now__spin" id="spotify" data-spin-link href="https://open.spotify.com" target="_blank" rel="noopener" hidden>
+              <span class="now__k"><span data-spin-heading>Last played</span> · <span class="now__status" data-spin-status></span></span>
+              <span class="now__song">
+                <img class="now__art" data-spin-art src="data:," alt="" width="40" height="40" loading="lazy">
+                <span class="now__songmeta"><b class="now__v" data-spin-title></b><span class="now__sub" data-spin-artist></span></span>
+              </span>
+            </a>
+          </div>
+          <div class="contrib" id="contrib" hidden>
+            <p class="contrib__total"><b data-contrib-total>…</b> contributions in the last year · <a class="textlink" href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener">@TryingtobeingNikhil ↗</a></p>
+            <div class="contrib__scroll"><svg class="contrib__svg" id="contrib-svg" role="img" aria-label="GitHub contribution calendar for the last year"></svg></div>
+            <div class="contrib__legend" aria-hidden="true">less <i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> more</div>
+          </div>
         </div>
       </div>
     </section>
@@ -315,7 +335,7 @@
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>03</span>Projects</p>
+          <p class="tag"><span>03</span>Work<em class="tag__n">10 projects</em></p>
           <h2 class="shead__title">Rebuilt from first principles. <span class="dim">No black boxes I didn't open.</span></h2>
           <p class="shead__desc">Two systems I wrote end to end because reading the library source stopped being enough. One serves LLMs. The other trains agents.</p>
         </header>
@@ -460,65 +480,149 @@
           </div>
         </article>
 
-        <!-- Also shipped -->
-        <div class="duo">
-          <article class="card" data-reveal>
-            <div class="card__top"><p class="feature__kicker">Multi-agent systems</p><a class="textlink" href="https://github.com/TryingtobeingNikhil/HiveMind" target="_blank" rel="noopener">GitHub ↗</a></div>
-            <h3>HiveMind</h3>
-            <p class="card__q">Can a research system know its own answer isn't good enough, and fix it?</p>
-            <p class="card__text">A 5-agent pipeline (Planner → Researcher → Critic → Writer → Evaluator) that loops until a deterministic confidence threshold is met, computed from mean retrieval score, not the LLM's self-report.</p>
-            <p class="card__stack">FastAPI · Redis · ChromaDB · OpenTelemetry · Docker</p>
-          </article>
-
-          <article class="card" data-reveal style="--d:.08s">
-            <div class="card__top"><p class="feature__kicker">Developer tools</p><span class="card__links"><a class="textlink" href="https://youtu.be/d2I2omkHVLE" target="_blank" rel="noopener">Demo ↗</a><a class="textlink" href="https://github.com/TryingtobeingNikhil/CodeLens" target="_blank" rel="noopener">GitHub ↗</a></span></div>
-            <h3>CodeLens</h3>
-            <p class="card__q">Can you search a codebase by intent, not keywords, fully offline?</p>
-            <p class="card__text">A VS Code extension that chunks code by AST with tree-sitter, embeds it locally through Ollama, and jumps you to the exact line from a plain-English query. No internet, no API keys.</p>
-            <p class="card__stack">TypeScript · tree-sitter · Ollama · VS Code API</p>
-          </article>
-        </div>
-
-        <!-- Other work -->
-        <div class="index" data-reveal>
+        <!-- Everything else: one index, filter by kind, open a row in place -->
+        <div class="index works" id="works" data-reveal>
           <div class="index__caption">
-            <h3>More work</h3>
+            <h3>Also built</h3>
             <a class="textlink" href="https://github.com/TryingtobeingNikhil?tab=repositories" target="_blank" rel="noopener">All repositories ↗</a>
           </div>
-          <ul>
-            <li><a class="ix" href="https://github.com/TryingtobeingNikhil/Vectorless-RAGs" target="_blank" rel="noopener">
-              <span class="ix__name">Vectorless RAG</span>
-              <span class="ix__desc">Retrieval by LLM-guided tree traversal. I wanted to know whether the vector-DB default was actually necessary.</span>
-              <span class="ix__stat"><span data-stars="Vectorless-RAGs">9</span>★ · zero embeddings</span><span class="ix__go" aria-hidden="true">↗</span></a></li>
-            <li><a class="ix" href="https://github.com/TryingtobeingNikhil/pegasus-lora-efficient-summarization" target="_blank" rel="noopener">
-              <span class="ix__name">PEGASUS + LoRA</span>
-              <span class="ix__desc">Fine-tuned a 767M summariser with 1.57M trainable params. Full fine-tuning fell apart on unseen domains; LoRA didn't.</span>
-              <span class="ix__stat">−99.8% params · 27× faster</span><span class="ix__go" aria-hidden="true">↗</span></a></li>
-            <li><a class="ix" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener">
-              <span class="ix__name">Pruned U-Net</span>
-              <span class="ix__desc">How much of a segmentation model is load-bearing? Research collaboration with IIT Kharagpur.</span>
-              <span class="ix__stat">−97.3% params · IoU &gt; 0.95</span><span class="ix__go" aria-hidden="true">↗</span></a></li>
-            <li><a class="ix" href="https://github.com/TryingtobeingNikhil/AttentionIsALLICode" target="_blank" rel="noopener">
-              <span class="ix__name">AttentionIsALLICode</span>
-              <span class="ix__desc">The full Transformer from the paper, multi-head attention to training loop. Not "used a framework."</span>
-              <span class="ix__stat">from scratch</span><span class="ix__go" aria-hidden="true">↗</span></a></li>
-            <li><a class="ix" href="https://github.com/TryingtobeingNikhil/dermavision" target="_blank" rel="noopener">
-              <span class="ix__name">DermaVision</span>
-              <span class="ix__desc">Skin-lesion classification across 7 classes with a 57:1 imbalance. Focal loss, Grad-CAM, ONNX export.</span>
-              <span class="ix__stat">7 classes · explainable</span><span class="ix__go" aria-hidden="true">↗</span></a></li>
-            <li><a class="ix" href="https://github.com/TryingtobeingNikhil/Second-Brain-Debugger" target="_blank" rel="noopener">
-              <span class="ix__name">Second Brain Debugger</span>
-              <span class="ix__desc">A senior engineer code-reviews your brain. Six-stage multimodal pipeline, real models, no affirmations.</span>
-              <span class="ix__stat">6 stages · SSE</span><span class="ix__go" aria-hidden="true">↗</span></a></li>
+          <div class="chips" role="group" aria-label="Filter projects" data-wf-chips><button type="button" data-wf="all" aria-pressed="true">All <i>8</i></button><button type="button" data-wf="agents" aria-pressed="false">Agents & RAG <i>2</i></button><button type="button" data-wf="models" aria-pressed="false">Models <i>3</i></button><button type="button" data-wf="tools" aria-pressed="false">Tools <i>2</i></button><button type="button" data-wf="research" aria-pressed="false">Research <i>1</i></button></div>
+          <ul class="wx__list" data-wx-list>
+            <li class="wx" data-cat="agents">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-hivemind">
+                <span class="wx__name">HiveMind</span>
+                <span class="wx__q">Can a research system know its own answer isn't good enough, and fix it?</span>
+                <span class="wx__stat">5 agents · self-checking</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-hivemind" role="region" aria-label="HiveMind">
+                <div class="wx__inner">
+                  <p class="wx__text">A 5-agent pipeline (Planner → Researcher → Critic → Writer → Evaluator) that loops until a deterministic confidence threshold is met, computed from mean retrieval score, not the LLM's self-report. The same rule "Ask this page" uses up there.</p>
+                  <p class="wx__meta"><span class="wx__cat">Agents & RAG</span><span class="wx__stack">FastAPI · Redis · ChromaDB · OpenTelemetry · Docker</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/HiveMind" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="tools">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-codelens">
+                <span class="wx__name">CodeLens</span>
+                <span class="wx__q">Can you search a codebase by intent, not keywords, fully offline?</span>
+                <span class="wx__stat">offline · results under 10 ms</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-codelens" role="region" aria-label="CodeLens">
+                <div class="wx__inner">
+                  <p class="wx__text">A VS Code extension that chunks code by AST with tree-sitter, embeds it locally through Ollama, and jumps you to the exact line from a plain-English query. No internet, no API keys. It reindexes on save and beat plain grep on every query in a 50-query test.</p>
+                  <p class="wx__meta"><span class="wx__cat">Tools</span><span class="wx__stack">TypeScript · tree-sitter · Ollama · VS Code API</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://youtu.be/d2I2omkHVLE" target="_blank" rel="noopener">Demo ↗</a><a class="textlink" href="https://github.com/TryingtobeingNikhil/CodeLens" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="agents">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-vectorless">
+                <span class="wx__name">Vectorless RAG</span>
+                <span class="wx__q">Do you actually need a vector database for RAG?</span>
+                <span class="wx__stat"><span data-stars="Vectorless-RAGs">9</span>★ · zero embeddings</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-vectorless" role="region" aria-label="Vectorless RAG">
+                <div class="wx__inner">
+                  <p class="wx__text">Retrieval by LLM-guided tree traversal instead of embeddings. I wanted to know whether the vector-DB default was actually necessary, so I built the version without one.</p>
+                  <p class="wx__meta"><span class="wx__cat">Agents & RAG</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/Vectorless-RAGs" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="models">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-pegasus">
+                <span class="wx__name">PEGASUS + LoRA</span>
+                <span class="wx__q">Can 0.2% of the weights do the job of all of them?</span>
+                <span class="wx__stat">−99.8% params · 27× faster</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-pegasus" role="region" aria-label="PEGASUS + LoRA">
+                <div class="wx__inner">
+                  <p class="wx__text">Fine-tuned a 767M summariser with 1.57M trainable params. Full fine-tuning fell apart on unseen domains; LoRA didn't.</p>
+                  <p class="wx__meta"><span class="wx__cat">Models</span><span class="wx__stack">PyTorch · HuggingFace · PEFT</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/pegasus-lora-efficient-summarization" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="research">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-unet">
+                <span class="wx__name">Pruned U-Net</span>
+                <span class="wx__q">How much of a segmentation model is load-bearing?</span>
+                <span class="wx__stat">−97.3% params · IoU > 0.95</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-unet" role="region" aria-label="Pruned U-Net">
+                <div class="wx__inner">
+                  <p class="wx__text">Research collaboration with IIT Kharagpur. Structured pruning of U-Net for biomedical segmentation: 97.3% fewer parameters, 92% fewer FLOPs, IoU still above 0.95 on MoNuSeg.</p>
+                  <p class="wx__meta"><span class="wx__cat">Research</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="models">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-attention">
+                <span class="wx__name">AttentionIsALLICode</span>
+                <span class="wx__q">What does a Transformer look like with nothing imported?</span>
+                <span class="wx__stat">from scratch</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-attention" role="region" aria-label="AttentionIsALLICode">
+                <div class="wx__inner">
+                  <p class="wx__text">The full Transformer from the paper, multi-head attention to training loop. Not "used a framework."</p>
+                  <p class="wx__meta"><span class="wx__cat">Models</span><span class="wx__stack">PyTorch</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/AttentionIsALLICode" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="models">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-dermavision">
+                <span class="wx__name">DermaVision</span>
+                <span class="wx__q">Can a classifier stay honest under a 57:1 class imbalance?</span>
+                <span class="wx__stat">7 classes · explainable</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-dermavision" role="region" aria-label="DermaVision">
+                <div class="wx__inner">
+                  <p class="wx__text">Skin-lesion classification across 7 classes with a 57:1 imbalance. Focal loss so the rare classes count, Grad-CAM so you can see what it looked at, ONNX export so it runs anywhere.</p>
+                  <p class="wx__meta"><span class="wx__cat">Models</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/dermavision" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="wx" data-cat="tools">
+              <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-sbd">
+                <span class="wx__name">Second Brain Debugger</span>
+                <span class="wx__q">What if a senior engineer code-reviewed your thoughts?</span>
+                <span class="wx__stat">6 stages · SSE</span>
+                <span class="wx__chev" aria-hidden="true"></span>
+              </button>
+              <div class="wx__body" id="wx-sbd" role="region" aria-label="Second Brain Debugger">
+                <div class="wx__inner">
+                  <p class="wx__text">A senior engineer code-reviews your brain. Six-stage multimodal pipeline, real models, no affirmations.</p>
+                  <p class="wx__meta"><span class="wx__cat">Tools</span></p>
+                  <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/Second-Brain-Debugger" target="_blank" rel="noopener">GitHub ↗</a></p>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
+      </div>
+    </section>
 
-        <!-- Lab -->
-        <div class="index lab" id="lab" data-reveal>
-          <div class="index__caption">
-            <h3>Lab</h3>
-            <span class="lab__note">Small toys for the ideas I keep explaining to anyone who stands still long enough</span>
-          </div>
+    <!-- ============================== LAB ============================== -->
+    <section class="section" id="lab">
+      <div class="axon" aria-hidden="true"><i></i></div>
+      <div class="wrap">
+        <header class="shead" data-reveal>
+          <p class="tag"><span>04</span>Lab<em class="tag__n">4 toys</em></p>
+          <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
+          <p class="shead__desc">Small toys for the ideas I explain to anyone who stands still long enough. Everything runs in your browser, nothing phones home.</p>
+        </header>
+        <div class="lab" data-reveal>
           <div class="spec" id="spec">
             <div class="spec__head">
               <div>
@@ -578,21 +682,34 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Writing -->
-        <div class="index writing" id="writing" data-reveal>
-          <div class="index__caption">
-            <h3>Writing</h3>
-            <span class="writing__links">
-              <button class="writing__add" type="button" data-publish-open hidden><span aria-hidden="true">+</span> Add article</button>
-              <a class="textlink" href="https://x.com/GonnabeNikhil/articles" target="_blank" rel="noopener">All articles on X ↗</a>
-            </span>
-          </div>
-          <p class="writing__intro">I write up what I build, one part at a time. Scheduler traces, memory bugs, and the math that has to be exactly right or nothing works.</p>
+    <!-- ============================== WRITING ============================== -->
+    <section class="section" id="writing">
+      <div class="axon" aria-hidden="true"><i></i></div>
+      <div class="wrap">
+        <header class="shead" data-reveal>
+          <p class="tag"><span>05</span>Writing<em class="tag__n"><b data-article-count>20</b> articles</em></p>
+          <h2 class="shead__title">I build it, then I write it down. <span class="dim">Usually in that order.</span></h2>
+          <p class="shead__desc">One part at a time. Scheduler traces, memory bugs, and the math that has to be exactly right or nothing works.</p>
+        </header>
+        <div class="writing" data-reveal>
           <p class="writing__stats"><span><b data-article-count>20</b> articles</span><span><b>~2M</b> impressions since July</span><span><b>~120K</b> views on inference posts</span><span><b>~20K</b> on RL posts</span></p>
           <div class="latest" data-latest hidden></div>
-          <div class="series" data-articles>
-            <noscript><p class="writing__intro"><a class="textlink" href="https://x.com/GonnabeNikhil/articles">Read all articles on X ↗</a></p></noscript>
+          <div class="lib" data-lib>
+            <div class="lib__bar">
+              <div class="chips" role="group" aria-label="Filter by series" data-lib-chips></div>
+              <div class="lib__tools">
+                <button class="writing__add" type="button" data-publish-open hidden><span aria-hidden="true">+</span> Add article</button>
+                <label class="lib__search"><span aria-hidden="true">›</span><input type="search" placeholder="Search articles" aria-label="Search articles" autocomplete="off" spellcheck="false" data-lib-q></label>
+                <label class="lib__sort"><span class="lib__sortk">sort</span><select data-lib-sort aria-label="Sort articles"><option value="order">reading order</option><option value="new">newest</option><option value="top">most read</option></select></label>
+              </div>
+            </div>
+            <div class="lib__list" data-articles>
+              <noscript><p class="writing__intro"><a class="textlink" href="https://x.com/GonnabeNikhil/articles">Read all articles on X ↗</a></p></noscript>
+            </div>
+            <p class="lib__foot"><a class="textlink" href="https://x.com/GonnabeNikhil/articles" target="_blank" rel="noopener">All articles on X ↗</a></p>
           </div>
         </div>
         <!-- Quote -->
@@ -611,7 +728,7 @@
     <section class="section contact" id="contact">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
-        <p class="tag" data-reveal><span>04</span>Contact</p>
+        <p class="tag" data-reveal><span>06</span>Contact</p>
         <h2 class="contact__title" data-reveal>If you've made it this far, you might as well <span class="accent">say hi.</span></h2>
         <p class="contact__lede" data-reveal>Open to ML engineering roles in inference, serving and agent infrastructure. Email is fastest. DMs on X work too, I check them more than I should.</p>
         <p class="contact__time" data-reveal><i class="led" aria-hidden="true"></i><span>It's <b data-clock>--:--</b> in Jaipur (IST)<span data-tzdiff-long></span></span></p>
@@ -646,7 +763,7 @@
           <p class="dim">Building the parts of AI most people import.</p>
           <button class="footer__cmd" type="button" data-cmdk><span class="on-kbd">Press <kbd>⌘</kbd><kbd>K</kbd> to search the site</span><span class="on-touch">Search the site →</span></button>
         </div>
-        <nav aria-label="Site"><h4>Site</h4><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#lab">Lab</a><a href="#writing">Writing</a><a href="#contact">Contact</a></nav>
+        <nav aria-label="Site"><h4>Site</h4><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Work</a><a href="#lab">Lab</a><a href="#writing">Writing</a><a href="#contact">Contact</a></nav>
         <nav aria-label="Built"><h4>Built</h4><a href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener">PageServe</a><a href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener">RLForge</a><a href="https://dev-path.site" target="_blank" rel="noopener">DevPath</a><a href="https://github.com/TryingtobeingNikhil/HiveMind" target="_blank" rel="noopener">HiveMind</a></nav>
         <nav aria-label="Elsewhere"><h4>Elsewhere</h4><a href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener">X</a><a href="https://www.linkedin.com/in/nikhil-mourya-36913a300/" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/not_nikhil14" target="_blank" rel="noopener">Instagram</a></nav>
       </div>
@@ -716,9 +833,10 @@
   <script src="./assets/js/main.js?v=15" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=16" defer></script>
+  <script src="./assets/js/extras.js?v=17" defer></script>
+  <script src="./assets/js/chapters.js?v=1" defer></script>
   <script src="./assets/js/showcase.js?v=4" defer></script>
-  <script src="./assets/js/ask.js?v=2" defer></script>
+  <script src="./assets/js/ask.js?v=3" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
 </body>
 </html>

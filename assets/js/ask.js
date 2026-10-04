@@ -48,7 +48,7 @@
   }
 
   /* ---------- corpus: passages taken from the live page ---------- */
-  const SECTION = { top: 'Intro', about: 'About', experience: 'Experience', projects: 'Projects', contact: 'Contact' };
+  const SECTION = { top: 'Intro', about: 'About', experience: 'Experience', projects: 'Work', lab: 'Lab', writing: 'Writing', contact: 'Contact' };
   const clean = s => s.replace(/\s+/g, ' ').replace(/\s*↗\s*/g, ' ').trim();
   const txt = el => (el ? (el.innerText || el.textContent || '') : '');
   let index = null;
@@ -71,7 +71,7 @@
     $$('#about .about__text > p').forEach(p => add(p, txt(p), ''));
     $$('#about .info dl div').forEach(d => add(d, `${t(d, 'dt')}: ${t(d, 'dd')}.`, 'nikhil --info'));
     $$('.stack__row').forEach(r => add(r, `Skills, ${t(r, '.stack__k')}: ${list(r, 'li')}.`, 'Stack'));
-    $$('.highlights .hl').forEach(h => add(h, `${end(t(h, 'span'))} (${t(h, 'em')})`, 'Highlights'));
+    $$('.highlights .hl').forEach(h => add(h, `${end(t(h, '.hl__text'))} (${t(h, 'em')})`, 'Highlights'));
     $$('#experience .role').forEach(r => {
       const name = t(r, 'h3');
       const body = [t(r, '.role__text'), ...[...r.querySelectorAll('.role__points li')].map(li => clean(txt(li)))].filter(Boolean).map(end).join(' ');
@@ -84,11 +84,14 @@
       add(f, `${name} (${t(f, '.feature__kicker')}): ${[t(f, '.feature__tagline'), t(f, '.feature__text'), t(f, '.feature__credit')].filter(Boolean).map(end).join(' ')} Demo: ${t(f, '.viz__label')}.`, name);
       add(f.querySelector('.metrics'), `${name} results: ${metrics}.`, name, false);
     });
-    $$('.card').forEach(c => { const name = t(c, 'h3'); add(c, `${name} (${t(c, '.feature__kicker')}): ${end(t(c, '.card__q'))} ${end(t(c, '.card__text'))} Stack: ${t(c, '.card__stack')}.`, name); });
-    $$('.ix').forEach(a => { const name = t(a, '.ix__name'); add(a, `${name}: ${end(t(a, '.ix__desc'))} ${t(a, '.ix__stat')}.`, name); });
+    $$('.wx').forEach(li => {
+      const name = t(li, '.wx__name'), stack = t(li, '.wx__stack');
+      add(li, `${name} (${t(li, '.wx__cat')}): ${end(t(li, '.wx__q'))} ${end(t(li, '.wx__text'))}${stack ? ` Stack: ${stack}.` : ''} ${t(li, '.wx__stat')}.`, name);
+    });
     const stats = $('.writing__stats');
     if (stats) add(stats, `Writing and reach on X: ${[...stats.querySelectorAll('span')].map(x => clean(txt(x))).join(', ')}.`, 'Writing');
-    $$('.series__col').forEach(c => add(c, `${t(c, '.series__title')} article series (${t(c, '.series__meta')}): ${list(c, '.series__t')}.`, t(c, '.series__title'), false));
+    const lib = $('#writing .lib') || $('#writing');
+    (window.ARTICLES_MERGED || []).forEach(sr => add(lib, `${sr.series} article series (${sr.items.length} ${sr.numbered ? 'parts' : 'pieces'}): ${sr.items.map(a => a.title).join(', ')}.`, sr.series, false));
     $$('#spec, .toy').forEach(x => add(x, `Lab demo, ${t(x, 'h4')}: ${t(x, 'p')}`, 'Lab'));
     if (!$('#spotify')?.hidden) add($('#spotify'), `Music on Spotify: ${t($('#spotify'), '[data-spin-heading]')}, ${t($('#spotify'), '[data-spin-title]')} by ${t($('#spotify'), '[data-spin-artist]')}.`, 'Spotify');
     add($('.contact__lede'), txt($('.contact__lede')), '');
@@ -146,6 +149,10 @@
   }
 
   function jump(el) {
+    // open whatever the citation is folded inside: a Work row, or the longer git log
+    if (el.matches('.wx') && window.WORK) window.WORK.open(el);
+    const more = el.closest('[data-gitlog]');
+    if (more && el.closest('[data-more]')) more.classList.add('is-all');
     el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
     el.classList.remove('is-cited'); void el.offsetWidth; el.classList.add('is-cited');
     setTimeout(() => el.classList.remove('is-cited'), 2200);

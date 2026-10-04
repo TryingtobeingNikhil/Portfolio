@@ -36,25 +36,106 @@
       return data;
     }
 
+    /* ---------- the library: one list with series chips, sort and search ---------- */
+    // Grouped by series in reading order (long series show 5 parts until opened);
+    // flat when sorted by date or views, or while searching. The series filter
+    // lives in the URL (#writing/rlforge) so a series can be shared as one link.
+    const slug = name => name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const chipsBox = $('[data-lib-chips]'), qBox = $('[data-lib-q]'), sortBox = $('[data-lib-sort]');
+    const SHOW = 5, FOLD_ABOVE = 6, FRESH_DAYS = 10; // only fold series long enough for it to matter
+    const st = { series: 'all', sort: 'order', q: '', open: new Set() };
+    let data = [];
+
+    const fromHash = () => {
+      const m = location.hash.match(/^#writing\/([a-z0-9-]+)$/);
+      return m ? m[1] : null;
+    };
+    const setHash = () => {
+      const want = st.series === 'all' ? '' : `#writing/${st.series}`;
+      if (want && location.hash !== want) history.replaceState(null, '', want);
+      else if (!want && /^#writing\//.test(location.hash)) history.replaceState(null, '', '#writing');
+    };
+
+    function row(a, s, i, flat, maxV, newest) {
+      const n = s.numbered ? String(i + 1).padStart(2, '0') : esc(a.tag || '');
+      const age = (Date.now() - new Date(`${a.date}T00:00:00`)) / 864e5;
+      const flag = a === newest || age < FRESH_DAYS ? '<em class="art__flag is-new">new</em>'
+        : !flat && s.numbered && i === 0 && s.items.length > 2 ? '<em class="art__flag">start here</em>' : '';
+      const w = maxV && a.views ? Math.max(0.04, a.views / maxV) : 0;
+      return `<a class="art" href="${esc(a.url)}" target="_blank" rel="noopener"${a.note ? ` title="${esc(a.note)}"` : ''}>
+        <span class="art__n">${n}</span>
+        <span class="art__t">${esc(a.title)}${flag}</span>
+        ${flat ? `<span class="art__s">${esc(s.series)}</span>` : ''}
+        <span class="art__d">${esc(day(a.date))}</span>
+        <span class="art__v" aria-label="${a.views ? a.views.toLocaleString('en-US') + ' views' : 'views not counted yet'}"><i style="--w:${w.toFixed(3)}"></i><b>${a.views ? compact(a.views) : ''}</b></span>
+        <span class="art__go" aria-hidden="true">↗</span>
+      </a>`;
+    }
+
+    function draw() {
+      const all = data.flatMap(s => s.items.map((a, i) => ({ a, s, i })));
+      const maxV = Math.max(0, ...all.map(x => x.a.views || 0));
+      const newest = all.reduce((b, x) => (!b || `${x.a.date}|${x.a.added || ''}` > `${b.a.date}|${b.a.added || ''}` ? x : b), null)?.a;
+      const inSeries = x => st.series === 'all' || slug(x.s.series) === st.series;
+      const q = st.q.toLowerCase();
+      const hit = x => !q || `${x.a.title} ${x.s.series} ${x.a.tag || ''} ${x.a.note || ''}`.toLowerCase().includes(q);
+
+      if (chipsBox) {
+        chipsBox.innerHTML = `<button type="button" data-ls="all" aria-pressed="${st.series === 'all'}">All <i>${all.length}</i></button>` +
+          data.map(s => `<button type="button" data-ls="${slug(s.series)}" aria-pressed="${st.series === slug(s.series)}">${esc(s.series)} <i>${s.items.length}</i></button>`).join('');
+      }
+
+      if (st.sort === 'order' && !q) {
+        host.innerHTML = data.filter(s => st.series === 'all' || slug(s.series) === st.series).map(s => {
+          const key = slug(s.series), open = st.open.has(key) || st.series === key || s.items.length <= FOLD_ABOVE;
+          const list = open ? s.items : s.items.slice(0, SHOW);
+          const v = views(s.items);
+          return `<section class="shelf" aria-label="${esc(s.series)}">
+            <h4 class="shelf__h"><span class="series__title">${esc(s.series)}</span><span class="series__meta">${s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length} pieces`}${v ? ` · ${compact(v)} views` : ''}</span></h4>
+            ${list.map((a, i) => row(a, s, i, false, maxV, newest)).join('')}
+            ${!open ? `<button class="shelf__more" type="button" data-lib-open="${key}">Show all ${s.items.length} <span aria-hidden="true">↓</span></button>` : ''}
+          </section>`;
+        }).join('');
+      } else {
+        let list = all.filter(x => inSeries(x) && hit(x));
+        if (st.sort === 'new') list.sort((x, y) => `${y.a.date}|${y.a.added || ''}`.localeCompare(`${x.a.date}|${x.a.added || ''}`));
+        else if (st.sort === 'top') list.sort((x, y) => (y.a.views || 0) - (x.a.views || 0));
+        host.innerHTML = list.length
+          ? `<div class="shelf is-flat">${list.map(x => row(x.a, x.s, x.i, true, maxV, newest)).join('')}</div>`
+          : `<p class="lib__empty">Nothing matches “${esc(st.q)}”. Try a shorter word, or <button type="button" data-lib-clear>clear the search</button>.</p>`;
+      }
+    }
+
+    if (chipsBox) chipsBox.addEventListener('click', e => {
+      const b = e.target.closest('[data-ls]');
+      if (!b) return;
+      st.series = b.dataset.ls;
+      setHash(); draw();
+    });
+    host.addEventListener('click', e => {
+      const more = e.target.closest('[data-lib-open]');
+      if (more) { st.open.add(more.dataset.libOpen); draw(); return; }
+      if (e.target.closest('[data-lib-clear]')) { st.q = ''; if (qBox) qBox.value = ''; draw(); qBox && qBox.focus(); }
+    });
+    if (qBox) qBox.addEventListener('input', () => { st.q = qBox.value.trim(); draw(); });
+    if (sortBox) sortBox.addEventListener('change', () => { st.sort = sortBox.value; draw(); });
+    const applyHash = () => {
+      const h = fromHash();
+      if (!h) return;
+      st.series = h;
+      draw();
+      const el = document.getElementById('writing');
+      if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    };
+    window.addEventListener('hashchange', applyHash);
+
     function render() {
-      const data = merged();
+      data = merged();
       window.ARTICLES_MERGED = data;
       const total = data.reduce((n, s) => n + s.items.length, 0);
       const totalViews = data.reduce((n, s) => n + views(s.items), 0);
-      host.innerHTML = data.map(s => {
-        const count = s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length}`;
-        const v = views(s.items);
-        return `
-        <div class="series__col">
-          <h4><span class="series__title">${esc(s.series)}</span><span class="series__meta">${count}${v ? ` · ${compact(v)} views` : ''}</span></h4>
-          <ol>${s.items.map((a, i) => `
-            <li><a href="${esc(a.url)}" target="_blank" rel="noopener" title="${esc([a.date, a.views ? a.views.toLocaleString('en-US') + ' views' : ''].filter(Boolean).join(' · '))}">
-              <span class="series__n">${s.numbered ? String(i + 1).padStart(2, '0') : esc(a.tag || '')}</span>
-              <span class="series__t">${esc(a.title)}</span>
-              <span class="series__go" aria-hidden="true">↗</span></a></li>`).join('')}
-          </ol>
-        </div>`;
-      }).join('');
+      if (st.series !== 'all' && !data.some(s => slug(s.series) === st.series)) st.series = 'all';
+      draw();
 
       // the newest piece gets its own row, with the note written for it (if any)
       if (latestBox) {
@@ -93,8 +174,14 @@
       set(items) { extra = Array.isArray(items) ? items : []; render(); },
       extra: () => extra,
       series: () => merged().map(s => ({ name: s.series, numbered: !!s.numbered })),
+      // used by ⌘K: show one series and bring the library into view
+      show(series) { st.series = series ? slug(series) : 'all'; st.q = ''; if (qBox) qBox.value = ''; setHash(); draw(); },
+      slug,
     };
+    const first = fromHash();
+    if (first) st.series = first;
     render();
+    if (first) requestAnimationFrame(() => document.getElementById('writing')?.scrollIntoView());
     fetch('/api/articles', { cache: 'no-store' })
       .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
       .then(d => { if (d && Array.isArray(d.items) && d.items.length) window.WRITING.set(d.items); })
@@ -435,14 +522,15 @@
 
     const collect = () => {
       items = [];
-      [['#about', 'About'], ['#experience', 'Experience'], ['#projects', 'Projects'], ['#lab', 'Lab'], ['#writing', 'Writing'], ['#contact', 'Contact']]
-        .forEach(([h, l]) => add('Sections', l, 'jump', go(h), 'section'));
+      [['#about', 'About'], ['#experience', 'Experience'], ['#projects', 'Work'], ['#lab', 'Lab'], ['#writing', 'Writing'], ['#contact', 'Contact']]
+        .forEach(([h, l]) => add('Sections', l, 'jump', go(h), l === 'Work' ? 'section projects' : 'section'));
       $$('.feature').forEach(f => { const a = $('.feature__links a', f); if (a) add('Projects', txt($('.feature__name', f)), 'GitHub', open(a.href), txt($('.feature__kicker', f))); });
-      $$('.card').forEach(c => { const a = $$('.card__top a', c).pop(); if (a) add('Projects', txt($('h3', c)), 'GitHub', open(a.href), txt($('.feature__kicker', c))); });
-      $$('.ix').forEach(a => add('Projects', txt($('.ix__name', a)), 'GitHub', open(a.href), txt($('.ix__desc', a))));
-      $$('.series__col').forEach(col => {
-        const series = txt($('.series__title', col)) || txt($('h4', col));
-        $$('a', col).forEach(a => add('Writing', txt($('.series__t', a)), series, open(a.href), 'article'));
+      $$('.wx').forEach(li => add('Projects', txt($('.wx__name', li)), 'open', () => window.WORK && window.WORK.open(li), `${txt($('.wx__q', li))} ${li.dataset.cat}`));
+      [['agents', 'Agents & RAG'], ['models', 'Models'], ['tools', 'Tools'], ['research', 'Research']]
+        .forEach(([cat, label]) => add('Projects', `${label} projects`, 'filter', () => window.WORK && window.WORK.filter(cat, true), 'kind category filter'));
+      (window.ARTICLES_MERGED || []).forEach(s => {
+        add('Writing', `${s.series} series`, `${s.items.length} articles`, () => { window.WRITING.show(s.series); go('#writing')(); }, 'series articles read');
+        s.items.forEach(a => add('Writing', a.title, s.series, open(a.url), 'article'));
       });
       $$('.social').forEach(a => add('Links', txt($('.social__k', a)), txt($('b', a)), open(a.href)));
       if (email) add('Actions', 'Copy email', email, () => navigator.clipboard?.writeText(email), 'mail contact');
