@@ -536,7 +536,6 @@
       $$('.social').forEach(a => add('Links', txt($('.social__k', a)), txt($('b', a)), open(a.href)));
       if (email) add('Actions', 'Copy email', email, () => navigator.clipboard?.writeText(email), 'mail contact');
       add('Actions', 'Back to top', 'scroll', go('#top'), 'home');
-      add('Actions', 'Résumé', 'print one page', () => setTimeout(() => window.print(), 80), 'cv resume pdf print');
       if (window.TERMINAL) add('Actions', 'Open terminal', 'press `', () => window.TERMINAL.open(), 'shell console command');
       if (window.PUBLISH && window.PUBLISH.isAdmin()) add('Actions', 'Add article', 'publish', () => window.PUBLISH.open(), 'new write post');
     };

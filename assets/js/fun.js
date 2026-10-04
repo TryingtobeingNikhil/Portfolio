@@ -1,4 +1,4 @@
-/* The playful layer: résumé printing, the precision slider on the portrait,
+/* The playful layer: the precision slider on the portrait,
    the temperature dial on About, the reading meter in the nav (tokens decoded,
    chapters in your KV cache), a 429 for over-eager email copiers, a backtick
    terminal, Konami debug mode, the GridWorld agent in Contact and the Lab
@@ -21,10 +21,6 @@
     toastEl.classList.add('is-on');
     clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('is-on'), ms);
   };
-
-  /* ---------------- résumé: ⌘P prints a one-pager (see .cv in index.html) ---------------- */
-  const printCV = () => window.print();
-  $$('[data-print]').forEach(b => b.addEventListener('click', printCV));
 
   /* ---------------- precision slider on the portrait ---------------- */
   (function quantize() {
@@ -168,7 +164,7 @@
     const works = () => [...$$('.feature').map(f => ({ name: $('.feature__name', f).textContent.trim(), run: () => window.open($('.feature__links a', f).href, '_blank', 'noopener') })),
       ...$$('.wx').map(li => ({ name: $('.wx__name', li).textContent.trim(), run: () => { close(); window.WORK && window.WORK.open(li); } }))];
     const CMDS = {
-      help: () => print(['<b>ls</b>  chapters', '<b>cd</b> &lt;chapter&gt;  go there', '<b>cat</b> about.txt', '<b>ls</b> work · <b>open</b> &lt;project&gt;', '<b>articles</b> [series]', '<b>temp</b> 0 | 0.7 | 1.4', '<b>quantize</b> fp32 | int8 | int4 | int2 | int1', '<b>resume</b>  print the one-pager', '<b>whoami</b> · <b>sudo hire nikhil</b> · <b>clear</b> · <b>exit</b>'].join('<br>')),
+      help: () => print(['<b>ls</b>  chapters', '<b>cd</b> &lt;chapter&gt;  go there', '<b>cat</b> about.txt', '<b>ls</b> work · <b>open</b> &lt;project&gt;', '<b>articles</b> [series]', '<b>temp</b> 0 | 0.7 | 1.4', '<b>quantize</b> fp32 | int8 | int4 | int2 | int1', '<b>whoami</b> · <b>sudo hire nikhil</b> · <b>clear</b> · <b>exit</b>'].join('<br>')),
       ls: a => {
         if (/^(work|projects)/.test(a)) return print(works().map(w => esc(w.name)).join('  '));
         print('about/  experience/  work/  lab/  writing/  contact/  about.txt');
@@ -194,7 +190,6 @@
       },
       temp: a => { if (window.TEMP && window.TEMP(a)) print(`temperature set to ${esc(a)}. scroll up to About.`); else print('temp: use 0, 0.7 or 1.4', 'is-err'); },
       quantize: a => { if (window.QUANT && window.QUANT(a)) print(`portrait quantized to ${esc(a.toUpperCase())}. look up.`); else print('quantize: fp32, fp16, int8, int4, int2 or int1', 'is-err'); },
-      resume: () => { close(); setTimeout(printCV, 100); },
       whoami: () => print('a visitor with good taste. also: this is the site of Nikhil Mourya, ML engineer.'),
       sudo: a => {
         if (!/^hire\s+nikhil/i.test(a || '')) return print('sudo: nice try.', 'is-err');

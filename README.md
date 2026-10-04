@@ -53,7 +53,6 @@ It stays hidden until these three environment variables are set in Netlify
 
 ## Hidden bits
 
-- **⌘P or any Résumé button** prints a one-page résumé built from the page (the `.cv` section in `index.html`; no phone number or graduation year).
 - **Backtick (`)** opens a terminal: `help`, `ls`, `cd writing`, `open pageserve`, `articles rlforge`, `temp 1.4`, `quantize int2`, `sudo hire nikhil`.
 - **↑↑↓↓←→←→BA** toggles debug mode: every chapter is outlined with its token count, DOM nodes and height.
 - **Writing filters are links**: `/#writing/rlforge` opens the library on one series.
@@ -81,7 +80,7 @@ Then open http://localhost:5501.
 | `assets/data/articles.js` | Article list |
 | `assets/data/quotes.js` | Quote bank |
 | `assets/js/chapters.js` | Work index (filters, rows that open), git-log Highlights, "Right now" strip |
-| `assets/js/fun.js` | Résumé printing, portrait precision slider, temperature dial, reading meter, terminal, Konami debug, GridWorld agent, tokenizer |
+| `assets/js/fun.js` | Portrait precision slider, temperature dial, reading meter, terminal, Konami debug, GridWorld agent, tokenizer |
 | `404.html` | "Token not in vocabulary" page with nearest-page suggestions |
 | `assets/js/publish.js` | Private "Add article" panel (opens with `#publish`) |
 | `netlify/functions/articles.mjs` | Articles added from the site (Netlify Blobs) |
