@@ -56,7 +56,7 @@
       const target = tokenize(SENTENCES[sentence++ % SENTENCES.length]);
       out.textContent = '';
       let pos = 0, passes = 0;
-      S.steps.textContent = '0'; S.tpp.textContent = '–'; S.speed.textContent = '–';
+      S.steps.textContent = '0'; S.tpp.textContent = '…'; S.speed.textContent = '…';
 
       while (pos < target.length) {
         // draft phase: propose up to k tokens
