@@ -240,7 +240,7 @@
         $('[data-spin-artist]', box).textContent = t.artist;
         const art = $('[data-spin-art]', box);
         if (t.art) { art.src = t.art; art.alt = t.album ? `${t.album} cover` : ''; }
-        const link = $('[data-spin-link]', box);
+        const link = box.matches('[data-spin-link]') ? box : $('[data-spin-link]', box); // in "Right now" the whole cell is the link
         if (t.url && /^https:\/\/open\.spotify\.com\//.test(t.url)) link.href = t.url;
         $('[data-spin-status]', box).innerHTML = t.playing
           ? '<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>listening now'
