@@ -24,6 +24,7 @@
   let nodes = [], edges = [], pulses = [], rings = [], streams = [];
   let mouse = { x: -9999, y: -9999, on: false };
   let visible = true, raf = 0, last = 0, idle = 0, rain = 0, booted = false;
+  let tempo = 1; // > 1 while Spotify says I'm listening: the net fires a little faster
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -171,7 +172,7 @@
 
     // keep the net breathing
     idle += dt;
-    if (idle > (pulses.length ? 2.8 : 1.1)) { idle = 0; fire((Math.random() * nodes.length) | 0); }
+    if (idle > (pulses.length ? 2.8 : 1.1) / tempo) { idle = 0; fire((Math.random() * nodes.length) | 0); }
   }
 
   function draw() {
@@ -257,6 +258,8 @@
     for (let i = 0; i < 3; i++) fire((Math.random() * nodes.length) | 0);
     if (reduce) { for (let s = 0; s < 40; s++) step(1 / 30); }
   }
+
+  window.FIELD = { tempo(v) { tempo = Math.max(0.5, Math.min(3, v || 1)); } };
 
   const boot = () => { resize(); booted = true; seed(); draw(); start(); };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot); else boot();

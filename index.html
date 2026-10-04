@@ -13,8 +13,12 @@
   <meta property="og:url" content="https://tryingtobenikhil.space/">
   <meta property="og:title" content="Nikhil Mourya: I build the parts of AI most people import">
   <meta property="og:description" content="ML engineer working on LLM inference and multi-agent systems. PageServe, a vLLM-style inference engine · RLForge, RL from scratch in C++.">
-  <meta property="og:image" content="https://tryingtobenikhil.space/assets/images/logo.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://tryingtobenikhil.space/assets/images/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Nikhil Mourya. I build the parts of AI most people import.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://tryingtobenikhil.space/assets/images/og.png">
   <meta name="twitter:site" content="@GonnabeNikhil">
   <meta name="twitter:creator" content="@GonnabeNikhil">
 
@@ -25,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=32">
+  <link rel="stylesheet" href="./assets/css/main.css?v=33">
 
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
   <script type="application/ld+json">
@@ -68,7 +72,7 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <span class="nav__status" aria-label="Local time in Jaipur"><i class="led" aria-hidden="true"></i><b data-clock>--:--</b> IST</span>
+      <span class="nav__status" title="Reading this page like a model: tokens decoded so far, and which chapters sit in your KV cache"><span class="kvm" data-kvm aria-hidden="true"></span><span class="nav__tok"><b data-tok>0</b> tok</span></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
@@ -119,6 +123,7 @@
           <div class="hero__actions">
             <a class="btn btn--primary" href="#projects">See the work <span aria-hidden="true">↓</span></a>
             <a class="btn btn--ghost" href="#contact">Say hi <span aria-hidden="true">→</span></a>
+            <button class="btn btn--ghost" type="button" data-print>Résumé <span aria-hidden="true">↓</span></button>
           </div>
         </div>
 
@@ -134,6 +139,11 @@
             <span>Jaipur, IN</span>
             <span class="loss"><span>train/loss</span><svg viewBox="0 0 80 20" preserveAspectRatio="none" aria-hidden="true"><path id="loss-path" d=""/></svg><b id="loss-val">0.000</b></span>
           </figcaption>
+          <div class="quant">
+            <label class="quant__k" for="quant">precision <b data-quant-label>FP32</b></label>
+            <input id="quant" type="range" min="0" max="5" step="1" value="0" aria-valuetext="FP32, full precision" data-quant-range>
+            <p class="quant__note" data-quant-note>full precision</p>
+          </div>
         </figure>
       </div>
 
@@ -158,9 +168,17 @@
 
         <div class="about">
           <div class="about__text" data-reveal>
-            <p>Retrieval scores over self-reported certainty. Pruned weights over bloated checkpoints. Shipped code over benchmark screenshots.</p>
-            <p>Lately that means going one layer down. I write the scheduler instead of calling <code>generate()</code>, and the autograd instead of importing it. It's slower, it's humbling, and it's the only way I've found to actually understand the thing instead of nodding along to it.</p>
-            <p>BIT Mesra, studying what doesn't fit in a lecture hall. I write up everything I build, and I'm always maintaining the unbroken eye contact with that single code block like we have beef.</p>
+            <div class="temp">
+              <span class="temp__k">temperature</span>
+              <div class="temp__opts" role="radiogroup" aria-label="How I write about myself">
+                <button type="button" role="radio" aria-checked="false" data-t="0">0.0 <small>résumé</small></button>
+                <button type="button" role="radio" aria-checked="true" data-t="1">0.7 <small>me</small></button>
+                <button type="button" role="radio" aria-checked="false" data-t="2">1.4 <small>unhinged</small></button>
+              </div>
+            </div>
+            <p data-temp-p>Retrieval scores over self-reported certainty. Pruned weights over bloated checkpoints. Shipped code over benchmark screenshots.</p>
+            <p data-temp-p>Lately that means going one layer down. I write the scheduler instead of calling <code>generate()</code>, and the autograd instead of importing it. It's slower, it's humbling, and it's the only way I've found to actually understand the thing instead of nodding along to it.</p>
+            <p data-temp-p>BIT Mesra, studying what doesn't fit in a lecture hall. I write up everything I build, and I'm always maintaining the unbroken eye contact with that single code block like we have beef.</p>
 
             <div class="stack">
               <div class="stack__row"><span class="stack__k">languages</span><ul class="pills"><li>Python</li><li>C++20</li><li>TypeScript</li><li>SQL</li></ul></div>
@@ -180,6 +198,7 @@
               <div><dt>cf</dt><dd>1400+ Specialist</dd></div>
               <div><dt>builds</dt><dd>SIH '24 · IIIT-D '23</dd></div>
               <div><dt>founder</dt><dd><a href="https://dev-path.site" target="_blank" rel="noopener">dev-path.site ↗</a></dd></div>
+              <div><dt>résumé</dt><dd><button class="info__btn" type="button" data-print>print a one-pager ↓</button></dd></div>
               <div><dt>reading</dt><dd>The Humans, Matt Haig</dd></div>
               <div><dt>status</dt><dd class="ok"><i class="led" aria-hidden="true"></i>Open to ML roles</dd></div>
             </dl>
@@ -618,7 +637,7 @@
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>04</span>Lab<em class="tag__n">4 toys</em></p>
+          <p class="tag"><span>04</span>Lab<em class="tag__n">5 toys</em></p>
           <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
           <p class="shead__desc">Small toys for the ideas I explain to anyone who stands still long enough. Everything runs in your browser, nothing phones home.</p>
         </header>
@@ -681,6 +700,16 @@
               <p>Each token only attends to what came before it. Hover a word to see where it looks.</p>
             </div>
           </div>
+
+          <div class="tokz" id="toy-tok">
+            <div class="tokz__head">
+              <h4>Tokenizer, the step before BPE <span class="spec__tag">type anything</span></h4>
+              <p>GPT-2 splits text on words, numbers, punctuation and leading spaces before a single merge happens. This is that exact split, live. Real BPE then lands a little higher on rare words, which is why your name costs more than "the".</p>
+            </div>
+            <label class="tokz__in"><span aria-hidden="true">›</span><input type="text" value="I build the parts of AI most people import." aria-label="Text to tokenize" spellcheck="false" autocomplete="off" data-tok-in></label>
+            <p class="tokz__out" data-tok-out aria-hidden="true"></p>
+            <p class="tokz__stats" aria-live="polite"><span><b data-tok-n>0</b> pre-tokens</span><span><b data-tok-c>0</b> characters</span><span><b data-tok-r>0</b> characters per token</span></p>
+          </div>
         </div>
       </div>
     </section>
@@ -738,6 +767,16 @@
           <button class="btn btn--ghost btn--lg" type="button" id="copy-email" data-email="tsmftxnikhil14@gmail.com">Copy email</button>
         </div>
 
+        <figure class="agent" data-agent data-reveal>
+          <canvas data-agent-canvas role="img" aria-label="A tabular Q-learning agent on a 6 by 6 grid learning, episode by episode, the shortest path around the walls to the cell that says hi."></canvas>
+          <figcaption class="agent__cap">
+            <span class="agent__k">tabular Q-learning, running live in your browser</span>
+            <b class="agent__t" data-ag-title>Even my agent is figuring out how to reach me.</b>
+            <span class="agent__stats"><span>episode <b data-ag-ep>0</b></span><span>steps <b data-ag-steps>…</b></span><span>ε <b data-ag-eps>1.00</b></span></span>
+            <button class="btn btn--ghost btn--sm" type="button" data-ag-reset>Retrain from scratch <span aria-hidden="true">↻</span></button>
+          </figcaption>
+        </figure>
+
         <div class="socials" data-reveal>
           <a class="social" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span class="social__k">X / Twitter</span><b>@GonnabeNikhil <span aria-hidden="true">↗</span></b><small class="social__sub">3.1K followers</small></a>
           <a class="social" href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener"><span class="social__k">GitHub</span><b>TryingtobeingNikhil <span aria-hidden="true">↗</span></b></a>
@@ -746,6 +785,57 @@
           <a class="social" href="https://www.instagram.com/not_nikhil14" target="_blank" rel="noopener"><span class="social__k">Instagram</span><b>not_nikhil14 <span aria-hidden="true">↗</span></b></a>
         </div>
       </div>
+    </section>
+    <!-- Print-only one-page résumé: what ⌘P (or any Résumé button) produces. Hidden on screen. -->
+    <section class="cv" aria-label="Résumé (print version)">
+      <header class="cv__head">
+        <h1>Nikhil Mourya</h1>
+        <p class="cv__role">ML Engineer · LLM inference · multi-agent systems</p>
+        <p class="cv__links">Jaipur, India · tsmftxnikhil14@gmail.com · tryingtobenikhil.space · github.com/TryingtobeingNikhil · linkedin.com/in/nikhil-mourya-36913a300</p>
+      </header>
+      <p class="cv__sum">ML engineer who builds the parts of AI most people import: a vLLM-style inference engine, a reinforcement-learning library in C++ with its own autograd, and production RAG systems handling 10K+ requests a day. Research collaboration with IIT Kharagpur. Codeforces Specialist (1400+). Writes a build-along series for every system, with about 2M impressions on X since July.</p>
+
+      <h2>Experience</h2>
+      <div class="cv__item">
+        <p class="cv__row"><b>HireBuddy</b><span>Software Engineer, ML · 2025</span></p>
+        <ul>
+          <li>Built and deployed a resume-to-JD matching system on RAG and Transformers, replacing legacy regex parsers. Shortlist accuracy up 35%.</li>
+          <li>Designed an NLP ingestion pipeline processing 10K+ resumes a day; shipped the APIs on FastAPI, Docker and AWS. Chain latency down 28%, user engagement up 40%.</li>
+          <li>Set up a deterministic eval stack with RAGAS and LangSmith so improvements were measured, not guessed.</li>
+        </ul>
+      </div>
+      <div class="cv__item">
+        <p class="cv__row"><b>DevPath</b><span>Founder · dev-path.site</span></p>
+        <ul><li>Structured learning for developers: curated roadmaps and one focused task a day. Designed, built and shipped solo.</li></ul>
+      </div>
+      <div class="cv__item">
+        <p class="cv__row"><b>IIT Kharagpur</b><span>Research collaboration</span></p>
+        <ul><li>Structured pruning of U-Net for biomedical segmentation: 97.3% fewer parameters, 92% fewer FLOPs, IoU above 0.95 on MoNuSeg.</li></ul>
+      </div>
+
+      <h2>Projects</h2>
+      <div class="cv__item">
+        <p class="cv__row"><b>PageServe</b><span>LLM inference engine · github.com/TryingtobeingNikhil/vLLM_Inference_Engine</span></p>
+        <ul><li>vLLM-style engine built in 11 phases: continuous batching, paged KV cache over a physical tensor pool, prefill/decode budgets, CPU swap under memory pressure. Mean TTFT at 4-way load from 1,418 ms to 20.9 ms (98.5% lower).</li></ul>
+      </div>
+      <div class="cv__item">
+        <p class="cv__row"><b>RLForge</b><span>RL library in C++20 · github.com/TryingtobeingNikhil/RLForge</span></p>
+        <ul><li>Tensor engine, autograd, optimizers, Q-learning, DQN and PPO with zero dependencies, including the diamond-graph gradient case. 148/148 tests passing.</li></ul>
+      </div>
+      <div class="cv__item">
+        <p class="cv__row"><b>HiveMind</b><span>Multi-agent research system</span></p>
+        <ul><li>Five agents (Planner, Researcher, Critic, Writer, Evaluator) loop until a confidence threshold computed from retrieval scores is met. FastAPI, Redis, ChromaDB, OpenTelemetry.</li></ul>
+      </div>
+      <div class="cv__item">
+        <p class="cv__row"><b>CodeLens</b><span>Offline semantic code search for VS Code</span></p>
+        <ul><li>AST chunking with tree-sitter and local embeddings through Ollama; plain-English queries jump to the exact line, fully offline.</li></ul>
+      </div>
+
+      <h2>Skills</h2>
+      <p class="cv__skills"><b>Languages</b> Python, C++20, TypeScript, SQL · <b>Modeling</b> PyTorch, HuggingFace, PEFT/LoRA, scikit-learn · <b>Inference</b> continuous batching, paged KV cache, pruning, ONNX, Ollama · <b>Agents and RAG</b> LangGraph, ChromaDB, FAISS, RAGAS, LangSmith · <b>Infra</b> FastAPI, Docker, AWS, Redis, OpenTelemetry</p>
+
+      <h2>Education and recognition</h2>
+      <p class="cv__skills">BIT Mesra, BS in Physics (ML, deep learning, optimization) · Finalist, Smart India Hackathon 2024 · Finalist, IIIT Delhi 2023 · Codeforces Specialist (1400+)</p>
     </section>
   </main>
 
@@ -770,6 +860,7 @@
       <div class="footer__inner">
         <span>© 2026 Nikhil Mourya</span>
         <span class="dim">Held together by coffee and hope<span class="visits" data-visits hidden> · <b data-visits-n></b> <span data-visits-word>visitors</span> so far</span></span>
+        <span class="kv-sum" data-kv-sum hidden></span>
         <a href="#top">Back to top ↑</a>
       </div>
     </div>
@@ -828,15 +919,16 @@
     </form>
   </dialog>
 
-  <script src="./assets/js/field.js?v=9" defer></script>
+  <script src="./assets/js/field.js?v=10" defer></script>
   <script src="./assets/js/trail.js?v=3" defer></script>
-  <script src="./assets/js/main.js?v=15" defer></script>
+  <script src="./assets/js/main.js?v=16" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=17" defer></script>
+  <script src="./assets/js/extras.js?v=18" defer></script>
   <script src="./assets/js/chapters.js?v=1" defer></script>
   <script src="./assets/js/showcase.js?v=4" defer></script>
   <script src="./assets/js/ask.js?v=3" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
+  <script src="./assets/js/fun.js?v=1" defer></script>
 </body>
 </html>

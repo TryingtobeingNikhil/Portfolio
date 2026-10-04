@@ -112,6 +112,14 @@
     const rgb = (v, d) => css(v, d).split(',').map(Number);
     const HOT = css('--accent-rgb', '205, 176, 124'); // moving particles take the accent
     const LO = rgb('--portrait-lo', '10, 10, 9'), MID = rgb('--portrait-mid', '126, 124, 119'), HIGH = rgb('--portrait-hi', '242, 238, 227');
+    // duotone from the palette: shadows → mids → highlights
+    const tone = t => {
+      const [A, B, u] = t < 0.55 ? [LO, MID, t / 0.55] : [MID, HIGH, (t - 0.55) / 0.45];
+      return `rgb(${(A[0] + (B[0] - A[0]) * u) | 0},${(A[1] + (B[1] - A[1]) * u) | 0},${(A[2] + (B[2] - A[2]) * u) | 0})`;
+    };
+    // the precision slider under the portrait: snap brightness to 2^bits levels
+    let bits = 32;
+    const quant = t => (bits >= 8 ? t : Math.round(t * ((1 << bits) - 1)) / ((1 << bits) - 1));
 
     function build() {
       const rect = canvas.getBoundingClientRect();
@@ -142,17 +150,13 @@
       P = [];
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
         const t = Math.pow(Math.min(1, Math.max(0, (L[y * cols + x] - lo) / (hi - lo))), 0.92);
-        let r, g, b;
-        // duotone from the palette: shadows → mids → highlights
-        const [A, B, u] = t < 0.55 ? [LO, MID, t / 0.55] : [MID, HIGH, (t - 0.55) / 0.45];
-        r = A[0] + (B[0] - A[0]) * u; g = A[1] + (B[1] - A[1]) * u; b = A[2] + (B[2] - A[2]) * u;
         const ox = (x + 0.5) * cell, oy = (y + 0.5) * cell;
         P.push({
           ox, oy,
           x: fresh && !reduce ? Math.random() * w : ox,
           y: fresh && !reduce ? Math.random() * h : oy,
           vx: 0, vy: 0, seed: Math.random() * 100, t,
-          c: `rgb(${r | 0},${g | 0},${b | 0})`,
+          c: tone(quant(t)),
         });
       }
       return true;
@@ -235,6 +239,21 @@
       rt = setTimeout(() => { if (build()) { if (reduce) drawStatic(); else wake(); } }, 150);
     });
     img.onload = go;
+
+    // re-colour at a new precision; the pixels that changed get a small shove
+    window.PORTRAIT = {
+      quantize(b) {
+        bits = b;
+        P.forEach(p => {
+          const c = tone(quant(p.t));
+          if (c === p.c) return;
+          p.c = c;
+          if (!reduce) { p.vx += (Math.random() - 0.5) * 2.6; p.vy += (Math.random() - 0.5) * 2.6; }
+        });
+        if (reduce) drawStatic(); else wake();
+      },
+      pixels: () => P.length,
+    };
   })();
 
   /* ---------------- train/loss sparkline ---------------- */
