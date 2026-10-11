@@ -2022,3 +2022,13 @@ body { background: transparent; }
   .lanterns .social { gap: 0; }
 }
 html { overflow-x: clip; }
+
+/* the hero, pared back: headline, one line, two buttons */
+.hero__lede { max-width: 48em; font-size: clamp(15px, 1.15vw, 17px); color: rgba(var(--fg-rgb), 0.72); }
+.hero__lede a { color: var(--fg); border-bottom: 1px solid rgba(var(--accent-rgb), 0.5); transition: color 0.2s, border-color 0.2s; }
+.hero__lede a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* the nav's clock: the time where I am, in place of the reading lanterns */
+.nav__time { gap: 8px; cursor: default; font: 500 14px/1 var(--serif); color: var(--fg-3); }
+.nav__time .nav__city { letter-spacing: 0.04em; }
+.nav__time b { font: 600 14px/1 var(--serif); color: var(--fg); font-variant-numeric: tabular-nums; }

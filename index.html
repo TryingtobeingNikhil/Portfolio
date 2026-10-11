@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=57">
+  <link rel="stylesheet" href="./assets/css/main.css?v=59">
 
   <script>
     document.documentElement.classList.replace('no-js', 'js');
@@ -103,7 +103,7 @@
 
       <button class="nav__icon nav__season" type="button" data-season-next aria-label="Change the season" title="Change the season"><span data-season-kanji>秋</span></button>
       <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Sound" title="Sound: an original score over the village at night, made live in your browser"><svg class="nav__spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 5.6v12.8l-4.4-3.9H4z" fill="currentColor"/><path class="nav__spk-off" d="M16 9.6l4.6 4.8M20.6 9.6 16 14.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="snd" aria-hidden="true"><i></i><i></i><i></i></span></button>
-      <span class="nav__status" title="A lantern lights for each chapter you read"><span class="kvm" data-kvm aria-hidden="true"></span></span>
+      <span class="nav__status nav__time" title="Local time in Jaipur (IST)"><span class="nav__city">Jaipur</span><b data-clock>--:--</b></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
@@ -136,7 +136,7 @@
             <span class="line" style="--i:2">most people <span class="hero__key">import.</span></span>
           </h1>
 
-          <p class="hero__lede">ML engineer. I build LLM inference engines and RL libraries from scratch, then write up everything that broke.</p>
+          <p class="hero__lede">Growth at <a href="https://recrivio.com" target="_blank" rel="noopener">Recrivio</a> · reverse-engineering LLM inference &amp; serving · driving LLMs at 780&nbsp;tok/s</p>
 
           <div class="hero__actions">
             <a class="btn btn--primary" href="#projects">See the work <span aria-hidden="true">↓</span></a>
@@ -147,23 +147,7 @@
         <div class="hero__jp">
           <span class="hero__kana" aria-hidden="true">ニキル・マウリヤ</span>
           <span class="seal seal--name" aria-hidden="true">ニ<br>キ<br>ル</span>
-          <div class="season" role="group" aria-label="Season">
-            <button type="button" data-season-btn="spring" aria-pressed="false" title="春 haru · spring">春</button>
-            <button type="button" data-season-btn="summer" aria-pressed="false" title="夏 natsu · summer">夏</button>
-            <button type="button" data-season-btn="autumn" aria-pressed="false" title="秋 aki · autumn">秋</button>
-            <button type="button" data-season-btn="winter" aria-pressed="false" title="冬 fuyu · winter">冬</button>
-          </div>
-          <span class="season__cap">season</span>
         </div>
-      </div>
-
-      <div class="wrap">
-        <dl class="facts">
-          <div data-reveal style="--d:.05s"><dt>focus</dt><dd>LLM inference &amp; multi-agent systems</dd></div>
-          <div data-reveal style="--d:.1s"><dt>building</dt><dd><a href="#projects">PageServe</a> &amp; <a href="#projects">RLForge</a></dd></div>
-          <div data-reveal style="--d:.15s"><dt>writing</dt><dd>Deep-dives on <a href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener">X</a><small class="facts__sub">~2M impressions since July</small></dd></div>
-          <div data-reveal style="--d:.2s"><dt>based</dt><dd>Jaipur · <b data-clock>--:--</b> IST<small class="tzdiff" data-tzdiff></small></dd></div>
-        </dl>
       </div>
 
     </section>
@@ -330,6 +314,15 @@
         </header>
 
         <ol class="timeline">
+          <li class="role is-live" data-reveal>
+            <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">Now</span></div>
+            <div class="role__main">
+              <div class="role__head">
+                <h3><a href="https://recrivio.com" target="_blank" rel="noopener">Recrivio <span aria-hidden="true">↗</span></a></h3>
+                <p class="role__title">Growth</p>
+              </div>
+            </div>
+          </li>
           <li class="role" data-reveal>
             <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">2025</span></div>
             <div class="role__main">
