@@ -1641,16 +1641,19 @@ body { background: linear-gradient(180deg, #0e1020 0, var(--bg) 40%, #090a13 100
 .latest__row:hover .latest__t, .latest__row:hover .latest__go { color: #9a2f1c; }
 
 /* ---------- 縁: the koi pond (koi.js) ---------- */
-.pond { margin: 64px 0 0; max-width: 860px; }
+.pond { position: relative; width: 100vw; max-width: none; margin: 72px 0 0 calc(50% - 50vw); }
 .pond canvas {
-  display: block; width: 100%; aspect-ratio: 16 / 7; border-radius: 18px; cursor: pointer; touch-action: manipulation;
-  background: #0b2229; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(var(--w-rgb), 0.08);
+  display: block; width: 100%; height: clamp(240px, 24vw, 360px); cursor: pointer; touch-action: manipulation; background: #141b14;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  mask-composite: intersect;
 }
-.pond__cap { display: grid; gap: 6px; margin-top: 16px; }
+.pond__cap { display: grid; gap: 6px; max-width: var(--max); margin: 12px auto 0; padding: 0 var(--pad); }
 .pond__k { font: 500 13px/1.3 var(--serif); color: var(--shu); }
 .pond__k span { font: 400 12px/1.3 var(--mono); color: var(--fg-3); }
 .pond__t { font-size: 19px; font-weight: 500; line-height: 1.4; }
-@media (max-width: 680px) { .pond canvas { aspect-ratio: 4 / 3; border-radius: 14px; } .pond__t { font-size: 17px; } }
+@media (max-width: 680px) { .pond canvas { height: 260px; } .pond__t { font-size: 17px; } }
 
 /* the clock: in daylight the hero sky is paler, so the left veil does more work */
 [data-tod="day"] .hero__veil { background: linear-gradient(90deg, rgba(10, 11, 26, 0.72) 0%, rgba(10, 11, 26, 0.45) 40%, rgba(10, 11, 26, 0) 66%), linear-gradient(180deg, rgba(12, 14, 25, 0.15) 0, rgba(12, 14, 25, 0) 30%, rgba(12, 14, 25, 0) 64%, rgba(12, 14, 25, 0.6) 86%, #0e1020 100%); }

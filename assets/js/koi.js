@@ -1,9 +1,11 @@
-/* 鯉, the koi pond in Contact. Each koi is a flexible spine: the head steers
-   (wander, keep off the rim, give the others room, chase food, drift toward a
-   still cursor) and every segment follows the one before it, so the body bends
-   and the tail flows. Patterns are the traditional varieties. The floor has
-   pebbles and moving caustics, the surface has lily pads, a lotus or two, and
-   whatever the season is dropping. A bamboo spout trickles in one corner.
+/* 鯉, a garden stream across the whole width of Contact. Each koi is a
+   flexible spine: the head steers (wander along the stream, stay off the banks,
+   give the others room, chase food, drift toward a still cursor) and every
+   segment follows the one before it, so the body bends and the tail flows.
+   Patterns are the traditional varieties. The stream has a pebbled bed and
+   moving caustics, a gentle current, lily pads and whatever the season drops;
+   the banks have stones, grasses, a yatsuhashi plank bridge with irises,
+   stepping stones, a snow-viewing lantern and a bamboo spout.
    Tap the water to feed them. */
 (() => {
   const fig = document.querySelector('[data-pond]');
@@ -27,7 +29,11 @@
 
   let w = 0, h = 0, dpr = 1, raf = 0, visible = false, last = 0, time = 0, built = false;
   let koi = [], food = [], ripples = [], pads = [], floaters = [], glints = [];
-  let bed = null, caustic = null, rim = null, spoutAt = 0;
+  let bed = null, caustic = null, rim = null, spoutAt = 0, streaks = [];
+  // the stream: a centre line that meanders, and a half-width that breathes
+  const cy = x => h * 0.5 + Math.sin(x * 0.0042 + 0.6) * h * 0.12 + Math.sin(x * 0.011 + 2) * h * 0.035;
+  const hw = x => h * (0.25 + 0.05 * Math.sin(x * 0.0063 + 1));
+  const CURRENT = 9;
   const mouse = { x: -1, y: -1, still: 0, on: false };
 
   /* ---------------- static paintings ---------------- */
@@ -53,71 +59,151 @@
   function paintBed() {
     const c = document.createElement('canvas'); c.width = w * dpr; c.height = h * dpr;
     const g = c.getContext('2d'); g.scale(dpr, dpr);
-    const gr = g.createRadialGradient(w * 0.45, h * 0.45, 10, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
-    gr.addColorStop(0, '#1d4a52'); gr.addColorStop(0.6, '#123640'); gr.addColorStop(1, '#0a2029');
-    g.fillStyle = gr; g.fillRect(0, 0, w, h);
-    // pebbles, and a few large stones lying deep
-    for (let i = 0; i < w * h / 160; i++) {
-      const x = R() * w, y = R() * h, r = 1 + R() * 3.2, l = R();
-      g.fillStyle = l < 0.5 ? `rgba(10, 30, 34, ${0.25 + R() * 0.3})` : `rgba(120, 160, 150, ${0.06 + R() * 0.08})`;
+    g.fillStyle = '#1c4a50'; g.fillRect(0, 0, w, h);
+    // deeper, darker water down the middle of the channel
+    g.save(); g.filter = `blur(${Math.round(h * 0.06)}px)`;
+    g.strokeStyle = '#0b2530'; g.lineWidth = h * 0.24; g.lineCap = 'round';
+    g.beginPath(); for (let x = -40; x <= w + 40; x += 10) (x === -40 ? g.moveTo(x, cy(x)) : g.lineTo(x, cy(x))); g.stroke();
+    g.restore();
+    for (let i = 0; i < w * h / 150; i++) {
+      const x = R() * w, y = R() * h, r = 1 + R() * 3.2;
+      g.fillStyle = R() < 0.5 ? `rgba(10, 30, 34, ${0.25 + R() * 0.3})` : `rgba(140, 170, 150, ${0.06 + R() * 0.1})`;
       g.beginPath(); g.ellipse(x, y, r * 1.3, r, R() * 3, 0, TAU); g.fill();
     }
-    g.filter = 'blur(3px)';
-    for (let i = 0; i < 6; i++) {
-      const x = R() * w, y = R() * h, r = 14 + R() * 26;
-      g.fillStyle = 'rgba(70, 90, 88, 0.35)'; g.beginPath(); g.ellipse(x, y, r * 1.4, r, R() * 3, 0, TAU); g.fill();
-    }
-    g.filter = 'none';
     return c;
   }
 
-  // the stones round the edge, with moss, and the bamboo spout in the top right
-  function paintRim() {
+  // Everything that is not water: banks, stones, grasses, the bridge, the lantern, the spout.
+  function paintGarden() {
     const c = document.createElement('canvas'); c.width = w * dpr; c.height = h * dpr;
     const g = c.getContext('2d'); g.scale(dpr, dpr);
-    const stone = (x, y, r) => {
-      g.save();
-      g.fillStyle = 'rgba(0, 0, 0, 0.45)'; g.filter = 'blur(4px)';
-      g.beginPath(); g.ellipse(x + 3, y + 5, r * 1.15, r * 0.95, 0, 0, TAU); g.fill();
-      g.restore();
+    const season = window.SEASON ? window.SEASON.get() : 'autumn', snow = season === 'winter';
+    const edgeN = x => Math.sin(x * 0.05) * 2 + Math.sin(x * 0.13) * 1.5;
+    const water = new Path2D();
+    water.moveTo(-20, cy(-20) - hw(-20));
+    for (let x = -20; x <= w + 20; x += 6) water.lineTo(x, cy(x) - hw(x) + edgeN(x));
+    for (let x = w + 20; x >= -20; x -= 6) water.lineTo(x, cy(x) + hw(x) + edgeN(x + 40));
+    water.closePath();
+    // the ground: moss and soil
+    const gr = g.createLinearGradient(0, 0, 0, h);
+    gr.addColorStop(0, '#141b14'); gr.addColorStop(0.5, '#1c261b'); gr.addColorStop(1, '#121812');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < w * h / 90; i++) {
+      const x = R() * w, y = R() * h;
+      g.fillStyle = R() < 0.6 ? `rgba(70, 100, 50, ${0.1 + R() * 0.2})` : `rgba(10, 12, 8, ${0.2 + R() * 0.3})`;
+      g.fillRect(x, y, 1 + R() * 2, 1 + R() * 2);
+    }
+    if (snow) for (let i = 0; i < w * h / 600; i++) { g.fillStyle = `rgba(225, 233, 245, ${0.15 + R() * 0.35})`; g.beginPath(); g.ellipse(R() * w, R() * h, 3 + R() * 10, 2 + R() * 4, 0, 0, TAU); g.fill(); }
+    // cut the stream out, then darken the wet lip of each bank
+    g.save(); g.globalCompositeOperation = 'destination-out'; g.fill(water); g.restore();
+    g.save(); g.clip(water); g.restore();
+    g.save(); g.filter = 'blur(5px)'; g.strokeStyle = 'rgba(5, 8, 6, 0.75)'; g.lineWidth = 9; g.stroke(water); g.restore();
+    g.save(); g.globalCompositeOperation = 'destination-out'; g.fill(water); g.restore();
+
+    const stone = (x, y, r, flat) => {
+      g.save(); g.fillStyle = 'rgba(0, 0, 0, 0.45)'; g.filter = 'blur(4px)';
+      g.beginPath(); g.ellipse(x + 3, y + 5, r * 1.2, r * (flat ? 0.6 : 0.9), 0, 0, TAU); g.fill(); g.restore();
       const p = new Path2D(), n = 12, j = Array.from({ length: n }, () => 0.85 + R() * 0.25);
-      for (let i = 0; i <= n; i++) { const a = (i / n) * TAU, rr = r * j[i % n]; i ? p.lineTo(x + Math.cos(a) * rr * 1.2, y + Math.sin(a) * rr) : p.moveTo(x + Math.cos(a) * rr * 1.2, y + Math.sin(a) * rr); }
-      const sg = g.createLinearGradient(x - r, y - r, x + r, y + r);
-      const tone = 0.8 + R() * 0.35;
-      sg.addColorStop(0, `rgb(${120 * tone | 0}, ${122 * tone | 0}, ${118 * tone | 0})`); sg.addColorStop(1, '#262a2b');
+      for (let i = 0; i <= n; i++) { const a = (i / n) * TAU, rr = r * j[i % n], px = x + Math.cos(a) * rr * 1.25, py = y + Math.sin(a) * rr * (flat ? 0.6 : 0.95); i ? p.lineTo(px, py) : p.moveTo(px, py); }
+      const t = 0.8 + R() * 0.35, sg = g.createLinearGradient(x - r, y - r, x + r, y + r);
+      sg.addColorStop(0, `rgb(${125 * t | 0}, ${126 * t | 0}, ${120 * t | 0})`); sg.addColorStop(1, '#262a2b');
       g.fillStyle = sg; g.fill(p);
       g.save(); g.clip(p);
       g.fillStyle = 'rgba(255, 255, 255, 0.06)';
-      for (let i = 0; i < 30; i++) { g.beginPath(); g.arc(x + (R() - 0.5) * r * 2, y + (R() - 0.5) * r * 2, R() * 1.4, 0, TAU); g.fill(); }
-      g.fillStyle = 'rgba(92, 128, 64, 0.6)';
-      g.beginPath(); g.ellipse(x - r * 0.25, y - r * 0.55, r * 0.75, r * 0.35, -0.2, 0, TAU); g.fill();
-      g.fillStyle = 'rgba(140, 170, 90, 0.35)';
-      g.beginPath(); g.ellipse(x - r * 0.35, y - r * 0.65, r * 0.4, r * 0.15, -0.2, 0, TAU); g.fill();
+      for (let i = 0; i < 24; i++) { g.beginPath(); g.arc(x + (R() - 0.5) * r * 2, y + (R() - 0.5) * r * 2, R() * 1.4, 0, TAU); g.fill(); }
+      g.fillStyle = snow ? 'rgba(232, 238, 248, 0.85)' : 'rgba(92, 128, 64, 0.6)';
+      g.beginPath(); g.ellipse(x - r * 0.2, y - r * (flat ? 0.3 : 0.55), r * 0.8, r * 0.3, -0.15, 0, TAU); g.fill();
       g.restore();
     };
-    const s = Math.max(14, Math.min(w, h) * 0.075);
-    for (let x = -s * 0.5; x < w + s; x += s * (1.3 + R() * 0.6)) { stone(x, -s * 0.35 + R() * s * 0.3, s * (0.8 + R() * 0.5)); stone(x + s * 0.5, h + s * 0.3 - R() * s * 0.3, s * (0.8 + R() * 0.5)); }
-    for (let y = s; y < h - s; y += s * (1.4 + R() * 0.6)) { stone(-s * 0.4 + R() * s * 0.2, y, s * (0.75 + R() * 0.4)); stone(w + s * 0.4 - R() * s * 0.2, y, s * (0.75 + R() * 0.4)); }
-    // kakei, the bamboo spout
-    const bx = w - s * 0.2, by = s * 0.9, ex = w - s * 3.2, ey = s * 1.7;
+    const blades = (x, y, n, len, col) => {
+      g.lineCap = 'round';
+      for (let i = 0; i < n; i++) {
+        const a = -Math.PI / 2 + (R() - 0.5) * 1.1, l = len * (0.5 + R() * 0.6);
+        g.strokeStyle = col[(R() * col.length) | 0]; g.lineWidth = 1 + R() * 0.8;
+        g.beginPath(); g.moveTo(x + (R() - 0.5) * 6, y); g.quadraticCurveTo(x + Math.cos(a) * l * 0.4, y + Math.sin(a) * l * 0.6, x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+      }
+    };
+    const grass = { spring: ['#4f7a3a', '#6a9446', '#3d6230'], summer: ['#3f7036', '#57893f', '#2f5a2a'], autumn: ['#7d7a3a', '#9a8240', '#5e6a30', '#8a5a2a'], winter: ['#4a5a4c', '#6c776d', '#8a9590'] }[season];
+    const scale = Math.max(0.7, Math.min(1.3, h / 300));
+    // stones and grasses along both banks
+    for (let x = -10; x < w + 20; x += (26 + R() * 46) * scale) {
+      for (const side of [-1, 1]) {
+        if (R() < 0.55) stone(x + R() * 10, cy(x) + side * (hw(x) + 3) + (R() - 0.5) * 6, (7 + R() * 9) * scale, false);
+        if (R() < 0.7) blades(x + R() * 20, cy(x) + side * (hw(x) + 18 + R() * 24), 6 + (R() * 8 | 0), 16 * scale, grass);
+      }
+    }
+    // ground cover in the season: petals, fallen maple leaves, or nothing but snow
+    const kind = window.SEASON ? window.SEASON.info().kind : 'leaf';
+    if (kind === 'petal' || kind === 'leaf') {
+      for (let i = 0; i < w / 14; i++) {
+        const x = R() * w, side = R() < 0.5 ? -1 : 1, y = cy(x) + side * (hw(x) + 10 + R() * (h * 0.22));
+        const p = window.SEASON.particle.spawn(kind, w, h); p.x = x; p.y = y; p.flip = 0; p.size *= 0.8;
+        g.save(); g.globalAlpha = 0.75; window.SEASON.particle.draw(g, p); g.restore();
+      }
+    }
+    // stepping stones across the stream
+    const sx = w * 0.74;
+    for (let i = 0; i < 5; i++) {
+      const t = i / 4, x = sx + (t - 0.5) * 30 * scale, y = cy(x) - hw(x) * 0.9 + t * hw(x) * 1.8;
+      stone(x, y, (11 + R() * 3) * scale, true);
+    }
+    // a yatsuhashi: zigzag planks over the water, with irises growing beside it
+    const yx = w * 0.24, pw = 13 * scale;
+    const segs = [[yx - 40 * scale, cy(yx) - hw(yx) - 8], [yx + 10 * scale, cy(yx) - hw(yx) * 0.3], [yx - 30 * scale, cy(yx) + hw(yx) * 0.35], [yx + 20 * scale, cy(yx) + hw(yx) + 8]];
+    if (season === 'spring' || season === 'summer') {
+      for (let i = 0; i < 9; i++) {
+        const ix = yx + (R() - 0.5) * 120 * scale, iy = cy(ix) + (R() < 0.5 ? -1 : 1) * (hw(ix) * (0.6 + R() * 0.3));
+        g.strokeStyle = '#3c6a32'; g.lineWidth = 1.6;
+        for (let k = 0; k < 4; k++) { const a = -Math.PI / 2 + (R() - 0.5) * 0.5; g.beginPath(); g.moveTo(ix, iy); g.lineTo(ix + Math.cos(a) * 18 * scale, iy + Math.sin(a) * 18 * scale); g.stroke(); }
+        g.fillStyle = '#6b4fb0'; g.beginPath(); g.ellipse(ix + 2, iy - 17 * scale, 3.4 * scale, 2.2 * scale, 0.4, 0, TAU); g.fill();
+        g.fillStyle = '#8f75d0'; g.beginPath(); g.ellipse(ix - 1, iy - 19 * scale, 2.6 * scale, 1.6 * scale, -0.5, 0, TAU); g.fill();
+        g.fillStyle = '#e8c45a'; g.fillRect(ix, iy - 18 * scale, 1.2, 1.2);
+      }
+    }
+    for (let i = 0; i < segs.length - 1; i++) {
+      const [x0, y0] = segs[i], [x1, y1] = segs[i + 1], len = Math.hypot(x1 - x0, y1 - y0), a = Math.atan2(y1 - y0, x1 - x0);
+      g.save(); g.translate(x0, y0); g.rotate(a);
+      g.fillStyle = 'rgba(0, 0, 0, 0.4)'; g.fillRect(4, pw * 0.2, len, pw);
+      const wg = g.createLinearGradient(0, -pw / 2, 0, pw / 2);
+      wg.addColorStop(0, '#8a6a46'); wg.addColorStop(1, '#5e4630');
+      g.fillStyle = wg; g.fillRect(0, -pw / 2, len, pw);
+      g.strokeStyle = 'rgba(30, 20, 10, 0.55)'; g.lineWidth = 0.8;
+      g.beginPath(); g.moveTo(0, 0); g.lineTo(len, 0); g.stroke();
+      for (let k = 6; k < len; k += 9) { g.strokeStyle = 'rgba(60, 40, 20, 0.25)'; g.beginPath(); g.moveTo(k, -pw / 2); g.lineTo(k, pw / 2); g.stroke(); }
+      if (snow) { g.fillStyle = 'rgba(232, 238, 248, 0.8)'; g.fillRect(0, -pw / 2, len, pw * 0.4); }
+      g.restore();
+      g.fillStyle = '#2a1e14'; g.beginPath(); g.arc(x1, y1, 2.4 * scale, 0, TAU); g.fill();
+    }
+    // a yukimi-doro, the snow-viewing lantern, on the near bank
+    const lx = w * 0.53, ly = cy(lx) + hw(lx) + 46 * scale, ls = scale * 0.9;
+    g.save(); g.translate(lx, ly); g.scale(ls, ls);
+    g.fillStyle = 'rgba(0, 0, 0, 0.45)'; g.beginPath(); g.ellipse(4, 4, 30, 8, 0, 0, TAU); g.fill();
+    g.fillStyle = '#4c5150';
+    [[-18, 0], [-6, 4], [8, 2], [18, -2]].forEach(([dx, dy]) => g.fillRect(dx - 2, -16 + dy, 4, 16));
+    g.fillRect(-12, -24, 24, 9); g.fillStyle = '#ffd88a'; g.fillRect(-7, -23, 14, 6);
+    g.fillStyle = '#5a5f5d'; g.beginPath(); g.moveTo(-30, -24); g.quadraticCurveTo(0, -42, 30, -24); g.quadraticCurveTo(0, -30, -30, -24); g.fill();
+    g.beginPath(); g.arc(0, -37, 3.5, 0, TAU); g.fill();
+    if (snow) { g.fillStyle = 'rgba(235, 240, 250, 0.9)'; g.beginPath(); g.moveTo(-26, -27); g.quadraticCurveTo(0, -42, 26, -27); g.quadraticCurveTo(0, -34, -26, -27); g.fill(); }
+    g.globalCompositeOperation = 'lighter';
+    const lg = g.createRadialGradient(0, -20, 0, 0, -20, 46); lg.addColorStop(0, 'rgba(255, 200, 120, 0.4)'); lg.addColorStop(1, 'rgba(255, 200, 120, 0)');
+    g.fillStyle = lg; g.fillRect(-46, -66, 92, 92);
+    g.restore();
+    // kakei, the bamboo spout, reaching over the far bank
+    const bx = w * 0.9, by0 = cy(bx) - hw(bx) - 30 * scale, ex = bx - 34 * scale, ey = cy(bx) - hw(bx) + 4;
     g.lineCap = 'round';
-    g.strokeStyle = '#3f5a2a'; g.lineWidth = s * 0.42; g.beginPath(); g.moveTo(bx, by); g.lineTo(ex, ey); g.stroke();
-    g.strokeStyle = '#7c9a4a'; g.lineWidth = s * 0.3; g.beginPath(); g.moveTo(bx, by); g.lineTo(ex, ey); g.stroke();
-    g.strokeStyle = 'rgba(220, 240, 180, 0.35)'; g.lineWidth = s * 0.06; g.beginPath(); g.moveTo(bx, by - s * 0.08); g.lineTo(ex, ey - s * 0.08); g.stroke();
-    g.strokeStyle = '#33461f'; g.lineWidth = s * 0.07;
-    const nx = bx + (ex - bx) * 0.45, ny = by + (ey - by) * 0.45;
-    g.beginPath(); g.moveTo(nx, ny - s * 0.16); g.lineTo(nx + s * 0.04, ny + s * 0.16); g.stroke();
-    spoutAt = { x: ex - s * 0.1, y: ey + s * 0.08, land: { x: ex - s * 0.45, y: ey + s * 1.4 } };
+    g.strokeStyle = '#3f5a2a'; g.lineWidth = 9 * scale; g.beginPath(); g.moveTo(bx, by0); g.lineTo(ex, ey); g.stroke();
+    g.strokeStyle = '#7c9a4a'; g.lineWidth = 6 * scale; g.beginPath(); g.moveTo(bx, by0); g.lineTo(ex, ey); g.stroke();
+    g.strokeStyle = 'rgba(220, 240, 180, 0.35)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(bx, by0 - 2); g.lineTo(ex, ey - 2); g.stroke();
+    spoutAt = { x: ex - 2, y: ey + 2, land: { x: ex - 8 * scale, y: ey + 24 * scale } };
     return c;
   }
 
   /* ---------------- the koi ---------------- */
   function makeKoi(v, i) {
-    const scale = Math.max(0.6, Math.min(1.25, w / 760));
-    const L = (54 + R() * 30) * scale, n = 16, seg = L / n;
-    const x = w * (0.2 + R() * 0.6), y = h * (0.25 + R() * 0.5), a = R() * TAU;
+    const L = h * (0.15 + R() * 0.08), n = 16, seg = L / n;
+    const x = w * (0.05 + R() * 0.9), y = cy(x) + (R() - 0.5) * hw(x), a = R() < 0.5 ? 0 : Math.PI;
     return {
-      v, L, n, seg, a, speed: 18 + R() * 10, phase: R() * TAU, wander: R() * TAU, depth: 0.72 + R() * 0.28, gulp: 0, id: i,
+      v, L, n, seg, a, speed: 18 + R() * 10, phase: R() * TAU, wander: a, depth: 0.72 + R() * 0.28, gulp: 0, id: i,
       pts: Array.from({ length: n + 1 }, (_, k) => [x - Math.cos(a) * seg * k, y - Math.sin(a) * seg * k]),
     };
   }
@@ -135,10 +221,10 @@
       const d = Math.hypot(mouse.x - hx, mouse.y - hy);
       if (d < 220 && d > 34) { tx += ((mouse.x - hx) / d) * 1.2; ty += ((mouse.y - hy) / d) * 1.2; urgency = 0.15; }
     }
-    // keep off the stones
-    const m = Math.min(w, h) * 0.2;
-    if (hx < m) tx += (m - hx) / m * 2.2; if (hx > w - m) tx -= (hx - (w - m)) / m * 2.2;
-    if (hy < m) ty += (m - hy) / m * 2.2; if (hy > h - m) ty -= (hy - (h - m)) / m * 2.2;
+    // stay in the channel, and mostly swim along it rather than across
+    const off = hy - cy(hx), lim = hw(hx) * 0.5;
+    if (Math.abs(off) > lim) ty -= Math.sign(off) * ((Math.abs(off) - lim) / (hw(hx) * 0.25)) * 2.4;
+    ty *= 0.75;
     // and give the others room
     for (const o of koi) {
       if (o === k) continue;
@@ -157,8 +243,11 @@
     k.phase += dt * (3 + k.speed * 0.12);
     const swing = Math.sin(k.phase) * 0.32 * Math.min(1, k.speed / 30);
     const dir = k.a + swing;
-    k.pts[0][0] += Math.cos(dir) * k.speed * dt;
+    k.pts[0][0] += Math.cos(dir) * k.speed * dt + CURRENT * 0.4 * dt;
     k.pts[0][1] += Math.sin(dir) * k.speed * dt;
+    // the stream runs off both edges: a koi that swims out comes back in on the other side
+    const wrap = k.pts[0][0] > w + k.L * 1.6 ? -(w + k.L * 3) : k.pts[0][0] < -k.L * 1.6 ? w + k.L * 3 : 0;
+    if (wrap) k.pts.forEach(p => { p[0] += wrap; });
     for (let i = 1; i <= k.n; i++) {
       const p = k.pts[i], q = k.pts[i - 1], dx = p[0] - q[0], dy = p[1] - q[1], d = Math.hypot(dx, dy) || 1;
       p[0] = q[0] + (dx / d) * k.seg; p[1] = q[1] + (dy / d) * k.seg;
@@ -244,16 +333,18 @@
 
   /* ---------------- the surface ---------------- */
   function makeSurface() {
-    const sc = Math.max(0.65, Math.min(1.2, w / 760));
-    pads = Array.from({ length: Math.max(4, Math.round(w / 140)) }, (_, i) => ({
-      x: w * (0.08 + R() * 0.84), y: h * (0.12 + R() * 0.76), r: (14 + R() * 16) * sc, a: R() * TAU, va: (R() - 0.5) * 0.04, flower: i % 3 === 0,
-    }));
-    const kind = window.SEASON ? window.SEASON.info().kind : 'leaf';
-    floaters = kind === 'snow' || kind === 'firefly' ? [] : Array.from({ length: 7 }, () => {
-      const p = window.SEASON.particle.spawn(kind, w, h, { anywhere: true });
-      p.x = R() * w; p.y = R() * h; p.flip = 0; p.size *= 1.1; p.drift = (R() - 0.5) * 4; return p;
+    const sc = Math.max(0.65, Math.min(1.2, h / 300));
+    pads = Array.from({ length: Math.max(5, Math.round(w / 170)) }, (_, i) => {
+      const x = w * (0.04 + R() * 0.92);
+      return { x, y: cy(x) + (R() < 0.5 ? -1 : 1) * hw(x) * (0.55 + R() * 0.3), r: (11 + R() * 11) * sc, a: R() * TAU, va: (R() - 0.5) * 0.04, flower: i % 3 === 0 };
     });
-    glints = Array.from({ length: 24 }, () => ({ x: R() * w, y: R() * h, ph: R() * TAU, s: 0.6 + R() * 1.4 }));
+    const kind = window.SEASON ? window.SEASON.info().kind : 'leaf';
+    floaters = kind === 'snow' || kind === 'firefly' ? [] : Array.from({ length: Math.round(w / 110) }, () => {
+      const p = window.SEASON.particle.spawn(kind, w, h, { anywhere: true });
+      p.x = R() * w; p.y = cy(p.x) + (R() - 0.5) * hw(p.x) * 1.4; p.flip = 0; p.size *= 1.1; p.lane = (p.y - cy(p.x)) / hw(p.x); return p;
+    });
+    glints = Array.from({ length: Math.round(w / 40) }, () => { const x = R() * w; return { x, y: cy(x) + (R() - 0.5) * hw(x) * 1.6, ph: R() * TAU, s: 0.6 + R() * 1.4 }; });
+    streaks = Array.from({ length: Math.round(w / 45) }, () => ({ x: R() * w, lane: (R() - 0.5) * 1.5, len: 14 + R() * 30, v: CURRENT * (1.4 + R()) }));
   }
 
   function drawPad(p) {
@@ -307,9 +398,18 @@
     // surface
     for (const p of pads) { p.a += p.va * dt; drawPad(p); }
     for (const p of floaters) {
-      p.x += (p.drift + Math.sin(time * 0.3 + p.t) * 2) * dt; p.rot += 0.05 * dt;
-      if (p.x > w + 20) p.x = -20; if (p.x < -20) p.x = w + 20;
+      p.x += (CURRENT * 1.6 + Math.sin(time * 0.3 + p.t) * 2) * dt; p.rot += 0.08 * dt;
+      if (p.x > w + 20) p.x = -20;
+      p.y = cy(p.x) + p.lane * hw(p.x) + Math.sin(time * 0.7 + p.t) * 2;
       window.SEASON.particle.draw(ctx, p, 0.9);
+    }
+    // the current, as faint streaks of light following the channel
+    ctx.lineCap = 'round'; ctx.lineWidth = 1;
+    for (const st of streaks) {
+      st.x += st.v * dt; if (st.x > w + 40) st.x = -40;
+      const y = x => cy(x) + st.lane * hw(x) * 0.6;
+      ctx.strokeStyle = 'rgba(210, 240, 240, 0.09)';
+      ctx.beginPath(); ctx.moveTo(st.x, y(st.x)); ctx.lineTo(st.x + st.len, y(st.x + st.len)); ctx.stroke();
     }
     // ripples
     ctx.lineWidth = 1;
@@ -337,7 +437,7 @@
   function step(dt) {
     time += dt;
     koi.forEach(k => steer(k, dt));
-    food.forEach(f => { f.life -= dt; f.x += Math.sin(time + f.ph) * 2 * dt; });
+    food.forEach(f => { f.life -= dt; f.x += (CURRENT + Math.sin(time + f.ph) * 2) * dt; });
     food = food.filter(f => !f.eaten && f.life > 0);
     ripples.forEach(r => { r.r += r.v * dt; r.a -= dt * 0.5; });
     ripples = ripples.filter(r => r.a > 0);
@@ -359,9 +459,9 @@
     w = r.width; h = r.height; dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    bed = paintBed(); rim = paintRim();
+    bed = paintBed(); rim = paintGarden();
     if (!caustic) caustic = makeCaustic(160);
-    if (!koi.length) koi = VARIETIES.slice(0, w < 520 ? 5 : 7).map(makeKoi);
+    if (!koi.length) koi = Array.from({ length: Math.max(5, Math.min(11, Math.round(w / 150))) }, (_, i) => makeKoi(VARIETIES[i % VARIETIES.length], i));
     makeSurface();
     built = true;
     return true;
@@ -391,5 +491,5 @@
   document.addEventListener('visibilitychange', start);
   let rt;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (built && build()) draw(0); }, 200); });
-  if (window.SEASON) window.SEASON.on(() => { if (built) { makeSurface(); if (reduce) draw(0); } });
+  if (window.SEASON) window.SEASON.on(() => { if (built) { rim = paintGarden(); makeSurface(); if (reduce) draw(0); } });
 })();
