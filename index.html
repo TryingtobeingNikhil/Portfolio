@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=49">
+  <link rel="stylesheet" href="./assets/css/main.css?v=51">
 
   <script>
     document.documentElement.classList.replace('no-js', 'js');
@@ -132,29 +132,14 @@
 
       <div class="wrap hero__grid">
         <div class="hero__copy">
-          <a class="status-pill" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener">
-            <i class="led" aria-hidden="true"></i>
-            <span>Open to ML roles</span>
-            <span class="status-pill__sep" aria-hidden="true"></span>
-            <span class="status-pill__dim">Currently building PageServe ↗</span>
-          </a>
 
-          <p class="hero__prompt" aria-hidden="true"><span class="p">›</span> nikhil.generate(<span class="s">"who are you?"</span>)</p>
-
-          <h1 class="hero__title" aria-label="Nikhil Mourya. I build the parts of AI most people import.">
-            <span class="line hero__name" aria-hidden="true"><span data-stream="Nik|hil| M|our|ya|.">Nikhil Mourya.</span></span>
-            <span class="line" aria-hidden="true"><span data-stream="I| build| the| parts| of| AI">I build the parts of AI</span></span>
-            <span class="line" aria-hidden="true"><span data-stream="most| people">most people</span> <span class="hero__key"><span data-stream="import|.">import.</span></span><i class="cursor" data-stream-cursor></i></span>
+          <h1 class="hero__title">
+            <span class="line" style="--i:0">Nikhil Mourya.</span>
+            <span class="line" style="--i:1">I build the parts of AI</span>
+            <span class="line" style="--i:2">most people <span class="hero__key">import.</span></span>
           </h1>
 
-          <p class="hero__gen" aria-hidden="true" title="TTFT is PageServe's measured mean under 4-way concurrent load. The stream is replayed slowly so it can be read.">
-            <span>ttft <b>20.9 ms</b></span><i>·</i><span><b data-gen-tokens>16</b> tokens</span><i>·</i><span>replayed at <b data-gen-rate>~13</b> tok/s</span>
-          </p>
-
-          <p class="hero__lede">
-            ML engineer working on <strong class="tok" tabindex="0" data-tokens="LL|M| inference| and| multi|-agent| systems">LLM inference and multi-agent systems</strong>. I wrote a vLLM-style serving engine with a paged KV cache,
-            a reinforcement-learning library in C++ that brings its own autograd, and then wrote up every single thing that broke. It was a long list.
-          </p>
+          <p class="hero__lede">ML engineer. I build LLM inference engines and RL libraries from scratch, then write up everything that broke.</p>
 
           <div class="hero__actions">
             <a class="btn btn--primary" href="#projects">See the work <span aria-hidden="true">↓</span></a>
@@ -205,8 +190,8 @@
               </div>
             </div>
             <p data-temp-p>Retrieval scores over self-reported certainty. Pruned weights over bloated checkpoints. Shipped code over benchmark screenshots.</p>
-            <p data-temp-p>Lately that means going one layer down. I write the scheduler instead of calling <code>generate()</code>, and the autograd instead of importing it. It's slower, it's humbling, and it's the only way I've found to actually understand the thing instead of nodding along to it.</p>
-            <p data-temp-p>BIT Mesra, studying what doesn't fit in a lecture hall. I write up everything I build, and I'm always maintaining the unbroken eye contact with that single code block like we have beef.</p>
+            <p data-temp-p>So I go one layer down: I write the scheduler instead of calling <code>generate()</code>, and the autograd instead of importing it.</p>
+            <p data-temp-p>BIT Mesra. Still in a staring contest with one code block. We have beef.</p>
 
             <div class="stack" aria-label="Skills, hung like name plaques on a dojo board. Each plaque says where I used it.">
               <div class="stack__row"><span class="stack__k">languages</span><ul class="pills"><li tabindex="0" data-used="HireBuddy · HiveMind · PEGASUS + LoRA">Python</li><li tabindex="0" data-used="RLForge">C++20</li><li tabindex="0" data-used="CodeLens">TypeScript</li><li>SQL</li></ul></div>
@@ -243,7 +228,6 @@
           <div class="info" data-reveal style="--d:.08s">
             <div class="info__bar"><span lang="ja">名刺 <span class="dim" lang="en">nikhil --info</span></span><span class="dim">v2026</span></div>
               <div class="meishi__side" aria-hidden="true"><span class="meishi__name">ニキル・マウリヤ</span><span class="seal seal--name">ニ<br>キ<br>ル</span></div>
-              <span class="meishi__stamp" aria-hidden="true">募集中</span>
             <dl>
               <div><dt>location</dt><dd>Jaipur, India</dd></div>
               <div><dt>college</dt><dd>BIT Mesra</dd></div>
@@ -252,7 +236,6 @@
               <div><dt>builds</dt><dd>SIH '24 · IIIT-D '23</dd></div>
               <div><dt>founder</dt><dd><a href="https://dev-path.site" target="_blank" rel="noopener">dev-path.site ↗</a></dd></div>
               <div><dt>reading</dt><dd>The Humans, Matt Haig</dd></div>
-              <div><dt>status</dt><dd class="ok"><i class="led" aria-hidden="true"></i>Open to ML roles</dd></div>
             </dl>
           </div>
           </div>
@@ -261,7 +244,7 @@
         <div class="ask" id="ask" data-reveal>
           <div class="index__caption">
             <h3>Ask this page</h3>
-            <span class="ask__note">BM25 over this page's own text, right in your browser. No LLM, no API, no making things up. If the score is too low, it says so.</span>
+            <span class="ask__note">Searches this page in your browser. No LLM. If it doesn't know, it says so.</span>
           </div>
           <form class="ask__form" data-ask-form role="search">
             <span class="ask__prompt" aria-hidden="true">›</span>
@@ -273,14 +256,9 @@
             <button type="button" data-ask-q="Where has he worked?">Where has he worked?</button>
             <button type="button" data-ask-q="How big is his reach on X?">How big is his reach on X?</button>
             <button type="button" data-ask-q="What's the diamond dependency bug?">What's the diamond bug?</button>
-            <button type="button" data-ask-q="Is he open to roles?">Is he open to roles?</button>
+            <button type="button" data-ask-q="What is RLForge?">What is RLForge?</button>
             <button type="button" data-ask-q="What's the capital of France?" class="is-trick">What's the capital of France?</button>
           </div>
-          <p class="ask__lineage">
-            <span>built on</span>
-            <a href="https://github.com/TryingtobeingNikhil/HiveMind" target="_blank" rel="noopener"><b>HiveMind</b> for the rule: refuse when the retrieval score is too low ↗</a>
-            <a href="https://github.com/TryingtobeingNikhil/CodeLens" target="_blank" rel="noopener"><b>CodeLens</b> for the idea: offline search by intent (embeddings there, BM25 here) ↗</a>
-          </p>
           <div class="ask__out" data-ask-out aria-live="polite" hidden>
             <p class="ask__answer" data-ask-answer></p>
             <p class="ask__src" data-ask-src></p>
@@ -351,7 +329,7 @@
         <header class="shead" data-reveal>
           <p class="tag"><span class="seal">二</span>Experience<em class="tag__jp" lang="ja">経歴</em></p>
           <h2 class="shead__title">Where it runs <span class="dim">in production.</span></h2>
-          <p class="shead__desc">Notebooks are cheap. These are the places where my code had to survive real users, real traffic and someone else's pager.</p>
+          <p class="shead__desc">Where my code met real users.</p>
         </header>
 
         <ol class="timeline">
@@ -363,9 +341,8 @@
                 <p class="role__title">Software Engineer, ML</p>
               </div>
               <ul class="role__points">
-                <li>Built and deployed a resume-to-JD matching system on <strong>RAG + Transformers</strong>, and retired the legacy regex parsers for good.</li>
-                <li>Designed an NLP ingestion pipeline processing <strong>10K+ resumes a day</strong> for automated shortlisting; shipped the APIs on FastAPI, Docker and AWS.</li>
-                <li>Set up a deterministic eval stack with <strong>RAGAS and LangSmith</strong> so improvements were measured, not vibed.</li>
+                <li>Replaced regex resume parsing with a <strong>RAG + Transformers</strong> matcher.</li>
+                <li><strong>10K+ resumes a day</strong> through FastAPI, Docker and AWS, measured with RAGAS and LangSmith.</li>
               </ul>
               <div class="role__nums">
                 <div><b>+35%</b><span>shortlist accuracy</span></div>
@@ -381,7 +358,7 @@
                 <h3><a href="https://dev-path.site" target="_blank" rel="noopener">DevPath <span aria-hidden="true">↗</span></a></h3>
                 <p class="role__title">Live product · dev-path.site</p>
               </div>
-              <p class="role__text">Structured learning for developers stuck in tutorial hell. Curated roadmaps and one focused task a day, so the hardest decision is already made for you. Designed, built and shipped solo. Free to start.</p>
+              <p class="role__text">Roadmaps and one focused task a day, for developers stuck in tutorial hell. Built and shipped solo.</p>
             </div>
           </li>
           <li class="role" data-reveal>
@@ -391,7 +368,7 @@
                 <h3>IIT Kharagpur</h3>
                 <p class="role__title">Model compression collaboration</p>
               </div>
-              <p class="role__text">Structured pruning of U-Net for biomedical segmentation: <strong>97.3% fewer parameters</strong>, 92% fewer FLOPs, IoU still above 0.95 on MoNuSeg. Turns out most of the network was just along for the ride.</p>
+              <p class="role__text">Pruned a U-Net for biomedical segmentation: <strong>97.3% fewer parameters</strong>, IoU still above 0.95. Most of it was along for the ride.</p>
             </div>
           </li>
         </ol>
@@ -406,7 +383,7 @@
         <header class="shead" data-reveal>
           <p class="tag"><span class="seal">三</span>Work<em class="tag__jp" lang="ja">作品</em><em class="tag__n">10 projects</em></p>
           <h2 class="shead__title">Rebuilt from first principles. <span class="dim">No black boxes I didn't open.</span></h2>
-          <p class="shead__desc">Two systems I wrote end to end because reading the library source stopped being enough. One serves LLMs. The other trains agents.</p>
+          <p class="shead__desc">Two systems, end to end. One serves LLMs, one trains agents.</p>
         </header>
 
         <!-- PageServe -->
@@ -421,10 +398,7 @@
             </div>
             <h3 class="feature__name">PageServe</h3>
             <p class="feature__tagline">A vLLM-style inference engine, grown from a naive <code>generate()</code> loop in 11 phases.</p>
-            <p class="feature__text">
-              Continuous batching, a paged KV cache over a physical tensor pool, prefill/decode budgets, and CPU swap, so under
-              load it slows down politely instead of OOMing. Along the way I found a cache bug quietly charging 1.1&nbsp;ms per token, and evicted it.
-            </p>
+            <p class="feature__text">Continuous batching, a paged KV cache and CPU swap. Under load it slows down instead of falling over.</p>
 
             <dl class="metrics">
               <div class="is-hot"><dd>−98.5%</dd><dt>mean TTFT at 4-way load<br>1,418 → 20.9 ms</dt></div>
@@ -477,11 +451,8 @@
             </div>
             <h3 class="feature__name">RLForge</h3>
             <p class="feature__tagline">A reinforcement-learning library with no <code>import torch</code>, down to its own autograd.</p>
-            <p class="feature__text">
-              Tensor engine, autograd, optimizers, Q-learning, DQN and PPO in C++20 with zero dependencies, including the
-              diamond-graph gradient case that most from-scratch engines get wrong without telling anyone.
-            </p>
-            <p class="feature__credit">Environments, tensor/autograd and DQN by me. PPO, threading and CUDA/BLAS backends co-built with <a href="https://github.com/aprv10" target="_blank" rel="noopener">aprv10</a>.</p>
+            <p class="feature__text">Tensors, autograd, DQN and PPO in C++20, zero dependencies, and the diamond-graph gradient that most from-scratch engines get wrong.</p>
+            <p class="feature__credit">PPO, threading and CUDA backends co-built with <a href="https://github.com/aprv10" target="_blank" rel="noopener">aprv10</a>.</p>
 
             <dl class="metrics">
               <div class="is-hot"><dd>148/148</dd><dt>tests passing<br>warnings as errors</dt></div>
@@ -705,14 +676,13 @@
         <header class="shead" data-reveal>
           <p class="tag"><span class="seal">四</span>Lab<em class="tag__jp" lang="ja">実験室</em><em class="tag__n">5 toys</em></p>
           <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
-          <p class="shead__desc">Small toys for the ideas I explain to anyone who stands still long enough. Everything runs in your browser, nothing phones home.</p>
         </header>
         <div class="lab" data-reveal>
           <div class="spec" id="spec">
             <div class="spec__head">
               <div>
                 <h4>Speculative decoding <span class="spec__tag">how fast inference cheats, honestly</span></h4>
-                <p>A small draft model guesses <b data-k-label>4</b> tokens ahead. The big model checks all of them in one forward pass, keeps the matching prefix, and fixes the first miss. Same output as normal decoding, fewer expensive passes.</p>
+                <p>A small model drafts <b data-k-label>4</b> tokens; the big one checks them in one pass and keeps what matches.</p>
               </div>
               <button class="btn btn--ghost btn--sm" type="button" data-spec-run>Replay <span aria-hidden="true">↻</span></button>
             </div>
@@ -743,7 +713,7 @@
                 <button class="btn btn--ghost btn--sm" type="button" data-sample>Sample</button>
               </div>
               <h4>Temperature</h4>
-              <p>Low T sharpens the distribution toward the top token; high T flattens it. Drag, then sample.</p>
+              <p>Low sharpens, high flattens. Drag, then sample.</p>
             </div>
 
             <div class="toy" id="toy-lr">
@@ -753,7 +723,7 @@
                 <button class="btn btn--ghost btn--sm" type="button" data-run>Run</button>
               </div>
               <h4>Learning rate</h4>
-              <p>Gradient descent on a stretched bowl. Too small crawls, too large zig-zags, past 0.167 it diverges.</p>
+              <p>Too small crawls. Past 0.167 it diverges.</p>
             </div>
 
             <div class="toy" id="toy-attn">
@@ -763,14 +733,14 @@
               </div>
               <div class="toy__ctrl toy__ctrl--static"><span>causal mask · illustrative weights</span></div>
               <h4>Causal attention</h4>
-              <p>Each token only attends to what came before it. Hover a word to see where it looks.</p>
+              <p>Each word only looks back. Hover one.</p>
             </div>
           </div>
 
           <div class="tokz" id="toy-tok">
             <div class="tokz__head">
               <h4>Tokenizer, the step before BPE <span class="spec__tag">type anything</span></h4>
-              <p>GPT-2 splits text on words, numbers, punctuation and leading spaces before a single merge happens. This is that exact split, live. Real BPE then lands a little higher on rare words, which is why your name costs more than "the".</p>
+              <p>The split GPT-2 makes before BPE, live. Your name costs more tokens than "the".</p>
             </div>
             <label class="tokz__in"><span aria-hidden="true">›</span><input type="text" value="I build the parts of AI most people import." aria-label="Text to tokenize" spellcheck="false" autocomplete="off" data-tok-in></label>
             <p class="tokz__out" data-tok-out aria-hidden="true"></p>
@@ -787,7 +757,6 @@
         <header class="shead" data-reveal>
           <p class="tag"><span class="seal">五</span>Writing<em class="tag__jp" lang="ja">文章</em><em class="tag__n"><b data-article-count>20</b> articles</em></p>
           <h2 class="shead__title">I build it, then I write it down. <span class="dim">Usually in that order.</span></h2>
-          <p class="shead__desc">One part at a time. Scheduler traces, memory bugs, and the math that has to be exactly right or nothing works.</p>
         </header>
         <div class="writing" data-reveal>
           <p class="writing__stats"><span><b data-article-count>20</b> articles</span><span><b>~2M</b> impressions since July</span><span><b>~120K</b> views on inference posts</span><span><b>~20K</b> on RL posts</span></p>
@@ -825,7 +794,7 @@
       <div class="wrap">
         <p class="tag" data-reveal><span class="seal">六</span>Contact<em class="tag__jp" lang="ja">便り</em></p>
         <h2 class="contact__title" data-reveal>If you've made it this far, you might as well <span class="accent">say hi.</span></h2>
-        <p class="contact__lede" data-reveal>Open to ML engineering roles in inference, serving and agent infrastructure. Email is fastest. DMs on X work too, I check them more than I should.</p>
+        <p class="contact__lede" data-reveal>Email is fastest. DMs on X work too.</p>
         <p class="contact__time" data-reveal><i class="led" aria-hidden="true"></i><span>It's <b data-clock>--:--</b> in Jaipur (IST)<span data-tzdiff-long></span></span></p>
 
         <div class="mail" data-reveal>
@@ -842,11 +811,12 @@
         </figure>
 
         <p class="elsewhere" data-reveal>
-          Elsewhere, I'm <a class="social" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span class="social__k vh">X</span><b>@GonnabeNikhil</b></a> on X, where 3.1K people put up with my threads,
-          <a class="social" href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener"><span class="social__k vh">GitHub</span><b>TryingtobeingNikhil</b></a> on GitHub, where the commits are louder than the threads,
-          and <a class="social" href="https://www.linkedin.com/in/nikhil-mourya-36913a300/" target="_blank" rel="noopener"><span class="social__k vh">LinkedIn</span><b>nikhil-mourya</b></a> on LinkedIn for the version of me that wears a collar.
-          <a class="social" href="https://www.instagram.com/not_nikhil14" target="_blank" rel="noopener"><span class="social__k vh">Instagram</span><b>not_nikhil14</b></a> is what I look like away from a terminal, and
-          <a class="social" href="https://dev-path.site" target="_blank" rel="noopener"><span class="social__k vh">Product</span><b>DevPath</b></a> is the thing I built for people stuck in tutorial hell.
+          <span class="elsewhere__k" lang="ja">他にも</span>
+          <a class="social" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><b>X</b> @GonnabeNikhil</a>
+          <a class="social" href="https://github.com/TryingtobeingNikhil" target="_blank" rel="noopener"><b>GitHub</b> TryingtobeingNikhil</a>
+          <a class="social" href="https://www.linkedin.com/in/nikhil-mourya-36913a300/" target="_blank" rel="noopener"><b>LinkedIn</b> nikhil-mourya</a>
+          <a class="social" href="https://www.instagram.com/not_nikhil14" target="_blank" rel="noopener"><b>Instagram</b> not_nikhil14</a>
+          <a class="social" href="https://dev-path.site" target="_blank" rel="noopener"><b>DevPath</b> dev-path.site</a>
         </p>
       </div>
     </section>
@@ -935,17 +905,17 @@
   <script src="./assets/js/inkwash.js?v=2" defer></script>
   <script src="./assets/js/print.js?v=2" defer></script>
   <script src="./assets/js/japan.js?v=1" defer></script>
-  <script src="./assets/js/koi.js?v=4" defer></script>
+  <script src="./assets/js/koi.js?v=5" defer></script>
   <script src="./assets/js/ambience.js?v=2" defer></script>
   <script src="./assets/js/trail.js?v=4" defer></script>
-  <script src="./assets/js/main.js?v=17" defer></script>
+  <script src="./assets/js/main.js?v=18" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
   <script src="./assets/js/extras.js?v=20" defer></script>
   <script src="./assets/js/chapters.js?v=2" defer></script>
   <script src="./assets/js/showcase.js?v=4" defer></script>
-  <script src="./assets/js/ask.js?v=3" defer></script>
+  <script src="./assets/js/ask.js?v=4" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
-  <script src="./assets/js/fun.js?v=5" defer></script>
+  <script src="./assets/js/fun.js?v=7" defer></script>
 </body>
 </html>

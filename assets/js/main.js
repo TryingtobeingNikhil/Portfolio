@@ -1,4 +1,4 @@
-/* Page behaviour: nav, reveals, streamed headline,
+/* Page behaviour: nav, reveals,
    live GitHub numbers, the KV-cache simulator and small niceties. */
 (() => {
   const $ = (s, el = document) => el.querySelector(s);
@@ -51,46 +51,6 @@
     entries.forEach(en => en.target.classList.toggle('is-lit', en.isIntersecting));
   }, { rootMargin: '0px 0px -30% 0px' });
   $$('.section').forEach(el => lit.observe(el));
-
-  /* ---------------- headline, streamed like model output ---------------- */
-  // "nikhil.generate(...)" answers token by token. Tokens are listed in each
-  // span's data-stream; the cursor rides the newest token. Stats count live.
-  (function stream() {
-    const spans = $$('[data-stream]');
-    if (!spans.length) return;
-    const cursor = $('[data-stream-cursor]');
-    const countEl = $('[data-gen-tokens]'), rateEl = $('[data-gen-rate]');
-    const jobs = spans.map(el => ({ el, toks: el.dataset.stream.split('|'), text: el.textContent }));
-    const total = jobs.reduce((n, j) => n + j.toks.length, 0);
-    if (countEl) countEl.textContent = total;
-    if (reduce) return; // full headline is already in the markup
-
-    jobs.forEach(j => { j.el.textContent = ''; });
-    const home = cursor ? cursor.parentElement : null;
-    const put = el => { if (cursor) el.after(cursor); };
-    put(jobs[0].el);
-    const t0 = performance.now() + 420; // a visible "time to first token"
-    let n = 0;
-    const next = (ji, ti) => {
-      const job = jobs[ji];
-      if (!job) {
-        if (cursor && home) home.appendChild(cursor);
-        const secs = (performance.now() - t0) / 1000;
-        if (rateEl && secs > 0) rateEl.textContent = `~${Math.round(total / secs)}`;
-        return;
-      }
-      const tok = document.createElement('span');
-      tok.className = 'tk-new';
-      tok.textContent = job.toks[ti];
-      job.el.appendChild(tok);
-      put(job.el);
-      if (countEl) countEl.textContent = ++n;
-      const last = ti === job.toks.length - 1;
-      const pause = last ? 110 : 34 + Math.random() * 42; // a little jitter, like real decode steps
-      setTimeout(() => (last ? next(ji + 1, 0) : next(ji, ti + 1)), pause);
-    };
-    setTimeout(() => next(0, 0), Math.max(0, t0 - performance.now()));
-  })();
 
   /* the portrait is a woodblock print now: assets/js/print.js */
 

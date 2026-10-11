@@ -53,7 +53,7 @@ It stays hidden until these three environment variables are set in Netlify
 
 ## Hidden bits
 
-- **Backtick (`)** opens a terminal: `help`, `ls`, `cd writing`, `open pageserve`, `articles rlforge`, `temp 1.4`, `quantize int2`, `sudo hire nikhil`.
+- **Backtick (`)** opens a terminal: `help`, `ls`, `cd writing`, `open pageserve`, `articles rlforge`, `temp 1.4`, `quantize int2`.
 - **↑↑↓↓←→←→BA** toggles debug mode: every chapter is outlined with its token count, DOM nodes and height.
 - **Writing filters are links**: `/#writing/rlforge` opens the library on one series.
 

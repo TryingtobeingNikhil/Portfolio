@@ -1650,9 +1650,9 @@ body { background: transparent; }
 .pond { position: relative; width: 100vw; max-width: none; margin: 72px 0 0 calc(50% - 50vw); }
 .pond canvas {
   display: block; width: 100%; height: clamp(240px, 24vw, 360px); cursor: pointer; touch-action: manipulation; background: #141b14;
-  -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
   -webkit-mask-composite: source-in;
-  mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
   mask-composite: intersect;
 }
 .pond__cap { display: grid; gap: 6px; max-width: var(--max); margin: 12px auto 0; padding: 0 var(--pad); }
@@ -1759,15 +1759,6 @@ body { background: transparent; }
 .info .ok .led { background: #c4402c; box-shadow: none; }
 .meishi__side { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px 16px 16px 4px; border-left: 1px solid rgba(60, 40, 20, 0.12); }
 .meishi__name { writing-mode: vertical-rl; font: 600 20px/1 var(--serif); letter-spacing: 0.32em; color: #1d1610; }
-.meishi__stamp {
-  position: absolute; right: 70px; bottom: 26px; display: grid; place-items: center;
-  padding: 7px 9px; border: 2.5px solid rgba(196, 64, 44, 0.85); border-radius: 4px;
-  font: 700 17px/1 var(--serif); letter-spacing: 0.12em; color: rgba(196, 64, 44, 0.85);
-  transform: rotate(-11deg) scale(1.6); opacity: 0; mix-blend-mode: multiply;
-  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) 1.05s, opacity 0.15s 1.05s;
-}
-.info.is-in .meishi__stamp { transform: rotate(-11deg) scale(1); opacity: 1; }
-.no-js .meishi__stamp { opacity: 1; transform: rotate(-11deg); }
 
 /* ---------- 屏風: flagship projects as folding screens ---------- */
 .feature {
@@ -1827,9 +1818,56 @@ body { background: transparent; }
   .stack__k { margin-top: 0; }
   .pills li { height: 100px; font-size: 12px; }
   .pills { background-size: 100% 128px; }
-  .meishi__stamp { right: 60px; bottom: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .feature .feature__info, .feature .feature__viz { transform: none !important; filter: none !important; }
   .info[data-reveal] { transform: rotate(-1.2deg); }
+}
+
+/* ==========================================================================
+   Quieter: the headline settles in like ink instead of typing itself out,
+   no status pill, and text tabs instead of chips.
+   ========================================================================== */
+.hero__title .line {
+  opacity: 0; transform: translateY(14px); filter: blur(10px);
+  animation: inkIn 1.4s cubic-bezier(0.2, 0.7, 0.1, 1) forwards; animation-delay: calc(0.25s + var(--i, 0) * 0.22s);
+}
+@keyframes inkIn { to { opacity: 1; transform: none; filter: none; } }
+.hero__lede { margin-top: 26px; max-width: 30em; opacity: 0; animation: inkIn 1.4s cubic-bezier(0.2, 0.7, 0.1, 1) 0.95s forwards; }
+.hero__actions { opacity: 0; animation: inkIn 1.2s cubic-bezier(0.2, 0.7, 0.1, 1) 1.15s forwards; }
+
+/* hero facts: serif labels, no typewriter */
+.facts dt { font: 500 12px/1 var(--serif); letter-spacing: 0.1em; text-transform: lowercase; color: rgba(var(--fg-rgb), 0.5); }
+.facts__sub, .tzdiff { font-family: var(--serif); font-size: 13px; }
+
+/* filters: text tabs with a brushed underline, not capsules */
+.chips { gap: 4px 22px; }
+.chips button { height: auto; padding: 6px 0 9px; border: 0; border-radius: 0; background: none !important; position: relative; font: 500 15px/1 var(--serif); color: var(--fg-3); }
+.chips button i { font: 400 11px/1 var(--mono); color: var(--fg-4); }
+.chips button:hover { color: var(--fg); border: 0; }
+.chips button[aria-pressed="true"] { color: var(--fg); }
+.chips button[aria-pressed="true"] i { color: var(--accent); }
+.chips button::after { content: ''; position: absolute; left: -2px; right: -2px; bottom: 0; height: 3px; border-radius: 3px; background: var(--shu); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.45s var(--ease); }
+.chips button[aria-pressed="true"]::after { transform: scaleX(1); }
+
+/* ask: suggestions as plain prompts */
+.ask__chips { gap: 6px 22px; }
+.ask__chips button { padding: 4px 0; border: 0; border-radius: 0; font: 400 15px/1.3 var(--serif); color: var(--fg-3); }
+.ask__chips button::before { content: '› '; color: var(--accent); }
+.ask__chips button:hover { color: var(--fg); }
+.ask__chips button.is-trick { font-style: italic; }
+
+/* small flags in writing: a word in vermilion, no outline */
+.art__flag { border: 0; padding: 0; margin-left: 12px; font: 600 12px/1 var(--serif); color: var(--fg-3); }
+.art__flag.is-new { color: var(--shu); }
+
+/* elsewhere: one line of links */
+.elsewhere { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 26px; max-width: none; font-size: 15px; line-height: 1.4; }
+.elsewhere__k { font: 500 13px/1 var(--serif); color: var(--shu); letter-spacing: 0.15em; }
+.elsewhere .social { color: var(--fg-3); transition: color 0.2s; }
+.elsewhere .social b { font-family: var(--serif); font-weight: 600; color: var(--fg); border: 0; margin-right: 6px; }
+.elsewhere .social:hover, .elsewhere .social:hover b { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title .line, .hero__lede, .hero__actions { opacity: 1; transform: none; filter: none; animation: none; }
 }

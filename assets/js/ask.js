@@ -96,7 +96,7 @@
     if (!$('#spotify')?.hidden) add($('#spotify'), `Music on Spotify: ${t($('#spotify'), '[data-spin-heading]')}, ${t($('#spotify'), '[data-spin-title]')} by ${t($('#spotify'), '[data-spin-artist]')}.`, 'Spotify');
     add($('.contact__lede'), txt($('.contact__lede')), '');
     const mail = $('#copy-email')?.dataset.email;
-    if (mail) add($('.mail'), `Email: ${mail}. Open to ML engineering roles in inference, serving and agent infrastructure.`, 'Email');
+    if (mail) add($('.mail'), `Email: ${mail}. Email is fastest; DMs on X work too.`, 'Email');
     const socials = $$('.social');
     if (socials.length) add(socials[0].parentElement, 'Contact links: ' + socials.map(x => `${t(x, '.social__k')} ${clean(txt(x.querySelector('b')))}`).join(', ') + '.', 'Links');
 
