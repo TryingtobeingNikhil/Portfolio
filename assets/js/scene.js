@@ -93,7 +93,7 @@
     const host = canvas.parentElement;
     const ctx = canvas.getContext('2d');
     const M = 48; // margin painted around every layer, for parallax
-    let WL = 0, moonX = 0, floats = [], reeds = [], viaY = 0, train = null, trainT = 6, chimneys = [], smoke = [], w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
+    let WL = 0, moonX = 0, floats = [], reeds = [], viaY = 0, train = null, trainT = 1.5, chimneys = [], smoke = [], w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
     let time = 0, last = 0, raf = 0, visible = true, booted = false, tempo = 1;
     let mx = 0, my = 0, tx = 0, ty = 0, wind = 0, px = -1, py = -1, pt = 0, fade = null, tod = timeOfDay();
     if (!opts.end) document.documentElement.dataset.tod = tod;
@@ -826,7 +826,7 @@
       ctx.restore();
     }
 
-    // A two-car local train along the viaduct every half a minute or so, windows lit.
+    // A three-car local train along the viaduct every fifteen seconds or so, windows lit.
     function drawTrain(dt, ox, oy) {
       if (!viaY) return;
       trainT -= dt;
@@ -834,7 +834,7 @@
       if (!train) return;
       train.x -= train.v * dt;
       const s = Math.max(0.75, Math.min(1.3, w / 1100)), carL = 128 * s, carH = 17 * s, gap = 5 * s, y = viaY + oy - 1, lit = pal.lit ?? 0.68;
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         const x0 = train.x + ox + i * (carL + gap);
         ctx.fillStyle = '#0c0b16';
         ctx.beginPath(); ctx.moveTo(x0 + (i ? 0 : 10 * s), y - carH); ctx.lineTo(x0 + carL, y - carH); ctx.lineTo(x0 + carL, y); ctx.lineTo(x0, y); ctx.lineTo(x0, y - carH + (i ? 0 : 8 * s)); ctx.closePath(); ctx.fill();
@@ -851,7 +851,7 @@
       }
       // the lit windows throw a little light, and the headlight a lot
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      const len = 2 * carL + gap, gx = train.x + ox + len / 2;
+      const len = 3 * carL + 2 * gap, gx = train.x + ox + len / 2;
       const gl = ctx.createRadialGradient(gx, y - carH / 2, 0, gx, y - carH / 2, len * 0.7);
       gl.addColorStop(0, A(pal.light, 0.12 * (lit + 0.3))); gl.addColorStop(1, A(pal.light, 0));
       ctx.fillStyle = gl; ctx.fillRect(gx - len, y - carH * 3, len * 2, carH * 5);
@@ -859,7 +859,7 @@
       hl.addColorStop(0, A('#fff2cc', 0.45)); hl.addColorStop(1, A('#fff2cc', 0));
       ctx.fillStyle = hl; ctx.beginPath(); ctx.moveTo(hx, y - carH * 0.55); ctx.lineTo(hx - 160 * s, y - carH * 1.6); ctx.lineTo(hx - 160 * s, y + carH * 0.4); ctx.closePath(); ctx.fill();
       ctx.restore();
-      if (train.x + 2 * (carL + gap) < -80) { train = null; trainT = 22 + Math.random() * 18; }
+      if (train.x + 3 * (carL + gap) < -80) { train = null; trainT = 13 + Math.random() * 4; }
     }
 
     // Smoke from two chimneys: soft puffs that rise, widen, lean with the breeze and fade.
