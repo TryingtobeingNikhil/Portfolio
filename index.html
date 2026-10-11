@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=55">
+  <link rel="stylesheet" href="./assets/css/main.css?v=56">
 
   <script>
     document.documentElement.classList.replace('no-js', 'js');
@@ -102,7 +102,7 @@
       </nav>
 
       <button class="nav__icon nav__season" type="button" data-season-next aria-label="Change the season" title="Change the season"><span data-season-kanji>秋</span></button>
-      <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Ambient sound" title="Sound: an original score over the sounds of the village, synthesised live in your browser. No audio files."><span class="nav__sndk">音</span><span class="snd" aria-hidden="true"><i></i><i></i><i></i></span></button>
+      <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Sound" title="Sound: an original score over the village at night, made live in your browser"><svg class="nav__spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 5.6v12.8l-4.4-3.9H4z" fill="currentColor"/><path class="nav__spk-off" d="M16 9.6l4.6 4.8M20.6 9.6 16 14.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="snd" aria-hidden="true"><i></i><i></i><i></i></span></button>
       <span class="nav__status" title="A lantern lights for each chapter you read"><span class="kvm" data-kvm aria-hidden="true"></span></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
@@ -153,6 +153,7 @@
             <button type="button" data-season-btn="autumn" aria-pressed="false" title="秋 aki · autumn">秋</button>
             <button type="button" data-season-btn="winter" aria-pressed="false" title="冬 fuyu · winter">冬</button>
           </div>
+          <span class="season__cap">season</span>
         </div>
       </div>
 
@@ -889,7 +890,7 @@
     </form>
   </dialog>
 
-  <script src="./assets/js/season.js?v=2" defer></script>
+  <script src="./assets/js/season.js?v=3" defer></script>
   <script src="./assets/js/scene.js?v=9" defer></script>
   <script src="./assets/js/inkwash.js?v=2" defer></script>
   <script src="./assets/js/print.js?v=2" defer></script>

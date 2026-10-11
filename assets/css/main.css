@@ -1986,3 +1986,22 @@ body { background: transparent; }
 .outro__note { padding-bottom: 0; font-family: var(--serif); }
 .footer__inner { font: 400 13px/1.4 var(--serif); }
 .footer__inner > * + *:not([hidden])::before { color: var(--fg-4); }
+
+/* seasons and sound, readable without Japanese: symbols, with the English name on hover */
+.season button { position: relative; display: grid; place-items: center; color: rgba(var(--fg-rgb), 0.6); }
+.season button svg { width: 16px; height: 16px; }
+.season button[aria-pressed="true"] { color: var(--bg); }
+.season__label {
+  position: absolute; right: calc(100% + 12px); top: 50%; padding: 5px 9px; border-radius: 3px; white-space: nowrap;
+  background: rgba(14, 13, 18, 0.92); box-shadow: inset 0 0 0 1px rgba(var(--w-rgb), 0.12);
+  font: 500 13px/1 var(--serif); color: var(--fg); text-shadow: none;
+  opacity: 0; transform: translate(6px, -50%); pointer-events: none; transition: opacity 0.2s, transform 0.25s var(--ease);
+}
+.season__label i { font-style: normal; color: var(--fg-3); margin-left: 4px; }
+.season button:hover .season__label, .season button:focus-visible .season__label { opacity: 1; transform: translate(0, -50%); }
+.season__cap { font: 400 11px/1 var(--serif); letter-spacing: 0.18em; color: rgba(var(--fg-rgb), 0.55); text-shadow: 0 1px 10px rgba(8, 9, 22, 0.8); }
+.nav__season { color: var(--season); }
+.nav__season span { display: grid; place-items: center; }
+.nav__season svg { width: 16px; height: 16px; }
+.nav__spk { width: 17px; height: 17px; }
+.nav__sound.is-on .nav__spk-off { display: none; }
