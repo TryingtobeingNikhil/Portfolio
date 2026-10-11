@@ -93,7 +93,7 @@
     const host = canvas.parentElement;
     const ctx = canvas.getContext('2d');
     const M = 48; // margin painted around every layer, for parallax
-    let w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
+    let WL = 0, moonX = 0, floats = [], reeds = [], w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
     let time = 0, last = 0, raf = 0, visible = true, booted = false, tempo = 1;
     let mx = 0, my = 0, tx = 0, ty = 0, wind = 0, px = -1, py = -1, pt = 0, fade = null, tod = timeOfDay();
     if (!opts.end) document.documentElement.dataset.tod = tod;
@@ -276,9 +276,11 @@
     /* ---------- compose: paint every static layer for this size + season ---------- */
     function compose() {
       pal = tune(PAL[SEASON.get()], opts.end ? 'night' : tod);
+      if (opts.river) pal = { ...pal, lit: 0.8 }; // the last scene: everyone is home
       nLayer = 0;
       const end = opts.end, wide = w > h, S = Math.min(w, h * 1.5) / 1000;
-      const H = h * (end ? 0.56 : wide ? 0.64 : 0.6);
+      const H = h * (end ? (opts.river ? 0.5 : 0.56) : wide ? 0.64 : 0.6);
+      WL = opts.river ? h * 0.7 : 0;
       const R = rng(opts.seed || 7);
 
       // sky
@@ -291,8 +293,33 @@
       const glow = s.createRadialGradient(gx, H, 0, gx, H, Math.max(w, h) * 0.7);
       glow.addColorStop(0, A(pal.glow, end ? 0.16 : 0.36)); glow.addColorStop(1, A(pal.glow, 0));
       s.fillStyle = glow; s.fillRect(-M, -M, w + 2 * M, h + 2 * M);
+      if (opts.river) {
+        // the Milky Way: a soft band, dark dust lanes along it, and dense star dust
+        const mw = rng(301), ax = -w * 0.05, ay = H * 0.95, bx = w * 1.05, by = h * 0.02;
+        const len = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / len, uy = (by - ay) / len, nx = -uy, ny = ux, ang = Math.atan2(uy, ux);
+        const gauss = () => (mw() + mw() + mw() - 1.5) / 1.5;
+        s.save(); s.filter = `blur(${Math.round(h * 0.03)}px)`;
+        for (let i = 0; i < 46; i++) {
+          const t = mw(), off = gauss() * h * 0.07, x = ax + ux * len * t + nx * off, y = ay + uy * len * t + ny * off;
+          s.fillStyle = A(i % 5 ? '#c7c1e6' : '#e8cfc0', 0.045 + mw() * 0.05);
+          s.beginPath(); s.ellipse(x, y, h * (0.07 + mw() * 0.09), h * (0.025 + mw() * 0.03), ang, 0, Math.PI * 2); s.fill();
+        }
+        for (let i = 0; i < 16; i++) {
+          const t = 0.15 + mw() * 0.7, off = gauss() * h * 0.015, x = ax + ux * len * t + nx * off, y = ay + uy * len * t + ny * off;
+          s.fillStyle = A(pal.sky[0], 0.3 + mw() * 0.2);
+          s.beginPath(); s.ellipse(x, y, h * (0.03 + mw() * 0.05), h * (0.006 + mw() * 0.01), ang + (mw() - 0.5) * 0.3, 0, Math.PI * 2); s.fill();
+        }
+        s.restore();
+        for (let i = 0; i < w * 1.4; i++) {
+          const t = mw(), off = gauss() * h * 0.06, x = ax + ux * len * t + nx * off, y = ay + uy * len * t + ny * off;
+          if (y > H) continue;
+          const sz = 0.4 + mw() * mw() * 1.2;
+          s.fillStyle = `rgba(255, 250, 240, ${(0.12 + mw() * 0.5).toFixed(3)})`; s.fillRect(x, y, sz, sz);
+        }
+      }
       // moon
-      const mo = pal.moon, mr = Math.max(9, mo.r * Math.min(w * 1.1, h * 1.6)), mX = w * (end ? 0.16 : wide ? mo.x : 0.56), mY = h * (end ? 0.22 : wide ? mo.y : 0.12);
+      const mo = pal.moon, mr = Math.max(9, mo.r * Math.min(w * 1.1, h * 1.6)), mX = w * (end ? 0.16 : wide ? mo.x : 0.56), mY = h * (end ? 0.2 : wide ? mo.y : 0.12);
+      moonX = mX;
       const halo = s.createRadialGradient(mX, mY, mr * 0.8, mX, mY, mr * 7);
       halo.addColorStop(0, A(mo.c, 0.22)); halo.addColorStop(1, A(mo.c, 0));
       if (!pal.day) { s.fillStyle = halo; s.beginPath(); s.arc(mX, mY, mr * 7, 0, Math.PI * 2); s.fill(); }
@@ -458,7 +485,7 @@
       const mr2 = rng(31);
       for (let x = -M; x < w + M; x += 7 + mr2() * 10) canopy(g, x, mf(x) + 3, (6 + mr2() * 9) * Math.max(0.7, S * 1.1), mix(pal.mid, pal.fol[(mr2() * pal.fol.length) | 0], 0.16 + mr2() * 0.16), mr2);
       if (opts.pagoda !== false) {
-        const pX = w * (wide ? 0.86 : 0.84), pS = Math.min(h * 0.24, Math.max(w * 0.17, 90));
+        const pX = w * (end ? 0.3 : wide ? 0.86 : 0.84), pS = Math.min(h * 0.24, Math.max(w * 0.17, 90));
         const tc = mix(pal.mid, pal.fg, 0.35);
         roof(g, pX - pS * 0.42, mf(pX - pS * 0.42) - pS * 0.1, pS * 0.32, pS * 0.12, tc, 1.2);
         g.fillStyle = tc; g.fillRect(pX - pS * 0.62, mf(pX - pS * 0.42) - pS * 0.1, pS * 0.4, pS * 0.12);
@@ -486,8 +513,10 @@
 
       // foreground: the village, poles, wires and lanterns
       const fgL = layer(), v = fgL.g, vr = rng(53);
-      const gy = h * 0.93, gn = noise(61), ground = x => gy - (gn(x / 160) - 0.5) * h * 0.04;
-      for (const [row, sc, y0] of [[0, 0.72, h * 0.84], [1, 1, h * 0.95]]) {
+      const gy = h * 0.93, gn = noise(61);
+      const ground = opts.river ? x => WL + 2 + (gn(x / 160) - 0.5) * 3 : x => gy - (gn(x / 160) - 0.5) * h * 0.04;
+      const rows = opts.river ? [[0, 0.5, WL - h * 0.04], [1, 0.62, WL + 1]] : [[0, 0.72, h * 0.84], [1, 1, h * 0.95]];
+      for (const [row, sc, y0] of rows) {
         let x = -M - vr() * 40;
         while (x < w + M) {
           const hw = (70 + vr() * 70) * sc * Math.max(0.6, S * 1.1), hh = (26 + vr() * 18) * sc * Math.max(0.6, S * 1.1);
@@ -500,6 +529,37 @@
       for (let x = -M; x <= w + M; x += 6) v.lineTo(x, ground(x));
       v.lineTo(w + M, h + M); v.closePath();
       v.fillStyle = pal.snow ? mix(pal.fg, '#c6d3e8', 0.12) : pal.fg; v.fill();
+
+      if (opts.river) {
+        // a street of paper lanterns along the bank
+        const ls = Math.max(0.7, S * 1.1);
+        for (let x = 18 + vr() * 30; x < w; x += 40 + vr() * 34) {
+          const ph = 11 * ls, ly = WL - 1 - ph - 2;
+          v.fillStyle = pal.fg; v.fillRect(x - 0.8, ly, 1.6, ph + 2);
+          v.save(); v.globalCompositeOperation = 'lighter';
+          const gl = v.createRadialGradient(x, ly, 0, x, ly, 14 * ls); gl.addColorStop(0, A(pal.light, 0.5)); gl.addColorStop(1, A(pal.light, 0));
+          v.fillStyle = gl; v.fillRect(x - 14 * ls, ly - 14 * ls, 28 * ls, 28 * ls); v.restore();
+          v.fillStyle = mix(pal.light, '#ffffff', 0.3); v.beginPath(); v.ellipse(x, ly - 2 * ls, 2.3 * ls, 3.1 * ls, 0, 0, Math.PI * 2); v.fill();
+        }
+        // a vermilion taikobashi, arched over the water
+        const b0 = w * (wide ? 0.42 : 0.3), b1 = w * (wide ? 0.6 : 0.72), bh = h * 0.08, by = WL + 1, bc = mix('#c8432e', pal.fg, 0.32);
+        const at = (t, lift) => { const cx = (b0 + b1) / 2, cy = by - bh * 2; return [(1 - t) ** 2 * b0 + 2 * (1 - t) * t * cx + t * t * b1, (1 - t) ** 2 * (by - lift) + 2 * (1 - t) * t * (cy - lift) + t * t * (by - lift)]; };
+        const curve = lift => { v.beginPath(); for (let t = 0; t <= 1.0001; t += 0.02) { const [x, y] = at(t, lift); t ? v.lineTo(x, y) : v.moveTo(x, y); } v.stroke(); };
+        v.lineCap = 'round';
+        v.strokeStyle = mix(bc, '#000000', 0.4); v.lineWidth = 1.4;
+        for (const t of [0.22, 0.38, 0.62, 0.78]) { const [x, y] = at(t, 0); v.beginPath(); v.moveTo(x, y); v.lineTo(x, by); v.stroke(); }
+        v.strokeStyle = mix(bc, '#000000', 0.35); v.lineWidth = 7; curve(-2);
+        v.strokeStyle = bc; v.lineWidth = 4; curve(0);
+        v.lineWidth = 1.8; curve(13);
+        v.lineWidth = 1.3;
+        for (let t = 0; t <= 1.0001; t += 0.1) { const [x, y] = at(t, 0), [, y2] = at(t, 13); v.beginPath(); v.moveTo(x, y); v.lineTo(x, y2); v.stroke(); }
+        v.fillStyle = mix('#d8b56a', pal.fg, 0.3); // giboshi, the onion-shaped caps on the end posts
+        for (const t of [0, 1]) { const [x, y] = at(t, 13); v.beginPath(); v.arc(x, y - 2, 2.6, 0, Math.PI * 2); v.fill(); v.fillRect(x - 0.5, y - 7, 1, 4); }
+        // things that move on the water, and the near bank
+        floats = Array.from({ length: wide ? 12 : 7 }, () => ({ x: vr() * w, d: vr(), ph: vr() * 6 }));
+        reeds = [];
+        for (let x = -10; x < w + 10; x += 14 + vr() * 50) if (vr() < 0.55) reeds.push({ x, n: 4 + ((vr() * 7) | 0), hgt: (18 + vr() * 26) * Math.max(0.7, S * 1.2), cat: vr() < 0.4 });
+      }
 
       rope = null;
       if (opts.poles !== false && (wide || w > 700)) {
@@ -640,12 +700,109 @@
       raf = requestAnimationFrame(frame);
     }
 
+    // The river: everything above the waterline, mirrored and rippled, a road of
+    // moonlight, floating lanterns drifting downstream (toro nagashi), a boat,
+    // and the near bank with reeds and a stone lantern.
+    function drawRiver(dt) {
+      const depth = h - WL, src = Math.min(WL, depth), water = mix(pal.sky[1], '#02030a', 0.55);
+      const { c: rc, g: rg } = surface('refl', w * dpr, src * dpr);
+      rg.setTransform(1, 0, 0, -1, 0, src * dpr);
+      rg.drawImage(canvas, 0, Math.round((WL - src) * dpr), Math.round(w * dpr), Math.round(src * dpr), 0, 0, w * dpr, src * dpr);
+      ctx.fillStyle = water; ctx.fillRect(0, WL, w, depth);
+      for (let y = 0; y < src; y += 2) {
+        const k = y / src, off = Math.sin(time * 1.5 + y * 0.13) * (0.5 + k * 3.2) + Math.sin(time * 0.6 + y * 0.035) * k * 2.4;
+        ctx.drawImage(rc, 0, y * dpr, w * dpr, 2 * dpr, off, WL + y, w, 2.2);
+      }
+      const tint = ctx.createLinearGradient(0, WL, 0, h);
+      tint.addColorStop(0, A(water, 0.42)); tint.addColorStop(1, A(water, 0.86));
+      ctx.fillStyle = tint; ctx.fillRect(0, WL, w, depth);
+      ctx.fillStyle = A(pal.rim, 0.12); ctx.fillRect(0, WL, w, 1);
+      // the road of moonlight
+      const mc = pal.moon.c;
+      for (let i = 0; i < 46; i++) {
+        const k = i / 46, y = WL + 3 + Math.pow(k, 1.25) * depth * 0.95, spread = 6 + k * 46;
+        const a = Math.pow(0.5 + 0.5 * Math.sin(time * 2.6 + i * 7.31), 3) * 0.55 * (1 - k * 0.55);
+        if (a < 0.03) continue;
+        const x = moonX + Math.sin(i * 12.9898 + time * 0.7) * spread, len = 3 + k * 16;
+        ctx.fillStyle = A(mc, a); ctx.fillRect(x - len / 2, y, len, 1 + k);
+      }
+      // small breaks of light on the current
+      for (let i = 0; i < 18; i++) {
+        const y = WL + ((i * 37.7) % depth), x = ((i * 191.3 + time * (8 + (i % 5) * 3)) % (w + 60)) - 30;
+        ctx.fillStyle = A(pal.rim, 0.06 + 0.05 * Math.sin(time * 2 + i)); ctx.fillRect(x, y, 10 + (i % 4) * 6, 1);
+      }
+      // toro nagashi
+      floats.sort((a, b) => a.d - b.d).forEach(f => {
+        const sp = 5 + f.d * 11, s = 4.5 + f.d * 7;
+        f.x += sp * dt; if (f.x > w + 30) f.x = -30;
+        const y = WL + depth * (0.1 + f.d * 0.66) + Math.sin(time * 1.3 + f.ph) * 0.8;
+        const st = ctx.createLinearGradient(0, y, 0, y + s * 3.4);
+        st.addColorStop(0, A(pal.light, 0.4)); st.addColorStop(1, A(pal.light, 0));
+        ctx.fillStyle = st; ctx.fillRect(f.x - s * 0.4 + Math.sin(time * 2 + f.ph) * 0.6, y, s * 0.8, s * 3.4);
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        const gl = ctx.createRadialGradient(f.x, y - s * 0.7, 0, f.x, y - s * 0.7, s * 3);
+        gl.addColorStop(0, A(pal.light, 0.35)); gl.addColorStop(1, A(pal.light, 0));
+        ctx.fillStyle = gl; ctx.fillRect(f.x - s * 3, y - s * 3.7, s * 6, s * 6);
+        ctx.restore();
+        ctx.fillStyle = '#20150d'; ctx.fillRect(f.x - s * 0.72, y - s * 0.28, s * 1.44, s * 0.32);
+        const pg = ctx.createLinearGradient(0, y - s * 1.3, 0, y - s * 0.28);
+        pg.addColorStop(0, mix(pal.light, '#fff6e0', 0.55)); pg.addColorStop(1, pal.light);
+        ctx.fillStyle = pg; ctx.fillRect(f.x - s * 0.55, y - s * 1.3, s * 1.1, s * 1.02);
+        ctx.fillStyle = '#20150d'; ctx.fillRect(f.x - s * 0.62, y - s * 1.36, s * 1.24, s * 0.12); ctx.fillRect(f.x - s * 0.05, y - s * 1.3, s * 0.1, s);
+      });
+      // a boat, poled slowly across, with a lantern at the bow
+      const bs = Math.max(0.7, Math.min(1.3, w / 1100)), bx = w * (w > h ? 0.8 : 0.72) + Math.sin(time * 0.08) * 26, byy = WL + depth * 0.5 + Math.sin(time * 0.9) * 0.8;
+      ctx.save(); ctx.translate(bx, byy); ctx.scale(bs, bs);
+      ctx.fillStyle = 'rgba(3, 3, 8, 0.45)'; ctx.beginPath(); ctx.ellipse(0, 7, 34, 3, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#07070d';
+      ctx.beginPath(); ctx.moveTo(-36, -6); ctx.quadraticCurveTo(-30, 6, -18, 6); ctx.lineTo(22, 6); ctx.quadraticCurveTo(32, 4, 38, -9); ctx.lineTo(30, -3); ctx.lineTo(-30, -2); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-14, -2); ctx.lineTo(-14, -12); ctx.quadraticCurveTo(-3, -17, 8, -12); ctx.lineTo(8, -2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-26, -3); ctx.lineTo(-25, -15); ctx.lineTo(-21, -15); ctx.lineTo(-21, -3); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-30, -15); ctx.lineTo(-23, -21); ctx.lineTo(-16, -15); ctx.fill();
+      ctx.strokeStyle = '#07070d'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-22, -12); ctx.lineTo(-44, 16); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(30, -5); ctx.lineTo(33, -24); ctx.stroke();
+      ctx.globalCompositeOperation = 'lighter';
+      const lg = ctx.createRadialGradient(33, -22, 0, 33, -22, 16);
+      lg.addColorStop(0, A(pal.light, 0.6)); lg.addColorStop(1, A(pal.light, 0));
+      ctx.fillStyle = lg; ctx.fillRect(17, -38, 32, 32);
+      ctx.fillStyle = A(pal.light, 0.25); ctx.fillRect(31, 6, 4, 18);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = mix(pal.light, '#fff4dc', 0.3); ctx.beginPath(); ctx.ellipse(33, -21, 2.2, 3, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      // the near bank, its reeds, and a stone lantern
+      const nb = h - depth * 0.14;
+      ctx.fillStyle = '#05060b';
+      ctx.beginPath(); ctx.moveTo(0, h);
+      for (let x = 0; x <= w; x += 8) ctx.lineTo(x, nb + Math.sin(x * 0.013) * 4 + Math.sin(x * 0.041) * 2);
+      ctx.lineTo(w, h); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#06070c'; ctx.lineCap = 'round';
+      reeds.forEach(r => {
+        for (let i = 0; i < r.n; i++) {
+          const x0 = r.x + i * 2.4, y0 = nb + 4, hh = r.hgt * (0.6 + ((i * 37) % 10) / 25), sw = Math.sin(time * 1.1 + r.x * 0.05 + i * 0.7) * 3 + (i - r.n / 2) * 1.4;
+          ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0 + sw * 0.3, y0 - hh * 0.6, x0 + sw, y0 - hh); ctx.stroke();
+          if (r.cat && i % 3 === 0) { ctx.fillStyle = '#06070c'; ctx.beginPath(); ctx.ellipse(x0 + sw, y0 - hh - 3, 1.6, 4, sw * 0.03, 0, Math.PI * 2); ctx.fill(); }
+        }
+      });
+      const tx0 = w * 0.9, ts = Math.max(0.8, Math.min(1.4, w / 1000)), tb = nb + 2;
+      ctx.save(); ctx.translate(tx0, tb); ctx.scale(ts, ts);
+      ctx.fillStyle = '#0b0c12';
+      ctx.fillRect(-9, -6, 18, 6); ctx.fillRect(-4, -26, 8, 20); ctx.fillRect(-10, -30, 20, 4); ctx.fillRect(-7, -42, 14, 12);
+      ctx.beginPath(); ctx.moveTo(-14, -42); ctx.lineTo(0, -52); ctx.lineTo(14, -42); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, -54, 2.4, 0, Math.PI * 2); ctx.fill();
+      ctx.globalCompositeOperation = 'lighter';
+      const sg = ctx.createRadialGradient(0, -36, 0, 0, -36, 26); sg.addColorStop(0, A(pal.light, 0.45)); sg.addColorStop(1, A(pal.light, 0));
+      ctx.fillStyle = sg; ctx.fillRect(-26, -62, 52, 52);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = mix(pal.light, '#ffe9bf', 0.3); ctx.fillRect(-3.5, -40, 7, 7);
+      ctx.restore();
+    }
+
     function render(dt) {
       if (!Number.isFinite(tx + ty + mx + my + wind)) tx = ty = mx = my = wind = 0;
       tx += (mx - tx) * Math.min(1, dt * 2.2); ty += (my - ty) * Math.min(1, dt * 2.2);
       wind *= Math.pow(0.35, dt);
-      const top = canvas.getBoundingClientRect().top, sc = Math.max(0, -top);
-      const put = (lay, depth, k) => ctx.drawImage(lay.c, 0, 0, lay.c.width, lay.c.height, -M - tx * depth * 22, -M - ty * depth * 10 + sc * k, w + 2 * M, h + 2 * M);
+      const top = canvas.getBoundingClientRect().top, sc = opts.river ? 0 : Math.max(0, -top), vy = opts.river ? 0 : 10;
+      const put = (lay, depth, k) => ctx.drawImage(lay.c, 0, 0, lay.c.width, lay.c.height, -M - tx * depth * 22, -M - ty * depth * vy + sc * k, w + 2 * M, h + 2 * M);
       ctx.fillStyle = pal.sky[0];
       ctx.fillRect(0, 0, w, h);
       put(L.sky, 0.05, 0.6);
@@ -660,6 +817,7 @@
       drawParts(dt, false);
       put(L.fg, 0.9, 0.08);
       drawLanterns(-tx * 0.9 * 22, -ty * 0.9 * 10 + sc * 0.08);
+      if (opts.river) drawRiver(dt);
       drawParts(dt, true);
       if (fade) {
         fade.a -= dt * 1.4;
@@ -727,7 +885,7 @@
   const hero = document.getElementById('scene');
   const heroScene = hero ? makeScene(hero, { seed: 7 }) : null;
   const tail = document.getElementById('scene-end');
-  if (tail) makeScene(tail, { end: true, seed: 19, pagoda: false, poles: false, branch: false });
+  if (tail) makeScene(tail, { end: true, seed: 19, poles: false, branch: false, river: true });
   // extras.js calls this while Spotify says I'm listening: the lanterns sway a little more
   window.FIELD = { tempo(v) { if (heroScene) heroScene.tempo(v); } };
 
