@@ -25,22 +25,29 @@
     winter: { leaf: '#3f4a52', moss: '#3c4848', bloom: ['#f4f7fc', '#e3ebf6'], litter: 0.25, snow: 1 },
   };
 
-  let L = 0, W = 0, H = 0, cx = 0, top = 0;
+  let L = 0, W = 0, H = 0;
 
+  // where each gate, its label, its lantern and its words sit, in timeline coordinates
   function layout() {
     const roles = [...tl.querySelectorAll(':scope > .role')];
     if (!roles.length) return null;
-    const g0 = roles[0].querySelector('.role__gate');
-    cx = roles[0].offsetLeft + g0.offsetLeft + g0.offsetWidth / 2;
-    const narrow = g0.offsetWidth < 110;
-    // the canvas runs from well left of the gates to just short of the text
-    L = Math.round(cx - (narrow ? 66 : 150)); W = Math.round((narrow ? 66 + 48 : 150 + 82)); H = tl.offsetHeight;
+    H = tl.offsetHeight;
+    const narrow = roles[0].querySelector('.role__gate').offsetWidth < 110;
     const gates = roles.map(r => {
-      const g = r.querySelector('.role__gate'), gt = g.querySelector('.gate'), wh = g.querySelector('.role__when');
+      const g = r.querySelector('.role__gate'), gt = g.querySelector('.gate'), wh = g.querySelector('.role__when'), m = r.querySelector('.role__main');
+      const gx = r.offsetLeft + g.offsetLeft, gy = r.offsetTop + g.offsetTop;
       // the gate is an svg (no offset*), and scaled until revealed: size it from its css width
-      const y0 = r.offsetTop + g.offsetTop + parseFloat(getComputedStyle(g).paddingTop), gw = parseFloat(getComputedStyle(gt).width);
-      return { foot: y0 + gw * 0.92, top: y0, gw, label: wh ? { y: r.offsetTop + g.offsetTop + wh.offsetTop, h: wh.offsetHeight, w: wh.offsetWidth } : null };
+      const top = gy + parseFloat(getComputedStyle(g).paddingTop), gw = parseFloat(getComputedStyle(gt).width), cx = gx + g.offsetWidth / 2;
+      return {
+        cx, top, foot: top + gw * 0.92, gw,
+        label: wh ? { x: gx + wh.offsetLeft, y: gy + wh.offsetTop, w: wh.offsetWidth, h: wh.offsetHeight } : null,
+        text: { x: r.offsetLeft + m.offsetLeft, y: r.offsetTop + m.offsetTop, w: m.offsetWidth, h: m.offsetHeight },
+        bottom: r.offsetTop + r.offsetHeight,
+      };
     });
+    const xs = gates.map(g => g.cx);
+    L = Math.round(Math.min(...xs) - (narrow ? 66 : 150));
+    W = Math.round(Math.max(...xs) + (narrow ? 60 : 110) - L);
     return { gates, narrow };
   }
 
@@ -170,28 +177,46 @@
     ctx.clearRect(L, 0, W, H);
     const season = window.SEASON ? window.SEASON.get() : 'autumn', look = LOOK[season] || LOOK.autumn;
 
-    // the line: through each gate, swinging out to alternate sides between them
-    const swingL = narrow ? 30 : 74, swingR = narrow ? 26 : 46;
-    const pts = [[cx, 0]];
+    // the line: down through each gate, then a long bend to the next one. The gates
+    // alternate left and right (css), so the bends sweep across the open ground.
+    const sw = narrow ? 24 : 64;
+    const pts = [[gates[0].cx, 0]];
     gates.forEach((g, i) => {
-      pts.push([cx, g.top + (g.foot - g.top) * 0.55]);
-      pts.push([cx, g.foot + 6]);
-      const next = gates[i + 1] ? gates[i + 1].top : H;
-      const side = i % 2 ? 1 : -1;
-      pts.push([cx + side * (side < 0 ? swingL : swingR), (g.foot + next) / 2 + 10]);
+      const n = gates[i + 1];
+      pts.push([g.cx, g.top + (g.foot - g.top) * 0.5]);
+      pts.push([g.cx, g.foot + 8]);
+      if (!n) { pts.push([g.cx - sw * 0.6, Math.min(H, g.foot + 90)], [g.cx - sw, H]); return; }
+      const tb = Math.max(g.foot + 40, g.text.y + g.text.h + 18);
+      if (n.cx > g.cx + 8) {
+        // left to right: stay left of this role's words, then cross in the gap under them
+        pts.push([g.cx - sw * 0.5, (g.foot + tb) / 2 + 6]);
+        pts.push([g.cx + (n.cx - g.cx) * 0.45, tb + (n.top - tb) * 0.42]);
+      } else if (n.cx < g.cx - 8) {
+        // right to left: one long sweep through the open ground beside this role
+        pts.push([g.cx - (g.cx - n.cx) * 0.3, g.foot + (n.top - g.foot) * 0.32]);
+        pts.push([n.cx - sw * 0.7, g.foot + (n.top - g.foot) * 0.66]);
+      } else {
+        pts.push([g.cx + (i % 2 ? sw : -sw), (g.foot + n.top) / 2 + 10]);
+      }
+      pts.push([n.cx, n.top - 18]);
     });
-    pts.push([cx, H]);
     const path = spline(pts);
+    const coarse = path.filter((_, i) => i % 3 === 0);
+    const toPath = (x, y) => { let d = 1e9; for (const [px, py] of coarse) { const e = (px - x) ** 2 + (py - y) ** 2; if (e < d) d = e; } return Math.sqrt(d); };
 
-    // keep the stones off the labels under each gate
-    const clear = gates.filter(g => g.label).map(g => ({ y0: g.label.y - 4, y1: g.label.y + g.label.h + 4, x0: cx - g.label.w / 2 - 6, x1: cx + g.label.w / 2 + 6 }));
-    const inGate = (x, y) => gates.some(g => y > g.top && y < g.foot + 2 && Math.abs(x - cx) < g.gw * 0.32);
-    const blocked = (x, y) => clear.some(c => y > c.y0 && y < c.y1 && x > c.x0 && x < c.x1);
+    // things the planting has to keep clear of: the words, the labels, the gates, the lanterns
+    const rects = [];
+    gates.forEach(g => {
+      rects.push({ x0: g.text.x - 14, x1: g.text.x + g.text.w + 14, y0: g.text.y - 16, y1: g.text.y + g.text.h + 12, hard: 1 });
+      if (g.label) rects.push({ x0: g.label.x - 6, x1: g.label.x + g.label.w + 6, y0: g.label.y - 4, y1: g.label.y + g.label.h + 4, hard: 1 });
+      rects.push({ x0: g.cx - g.gw * 0.56, x1: g.cx + g.gw * 0.56, y0: g.top - 10, y1: g.foot + 4 });
+      if (!narrow) rects.push({ x0: g.cx + 52, x1: g.cx + 84, y0: g.top + 44, y1: g.top + 96, hard: 1 });
+    });
+    const hit = (x, y, soft) => rects.some(c => (soft || c.hard) && x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1);
+    const blocked = (x, y) => hit(x, y, false);
+    const inGate = (x, y) => gates.some(g => y > g.top && y < g.foot + 2 && Math.abs(x - g.cx) < g.gw * 0.32);
 
     const r = rng(7 + gates.length * 13);
-    const nearGate = y => gates.some(g => y > g.top - 8 && y < g.foot + 26);
-    // the text starts just right of the canvas: tall things stay further left
-    const maxX = (tall) => cx + (narrow ? (tall ? 30 : 40) : (tall ? 52 : 66));
 
     // the bed: packed earth and gravel under the stones, mossy at the edges
     ctx.save();
@@ -212,41 +237,37 @@
       ctx.fillRect(x + (r() - 0.5) * (narrow ? 18 : 28), y + (r() - 0.5) * 3, 0.9, 0.9);
     }
 
-    // planting along both sides, more on the outside of each bend
+    // planting along both sides of the path
     let acc = 0;
     const props = [];
     const add = (x, y, kind, extra = {}) => {
-      const tall = kind === 'shrub' || kind === 'fern';
-      x = Math.max(L + 12, Math.min(maxX(tall), x));
-      if (!blocked(x, y) && !nearGate(y)) props.push({ x, y, kind, seed: (r() * 1e6 | 0) + 1, dir: Math.sign(x - cx) || 1, ...extra });
+      const tall = kind === 'shrub' || kind === 'fern' || extra.big;
+      if (x < L + 12 || x > L + W - 12) return;
+      if (hit(x, y, true) || hit(x - 12, y, true) || hit(x + 12, y, true) || (tall && (hit(x, y - 26, true) || hit(x + 14, y - 20, true)))) return;
+      props.push({ x, y, kind, seed: (r() * 1e6 | 0) + 1, dir: r() < 0.5 ? -1 : 1, ...extra });
     };
     for (let i = 1; i < path.length; i++) {
       const [x, y] = path[i], [px, py] = path[i - 1];
       acc += Math.hypot(x - px, y - py);
-      if (acc < (narrow ? 26 : 22)) continue;
+      if (acc < (narrow ? 24 : 20)) continue;
       acc = 0;
-      const out = Math.sign(x - cx) || (r() < 0.5 ? -1 : 1), sd = r() < 0.7 ? out : -out;
-      const off = (narrow ? 15 : 24) + r() * (narrow ? 12 : 30);
+      const tl2 = Math.hypot(x - px, y - py) || 1, nx = -(y - py) / tl2, ny = (x - px) / tl2;
+      const sd = r() < 0.5 ? -1 : 1, off = (narrow ? 15 : 24) + r() * (narrow ? 12 : 30);
       const roll = r();
-      if (r() < 0.85) add(x + sd * off, y + (r() - 0.5) * 16, roll < 0.2 ? 'rock' : roll < 0.55 ? 'grass' : roll < 0.75 ? 'fern' : 'shrub');
-      if (r() < look.litter) for (let k = 0; k < 3; k++) { const lx = x + (r() - 0.5) * 60, ly = y + (r() - 0.5) * 30; if (!blocked(lx, ly)) props.push({ x: lx, y: ly, kind: 'litter', seed: (r() * 1e6 | 0) + 1, low: 1 }); }
+      if (r() < 0.85) add(x + nx * off * sd, y + ny * off * sd + (r() - 0.5) * 10, roll < 0.2 ? 'rock' : roll < 0.6 ? 'grass' : roll < 0.84 ? 'fern' : 'shrub');
+      if (r() < look.litter) for (let k = 0; k < 3; k++) { const lx = x + (r() - 0.5) * 60, ly = y + (r() - 0.5) * 30; if (!hit(lx, ly, true)) props.push({ x: lx, y: ly, kind: 'litter', seed: (r() * 1e6 | 0) + 1, low: 1 }); }
     }
-    // a planted corner at each bend: a shrub, a rock behind it, a fern and grass
-    pts.forEach(([bx, by], i) => {
-      if (Math.abs(bx - cx) < 5 || i === pts.length - 1) return;
-      const left = bx < cx, o = left ? -1 : 1;
-      if (left) {
-        add(bx - (narrow ? 26 : 44), by - 18, 'rock', { big: 1 });
-        add(bx - (narrow ? 20 : 34), by + 4, 'shrub');
-        add(bx - (narrow ? 10 : 18), by + 26, 'fern');
-        add(bx - (narrow ? 30 : 52), by + 30, 'grass');
-      } else {
-        // on the right the text is close, so the corner planting sits inside the bend
-        add(bx - (narrow ? 26 : 40), by - 6, 'shrub');
-        add(bx - (narrow ? 34 : 56), by + 18, 'rock');
-        add(bx + o * 18, by + 16, 'grass');
-      }
-    });
+    // the open ground inside each bend gets a planted bed: a big rock, a shrub, ferns and grass
+    for (let k = 0, tries = 0; tries < (narrow ? 60 : 220); tries++) {
+      const x = L + 16 + r() * (W - 32), y = 20 + r() * (H - 40), d = toPath(x, y);
+      if (d < (narrow ? 26 : 40) || d > (narrow ? 60 : 120) || hit(x, y - 20, true) || hit(x, y, true)) continue;
+      if (props.some(p => !p.low && Math.hypot(p.x - x, p.y - y) < (narrow ? 26 : 38))) continue;
+      add(x, y, 'rock', { big: r() < 0.5 ? 1 : 0 });
+      add(x + 16 + r() * 10, y + 6, 'shrub');
+      add(x - 14 - r() * 8, y + 12, r() < 0.5 ? 'fern' : 'grass');
+      add(x + 4, y + 22, 'grass');
+      if (++k > (narrow ? 3 : gates.length * 2)) break;
+    }
     props.filter(p => p.low).forEach(p => { if (!blocked(p.x, p.y)) litter(p.x, p.y, s, rng(p.seed), look, season); });
     // the stones
     acc = 999;
@@ -266,6 +287,13 @@
       else if (p.kind === 'fern') fern(p.x, p.y, s, pr, look, p.dir);
       else shrub(p.x, p.y, s, pr, look, season);
     });
+    // let both ends of the path fade into the ground instead of stopping at an edge
+    ctx.save(); ctx.globalCompositeOperation = 'destination-out';
+    const fade = ctx.createLinearGradient(0, 0, 0, H);
+    fade.addColorStop(0, 'rgba(0,0,0,1)'); fade.addColorStop(Math.min(0.2, 30 / H), 'rgba(0,0,0,0)');
+    fade.addColorStop(Math.max(0.8, 1 - 110 / H), 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)');
+    ctx.fillStyle = fade; ctx.fillRect(L, 0, W, H);
+    ctx.restore();
     reveal();
   }
 
