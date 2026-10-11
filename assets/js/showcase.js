@@ -24,7 +24,7 @@
       exp: $('[data-s-exp]', root), speed: $('[data-s-speed]', root),
     };
     const SENTENCES = [
-      'Most people call the model. I write what runs it, then write about what broke along the way.',
+      'Reverse-engineering LLM inference and serving, then writing about what broke along the way.',
       'Continuous batching lets new requests join while earlier ones are still decoding.',
       'A paged KV cache stops long prompts from wasting memory on padding they never use.',
     ];

@@ -2092,3 +2092,8 @@ html { overflow-x: clip; }
 .lab__tabs { margin-bottom: 22px; }
 .lab > [role="tabpanel"][hidden] { display: none; }
 .lab__grid, .tokz { margin-top: 0; }
+
+/* hero: the name large, the two lines under it a step smaller */
+.hero__title .hero__sub { font-size: 0.6em; line-height: 1.25; font-weight: 500; color: rgba(var(--fg-rgb), 0.9); }
+.hero__title .hero__sub:nth-child(2) { margin-top: 0.35em; }
+@media (max-width: 680px) { .hero__title .hero__sub { font-size: 0.62em; } }
