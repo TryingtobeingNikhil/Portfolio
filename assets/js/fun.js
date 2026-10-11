@@ -1,4 +1,4 @@
-/* The playful layer: the precision slider on the portrait,
+/* The playful layer: the precision slider on the woodblock portrait,
    the temperature dial on About, the reading meter in the nav (tokens decoded,
    chapters in your KV cache), a 429 for over-eager email copiers, a backtick
    terminal, Konami debug mode, the GridWorld agent in Contact and the Lab
@@ -30,9 +30,9 @@
       [32, 'FP32', 'full precision'],
       [16, 'FP16', 'half the bits, nobody can tell'],
       [8, 'INT8', 'still me'],
-      [4, 'INT4', 'getting artsy'],
-      [2, 'INT2', 'a vibe, not a face'],
-      [1, 'INT1', 'one bit. still recognisably me. probably.'],
+      [4, 'INT4', 'sixteen blocks to carve'],
+      [2, 'INT2', 'four blocks. Hokusai would allow it'],
+      [1, 'INT1', 'one block of sumi. still me. probably.'],
     ];
     const kb = bytes => (bytes >= 1024 * 1024 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(0.1, bytes / 1024).toFixed(bytes < 10240 ? 1 : 0)} KB`);
     const label = $('[data-quant-label]'), note = $('[data-quant-note]');

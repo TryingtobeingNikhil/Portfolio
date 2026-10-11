@@ -583,31 +583,92 @@
   // extras.js calls this while Spotify says I'm listening: the lanterns sway a little more
   window.FIELD = { tempo(v) { if (heroScene) heroScene.tempo(v); } };
 
-  /* ---------------- the hanging scroll unrolls as you read down to it ---------------- */
-  // Scroll position sets a target; the paper eases toward it, so it has a little weight.
-  // Scrolling back up rolls it up again. Reduced motion: it simply hangs open.
+  /* ---------------- the hanging scroll: unrolls, then hangs like one ---------------- */
+  // Page scroll sets how far it has unrolled and the paper eases after it. Once
+  // open it is a damped pendulum on its nail: a breeze keeps it alive, scrolling
+  // and a cursor sweeping across it push it, and the bottom rod can be grabbed
+  // and flung. The paper is cloth, so its bottom trails the swing a little.
+  // print.js waits for the "unrolled" event before it presses the portrait.
   (function kakejiku() {
-    const fig = document.querySelector('.portrait.scroll'), paper = fig && fig.querySelector('.scroll__paper');
-    if (!fig || !paper || reduce) return;
-    let cur = 0, target = 0, raf = 0, last = 0;
-    const measure = () => fig.style.setProperty('--hpx', `${paper.offsetHeight}px`);
-    const tick = now => {
+    const fig = document.querySelector('.portrait.scroll');
+    const paper = fig && fig.querySelector('.scroll__paper'), rod = fig && fig.querySelector('.scroll__end');
+    if (!fig || !paper) return;
+    const open = () => { fig.classList.add('is-unrolled'); fig.dispatchEvent(new CustomEvent('unrolled')); };
+    if (reduce) { open(); return; }
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    let u = 0, uT = 0, th = 0, om = 0, raf = 0, last = 0, time = 0, hpx = 0;
+    let onScreen = false, landed = false, drag = null, sv = 0, lastY = window.scrollY, hx = -1, ht = 0;
+    const measure = () => { hpx = paper.offsetHeight; fig.style.setProperty('--hpx', `${hpx}px`); };
+
+    function tick(now) {
       raf = 0;
-      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
-      cur += (target - cur) * Math.min(1, dt * 7);
-      if (Math.abs(target - cur) < 0.002) cur = target;
-      fig.style.setProperty('--u', cur.toFixed(4));
-      fig.classList.toggle('is-open', cur > 0.995);
-      if (cur !== target) raf = requestAnimationFrame(tick); else last = 0;
-    };
+      const dt = Math.min(0.033, (now - (last || now)) / 1000); last = now; time += dt;
+      u += (uT - u) * Math.min(1, dt * 7);
+      if (Math.abs(uT - u) < 0.002) u = uT;
+      if (u > 0.995 && !landed) { landed = true; om += 0.26; open(); }
+      if (u < 0.5) landed = false;
+
+      if (drag) {
+        const prev = th;
+        th += (drag.th - th) * Math.min(1, dt * 16);
+        om = (th - prev) / Math.max(dt, 1 / 240);
+      } else {
+        // a shorter (still rolled) scroll swings faster, like a shorter pendulum
+        const k = 13 * (1.5 - 0.5 * u);
+        const breeze = (Math.sin(time * 0.61) + 0.6 * Math.sin(time * 1.43 + 1.3)) * 0.035;
+        om += (-k * Math.sin(th) - 1.15 * om + breeze + sv * 0.0013) * dt;
+        th += om * dt;
+      }
+      sv *= Math.pow(0.03, dt);
+      th = clamp(th, -0.7, 0.7);
+      const lag = clamp(-om * 10, -18, 18) * u;
+      fig.style.transform = `rotate(${th.toFixed(4)}rad)`;
+      fig.style.setProperty('--u', u.toFixed(4));
+      fig.style.setProperty('--lag', `${lag.toFixed(2)}px`);
+      fig.style.setProperty('--skew', `${Math.atan2(lag, Math.max(1, hpx)).toFixed(4)}rad`);
+      if (onScreen || drag || u !== uT || Math.abs(om) > 0.003) raf = requestAnimationFrame(tick); else last = 0;
+    }
+    const wake = () => { if (!raf) raf = requestAnimationFrame(tick); };
+
     const aim = () => {
       const top = fig.getBoundingClientRect().top, vh = window.innerHeight;
-      const t = Math.min(1, Math.max(0, (vh * 0.95 - top) / (vh * 0.55)));
-      target = t * t * (3 - 2 * t);
-      if (!raf && target !== cur) raf = requestAnimationFrame(tick);
+      const t = clamp((vh * 0.95 - top) / (vh * 0.55), 0, 1);
+      uT = t * t * (3 - 2 * t);
+      const y = window.scrollY;
+      sv = clamp(sv + (y - lastY), -400, 400); lastY = y;
+      wake();
     };
+
+    // a cursor sweeping across the paper gives it a nudge
+    fig.addEventListener('pointermove', e => {
+      if (drag || e.pointerType !== 'mouse' || e.target.closest('.quant')) { hx = -1; return; }
+      const now = performance.now();
+      if (hx >= 0 && now - ht < 80) om = clamp(om - clamp((e.clientX - hx) / Math.max(4, now - ht), -3, 3) * 0.05, -2.5, 2.5);
+      hx = e.clientX; ht = now; wake();
+    });
+    fig.addEventListener('pointerleave', () => { hx = -1; });
+
+    // grab the bottom rod and swing it
+    if (rod) {
+      const pivot = () => { const r = fig.getBoundingClientRect(); return [r.left + r.width / 2, r.top - 30 * Math.cos(th)]; };
+      const follow = e => { const [px, py] = drag.p; drag.th = clamp(-Math.atan2(e.clientX - px, Math.max(40, e.clientY - py)), -0.7, 0.7); };
+      rod.addEventListener('pointerdown', e => {
+        if (u < 0.95) return;
+        e.preventDefault();
+        rod.setPointerCapture(e.pointerId);
+        drag = { p: pivot(), th };
+        rod.classList.add('is-held');
+        follow(e); wake();
+      });
+      rod.addEventListener('pointermove', e => { if (drag) follow(e); });
+      const drop = () => { if (!drag) return; drag = null; rod.classList.remove('is-held'); wake(); };
+      rod.addEventListener('pointerup', drop);
+      rod.addEventListener('pointercancel', drop);
+    }
+
     measure();
     fig.style.setProperty('--u', '0');
+    new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; if (onScreen) wake(); }, { rootMargin: '120px 0px' }).observe(fig);
     aim();
     window.addEventListener('scroll', aim, { passive: true });
     window.addEventListener('resize', () => { measure(); aim(); }, { passive: true });
