@@ -42,8 +42,9 @@
     // lives in the URL (#writing/rlforge) so a series can be shared as one link.
     const slug = name => name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const chipsBox = $('[data-lib-chips]'), qBox = $('[data-lib-q]'), sortBox = $('[data-lib-sort]');
-    const SHOW = 5, FOLD_ABOVE = 6, FRESH_DAYS = 10; // only fold series long enough for it to matter
-    const st = { series: 'all', sort: 'order', q: '', open: new Set() };
+    // One series at a time (a tab per series), five parts showing until opened.
+    const SHOW = 5, FOLD_ABOVE = 5, FRESH_DAYS = 10;
+    const st = { series: null, sort: 'order', q: '', open: new Set() };
     let data = [];
 
     const fromHash = () => {
@@ -81,17 +82,17 @@
       const hit = x => !q || `${x.a.title} ${x.s.series} ${x.a.tag || ''} ${x.a.note || ''}`.toLowerCase().includes(q);
 
       if (chipsBox) {
-        chipsBox.innerHTML = `<button type="button" data-ls="all" aria-pressed="${st.series === 'all'}">All <i>${all.length}</i></button>` +
+        chipsBox.innerHTML =
           data.map(s => `<button type="button" data-ls="${slug(s.series)}" aria-pressed="${st.series === slug(s.series)}">${esc(s.series)} <i>${s.items.length}</i></button>`).join('');
       }
 
       if (st.sort === 'order' && !q) {
-        host.innerHTML = data.filter(s => st.series === 'all' || slug(s.series) === st.series).map(s => {
-          const key = slug(s.series), open = st.open.has(key) || st.series === key || s.items.length <= FOLD_ABOVE;
+        host.innerHTML = data.map((s, idx) => ({ s, idx })).filter(({ s }) => st.series === 'all' || slug(s.series) === st.series).map(({ s, idx }) => {
+          const key = slug(s.series), open = st.open.has(key) || s.items.length <= FOLD_ABOVE;
           const list = open ? s.items : s.items.slice(0, SHOW);
           const v = views(s.items);
           return `<section class="shelf" aria-label="${esc(s.series)}">
-            <h4 class="shelf__h"><span class="series__title">${esc(s.series)}</span><span class="series__meta">${s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length} pieces`}${v ? ` · ${compact(v)} views` : ''}</span></h4>
+            <h4 class="shelf__h" data-num="${'一二三四五六七八九十'[idx] || idx + 1}"><span class="series__title">${esc(s.series)}</span><span class="series__meta">${s.numbered ? `${s.items.length} part${s.items.length === 1 ? '' : 's'}` : `${s.items.length} pieces`}${v ? ` · ${compact(v)} views` : ''}</span></h4>
             ${list.map((a, i) => row(a, s, i, false, maxV, newest)).join('')}
             ${!open ? `<button class="shelf__more" type="button" data-lib-open="${key}">Show all ${s.items.length} <span aria-hidden="true">↓</span></button>` : ''}
           </section>`;
@@ -134,7 +135,11 @@
       window.ARTICLES_MERGED = data;
       const total = data.reduce((n, s) => n + s.items.length, 0);
       const totalViews = data.reduce((n, s) => n + views(s.items), 0);
-      if (st.series !== 'all' && !data.some(s => slug(s.series) === st.series)) st.series = 'all';
+      // open on the series that holds the newest piece, unless the URL asks for one
+      if (!st.series || (st.series !== 'all' && !data.some(s => slug(s.series) === st.series))) {
+        const newest = data.flatMap(s => s.items.map(a => ({ a, s }))).reduce((b, x) => (!b || `${x.a.date}|${x.a.added || ''}` > `${b.a.date}|${b.a.added || ''}` ? x : b), null);
+        st.series = newest ? slug(newest.s.series) : (data[0] ? slug(data[0].series) : 'all');
+      }
       draw();
 
       // the newest piece gets its own row, with the note written for it (if any)

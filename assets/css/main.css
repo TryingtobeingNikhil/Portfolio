@@ -1606,7 +1606,7 @@ body { background: transparent; }
   border: 0; border-radius: 0; background: none; box-shadow: none;
 }
 .shelf__h::before {
-  content: counter(shelf, cjk-decimal); position: absolute; left: 4px; top: -4px; width: 30px; height: 70px;
+  content: attr(data-num); position: absolute; left: 4px; top: -4px; width: 30px; height: 70px;
   display: grid; place-items: center; writing-mode: vertical-rl;
   font: 600 15px/1 var(--serif); color: #2a1f16;
   background: linear-gradient(180deg, #efe4cc, #e2d3b2); border-radius: 1px;
@@ -2083,3 +2083,12 @@ html { overflow-x: clip; }
 @media (prefers-reduced-transparency: reduce) {
   .nav__capsule, .mobile-menu { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(18, 17, 26, 0.94); }
 }
+
+/* writing: one series at a time, so the tabs and the book sit close together */
+.lib__bar { margin-bottom: 30px; }
+.shelf + .shelf { margin-top: 48px; }
+
+/* lab: tabs over one room at a time */
+.lab__tabs { margin-bottom: 22px; }
+.lab > [role="tabpanel"][hidden] { display: none; }
+.lab__grid, .tokz { margin-top: 0; }

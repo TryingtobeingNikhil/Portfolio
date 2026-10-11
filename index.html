@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=60">
+  <link rel="stylesheet" href="./assets/css/main.css?v=61">
 
   <script>
     document.documentElement.classList.replace('no-js', 'js');
@@ -667,7 +667,12 @@
           <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
         </header>
         <div class="lab" data-reveal>
-          <div class="spec" id="spec">
+          <div class="chips lab__tabs" role="tablist" aria-label="Lab toys" data-lab-tabs>
+            <button type="button" role="tab" aria-pressed="true" aria-selected="true" aria-controls="spec">Speculative decoding</button>
+            <button type="button" role="tab" aria-pressed="false" aria-selected="false" aria-controls="lab-small">Temperature, learning rate, attention</button>
+            <button type="button" role="tab" aria-pressed="false" aria-selected="false" aria-controls="toy-tok">Tokenizer</button>
+          </div>
+          <div class="spec" id="spec" role="tabpanel">
             <div class="spec__head">
               <div>
                 <h4>Speculative decoding <span class="spec__tag">how fast inference cheats, honestly</span></h4>
@@ -691,7 +696,7 @@
             <p class="spec__legend" aria-hidden="true"><span class="k-draft">drafted</span><span class="k-ok">accepted for free</span><span class="k-bad">rejected</span><span class="k-fix">from the target model</span></p>
           </div>
 
-          <div class="lab__grid">
+          <div class="lab__grid" id="lab-small" role="tabpanel" hidden>
             <div class="toy" id="toy-temp">
               <div class="toy__stage">
                 <p class="toy__prompt">The KV cache stores the <span class="toy__blank" data-pick>____</span></p>
@@ -726,7 +731,7 @@
             </div>
           </div>
 
-          <div class="tokz" id="toy-tok">
+          <div class="tokz" id="toy-tok" role="tabpanel" hidden>
             <div class="tokz__head">
               <h4>Tokenizer, the step before BPE <span class="spec__tag">type anything</span></h4>
               <p>The split GPT-2 makes before BPE, live. Your name costs more tokens than "the".</p>
@@ -748,15 +753,12 @@
           <h2 class="shead__title">I build it, then I write it down. <span class="dim">Usually in that order.</span></h2>
         </header>
         <div class="writing" data-reveal>
-          <p class="writing__stats"><span><b data-article-count>20</b> articles</span><span><b>~2M</b> impressions since July</span><span><b>~120K</b> views on inference posts</span><span><b>~20K</b> on RL posts</span></p>
           <div class="latest" data-latest hidden></div>
           <div class="lib" data-lib>
             <div class="lib__bar">
               <div class="chips" role="group" aria-label="Filter by series" data-lib-chips></div>
               <div class="lib__tools">
                 <button class="writing__add" type="button" data-publish-open hidden><span aria-hidden="true">+</span> Add article</button>
-                <label class="lib__search"><span aria-hidden="true">›</span><input type="search" placeholder="Search articles" aria-label="Search articles" autocomplete="off" spellcheck="false" data-lib-q></label>
-                <label class="lib__sort"><span class="lib__sortk">sort</span><select data-lib-sort aria-label="Sort articles"><option value="order">reading order</option><option value="new">newest</option><option value="top">most read</option></select></label>
               </div>
             </div>
             <div class="lib__list" data-articles>
@@ -893,9 +895,9 @@
   <script src="./assets/js/main.js?v=19" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=21" defer></script>
-  <script src="./assets/js/chapters.js?v=3" defer></script>
-  <script src="./assets/js/showcase.js?v=4" defer></script>
+  <script src="./assets/js/extras.js?v=23" defer></script>
+  <script src="./assets/js/chapters.js?v=4" defer></script>
+  <script src="./assets/js/showcase.js?v=5" defer></script>
   <script src="./assets/js/ask.js?v=5" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
   <script src="./assets/js/fun.js?v=8" defer></script>
