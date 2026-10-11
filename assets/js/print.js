@@ -47,28 +47,30 @@
       for (let i = 0; i < L.length; i++) L[i] = (d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11) / 255;
       return L;
     };
-    try { sharp = read(0); soft = read(1.6 * dpr); } catch (_) { return false; }
+    let lines;
+    try { sharp = read(0.5 * dpr); soft = read(1.6 * dpr); lines = read(2.4 * dpr); } catch (_) { return false; }
     const hist = [];
     for (let i = 0; i < sharp.length; i += 7) hist.push(sharp[i]);
     hist.sort((a, b) => a - b);
-    const lo = hist[(hist.length * 0.02) | 0], hi = hist[(hist.length * 0.995) | 0];
-    for (const L of [sharp, soft]) for (let i = 0; i < L.length; i++) L[i] = Math.pow(Math.min(1, Math.max(0, (L[i] - lo) / (hi - lo))), 0.95);
+    const lo = hist[(hist.length * 0.01) | 0], hi = hist[(hist.length * 0.998) | 0];
+    // a gentle stretch: lift the blacks and keep skin off bare paper, so nothing clips
+    for (const L of [sharp, soft, lines]) for (let i = 0; i < L.length; i++) L[i] = 0.1 + 0.8 * Math.pow(Math.min(1, Math.max(0, (L[i] - lo) / (hi - lo))), 0.9);
 
-    // key block: Sobel on the softened image, so it cuts lines and not pores
+    // key block: Sobel on a well-softened copy, so it cuts one clean line per edge (glasses included)
     edge = new Float32Array(W * H);
     for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
-      const i = y * W + x, s = soft;
+      const i = y * W + x, s = lines;
       const gx = s[i - W + 1] + 2 * s[i + 1] + s[i + W + 1] - s[i - W - 1] - 2 * s[i - 1] - s[i + W - 1];
       const gy = s[i + W - 1] + 2 * s[i + W] + s[i + W + 1] - s[i - W - 1] - 2 * s[i - W] - s[i - W + 1];
       const m = Math.sqrt(gx * gx + gy * gy) / dpr;
-      edge[i] = Math.min(1, Math.max(0, (m - 0.16) / 0.3));
+      edge[i] = Math.min(1, Math.max(0, (m - 0.2) / 0.38));
     }
     // the cherry block leaves its grain in the ink: long horizontal streaks, plus washi fibre
     grain = new Float32Array(W * H);
     const rows = Array.from({ length: H }, () => Math.random()), cols = Array.from({ length: (W >> 3) + 2 }, () => Math.random());
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const c = cols[x >> 3] + ((cols[(x >> 3) + 1] - cols[x >> 3]) * (x & 7)) / 8;
-      grain[y * W + x] = 0.86 + 0.1 * (0.5 + 0.5 * Math.sin(y / dpr * 0.9 + c * 5 + rows[y] * 0.8)) + Math.random() * 0.04;
+      grain[y * W + x] = 0.9 + 0.06 * (0.5 + 0.5 * Math.sin(y / dpr * 0.9 + c * 5 + rows[y] * 0.8)) + Math.random() * 0.03;
     }
     return true;
   }
@@ -93,13 +95,13 @@
       }
       paper.data.set([pr, pg, pb, 255], o);
       // tone blocks: light, mid, dark; anything brighter stays bare paper
-      const b = n === 2 ? (q < 0.5 ? 2 : -1) : q < 0.3 ? 2 : q < 0.56 ? 1 : q < 0.84 ? 0 : -1;
+      const b = n === 2 ? (q < 0.5 ? 2 : -1) : q < 0.32 ? 2 : q < 0.58 ? 1 : q < 0.89 ? 0 : -1;
       if (b >= 0) {
         const [r, g, bl] = n === 2 ? SUMI : ramp(q);
         const d = grain[i];
         tone[b].data.set([pr + (r - pr) * d, pg + (g - pg) * d, pb + (bl - pb) * d, 255], o);
       }
-      const e = edge[i] * (n === 2 ? 0.6 : 0.85);
+      const e = edge[i] * (n === 2 ? 0.5 : n ? 0.6 : 0.42);
       if (e > 0.02) key.data.set([SUMI[0], SUMI[1], SUMI[2], e * 255 * grain[i]], o);
     }
     const toCanvas = id => { const c = surface(W, H); c.getContext('2d').putImageData(id, 0, 0); return c; };

@@ -1397,6 +1397,13 @@ body { background: linear-gradient(180deg, #0e1020 0, var(--bg) 40%, #090a13 100
   background: linear-gradient(180deg, #11152b, #2a3260 45%, #161a34);
   box-shadow: 0 -1px 0 rgba(var(--accent-rgb), 0.18) inset;
 }
+/* the string, and the brass nail it hangs from: the nail is the pivot, so it never moves */
+.portrait.scroll::before { content: ''; position: absolute; left: 50%; top: -31px; width: 84px; height: 30px; transform: translateX(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 30' fill='none' stroke='rgb(214,190,150)' stroke-opacity='0.7' stroke-width='1.2'%3E%3Cpath d='M4 30 L40 3 L76 30'/%3E%3C/svg%3E") center / contain no-repeat; }
+.portrait.scroll::after {
+  content: ''; position: absolute; left: 50%; top: -35px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff1c9, #d9a95a 40%, #6b4a1c 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.6), 1px 3px 6px rgba(0, 0, 0, 0.35);
+}
 .scroll__rod { position: absolute; left: -9px; right: -9px; top: -6px; height: 10px; border-radius: 5px; background: linear-gradient(180deg, #6a4428, #2b170b); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); }
 .scroll__rod--end { top: 0; height: 12px; }
 .scroll__rod::before, .scroll__rod::after { content: ''; position: absolute; top: -1px; bottom: -1px; width: 7px; border-radius: 3px; background: linear-gradient(180deg, #e9c27f, #8a6328); }

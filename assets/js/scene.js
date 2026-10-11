@@ -261,11 +261,61 @@
       const halo = s.createRadialGradient(mX, mY, mr * 0.8, mX, mY, mr * 7);
       halo.addColorStop(0, A(mo.c, 0.22)); halo.addColorStop(1, A(mo.c, 0));
       s.fillStyle = halo; s.beginPath(); s.arc(mX, mY, mr * 7, 0, Math.PI * 2); s.fill();
+      const ring = s.createRadialGradient(mX, mY, mr * 1.02, mX, mY, mr * 1.65);
+      ring.addColorStop(0, A(mo.c, 0.18)); ring.addColorStop(1, A(mo.c, 0));
+      s.fillStyle = ring; s.beginPath(); s.arc(mX, mY, mr * 1.65, 0, Math.PI * 2); s.fill();
       const { c: mc, g: m } = surface('moon', mr * 2.4 * ldpr, mr * 2.4 * ldpr); m.scale(ldpr, ldpr);
-      m.fillStyle = mo.c; m.beginPath(); m.arc(mr * 1.2, mr * 1.2, mr, 0, Math.PI * 2); m.fill();
-      if (mo.full) { m.fillStyle = 'rgba(120,90,60,0.08)'; [[0.8, 0.9, 0.28], [1.45, 1.1, 0.2], [1.1, 1.55, 0.24], [1.5, 0.75, 0.12]].forEach(([a, b, c]) => { m.beginPath(); m.arc(mr * a, mr * b, mr * c, 0, Math.PI * 2); m.fill(); }); }
-      else { m.globalCompositeOperation = 'destination-out'; m.beginPath(); m.arc(mr * 1.2 + mr * 0.45, mr * 1.2 - mr * 0.18, mr * 0.92, 0, Math.PI * 2); m.fill(); }
+      const mcx = mr * 1.2, mcy = mr * 1.2, mrn = rng(97), sea = mix(mo.c, '#5e5668', 0.42);
+      // the disc, darker toward the limb
+      const disc = m.createRadialGradient(mcx - mr * 0.3, mcy - mr * 0.3, mr * 0.05, mcx, mcy, mr);
+      disc.addColorStop(0, mix(mo.c, '#ffffff', 0.4)); disc.addColorStop(0.65, mo.c); disc.addColorStop(1, mix(mo.c, '#6d6070', 0.32));
+      m.fillStyle = disc; m.beginPath(); m.arc(mcx, mcy, mr, 0, Math.PI * 2); m.fill();
+      m.save(); m.beginPath(); m.arc(mcx, mcy, mr, 0, Math.PI * 2); m.clip();
+      // the maria, roughly where they sit on the near side: Imbrium, Serenitatis, Tranquillitatis, Procellarum, Nubium...
+      [[-0.32, -0.3, 0.34, 0.8], [0.2, -0.36, 0.2, 0.9], [0.4, -0.04, 0.24, 0.75], [-0.58, 0.08, 0.3, 0.6], [0.02, 0.02, 0.16, 0.6], [-0.16, 0.44, 0.22, 0.65], [0.34, 0.34, 0.13, 0.55], [0.62, -0.32, 0.1, 0.6]].forEach(([x, y, r, a]) => {
+        for (let k = 0; k < 4; k++) { // a few offset blobs each, so the edges are ragged
+          const bx = mcx + (x + (mrn() - 0.5) * r * 0.7) * mr, by = mcy + (y + (mrn() - 0.5) * r * 0.7) * mr, rr = r * (0.55 + mrn() * 0.5) * mr;
+          const g2 = m.createRadialGradient(bx, by, 0, bx, by, rr);
+          g2.addColorStop(0, A(sea, 0.34 * a)); g2.addColorStop(0.6, A(sea, 0.22 * a)); g2.addColorStop(1, A(sea, 0));
+          m.fillStyle = g2; m.beginPath(); m.arc(bx, by, rr, 0, Math.PI * 2); m.fill();
+        }
+      });
+      // craters, lit from the upper left: shadowed rim up there, bright rim below
+      for (let i = 0; i < 18; i++) {
+        const ang = mrn() * Math.PI * 2, d = Math.sqrt(mrn()) * 0.86, cr = (0.025 + mrn() * mrn() * 0.08) * mr;
+        const x = mcx + Math.cos(ang) * d * mr, y = mcy + Math.sin(ang) * d * mr;
+        m.fillStyle = A(sea, 0.16); m.beginPath(); m.arc(x, y, cr, 0, Math.PI * 2); m.fill();
+        m.lineWidth = Math.max(0.5, cr * 0.28);
+        m.strokeStyle = A('#ffffff', 0.32); m.beginPath(); m.arc(x, y, cr, 0.1 * Math.PI, 0.9 * Math.PI); m.stroke();
+        m.strokeStyle = A(sea, 0.4); m.beginPath(); m.arc(x, y, cr, 1.15 * Math.PI, 1.85 * Math.PI); m.stroke();
+      }
+      // Tycho and its rays
+      const tyX = mcx - 0.12 * mr, tyY = mcy + 0.62 * mr;
+      m.strokeStyle = A('#ffffff', 0.09); m.lineWidth = Math.max(0.6, mr * 0.018);
+      for (let i = 0; i < 9; i++) { const ang = mrn() * Math.PI * 2, l = (0.4 + mrn() * 0.7) * mr; m.beginPath(); m.moveTo(tyX, tyY); m.lineTo(tyX + Math.cos(ang) * l, tyY + Math.sin(ang) * l); m.stroke(); }
+      m.fillStyle = A('#ffffff', 0.55); m.beginPath(); m.arc(tyX, tyY, mr * 0.035, 0, Math.PI * 2); m.fill();
+      // regolith grain
+      for (let i = 0; i < mr * 10; i++) {
+        const ang = mrn() * Math.PI * 2, d = Math.sqrt(mrn()) * mr;
+        m.fillStyle = A(mrn() < 0.5 ? '#ffffff' : sea, 0.05); m.fillRect(mcx + Math.cos(ang) * d, mcy + Math.sin(ang) * d, 0.8, 0.8);
+      }
+      m.restore();
+      if (!mo.full) {
+        // a crescent, with earthshine still faintly lighting the rest of the disc
+        m.globalCompositeOperation = 'destination-out'; m.fillStyle = 'rgba(0,0,0,0.86)';
+        m.beginPath(); m.arc(mcx + mr * 0.45, mcy - mr * 0.18, mr * 0.92, 0, Math.PI * 2); m.fill();
+        m.globalCompositeOperation = 'source-over';
+      }
       s.drawImage(mc, mX - mr * 1.2, mY - mr * 1.2, mr * 2.4, mr * 2.4);
+      // a few wisps of cloud across it, silver on the edge that faces the moon
+      s.save(); s.filter = `blur(${Math.max(1.5, mr * 0.06).toFixed(1)}px)`;
+      const wisp = mix(stops[1], stops[2], 0.4);
+      [[-0.9, 0.55, 2.6, 0.16], [0.35, 0.85, 2.2, 0.12], [-0.25, -0.98, 1.6, 0.08]].forEach(([dx, dy, rw, rh]) => {
+        const cx2 = mX + dx * mr, cy2 = mY + dy * mr;
+        s.fillStyle = A(wisp, 0.55); s.beginPath(); s.ellipse(cx2, cy2, rw * mr, rh * mr, -0.06, 0, Math.PI * 2); s.fill();
+        s.fillStyle = A(mo.c, 0.24); s.beginPath(); s.ellipse(cx2, cy2 - Math.sign(dy) * rh * mr * 0.55, rw * mr * 0.85, rh * mr * 0.4, -0.06, 0, Math.PI * 2); s.fill();
+      });
+      s.restore();
       L.sky = sky;
 
       stars = [];
@@ -279,27 +329,86 @@
       const far = layer(), f = far.g;
       const fx = w * (end ? 0.82 : wide ? 0.62 : 0.66), peak = H - Math.min(h * (end ? 0.2 : 0.3), w * (end ? 0.12 : wide ? 0.24 : 0.42)), base = H + h * 0.02;
       if (opts.fuji !== false) {
-        const half = (base - peak) * 2.35, fn = noise(5), fp = new Path2D();
+        const half = (base - peak) * 2.35, fh = base - peak, fn = noise(5), fr = rng(13), fp = new Path2D();
+        const prof = u => peak + fh * (1 - Math.pow(1 - Math.max(Math.abs(u), 0.04), 2.5));
         fp.moveTo(fx - half - 4, base + 4);
-        for (let u = -1; u <= 1.0001; u += 0.008) {
-          const a = Math.max(Math.abs(u), 0.04);
-          fp.lineTo(fx + u * half, peak + (base - peak) * (1 - Math.pow(1 - a, 2.5)) + (fn(u * 30) - 0.5) * 2.5);
+        for (let u = -1; u <= 1.0001; u += 0.006) {
+          // the crater rim: a small notch either side of the flat summit
+          const notch = Math.abs(u) < 0.045 ? Math.max(0, 1.6 - Math.abs(Math.abs(u) - 0.022) * 90) : 0;
+          fp.lineTo(fx + u * half, prof(u) + notch + (fn(u * 30) - 0.5) * 2.5);
         }
         fp.lineTo(fx + half + 4, base + 4); fp.closePath();
         const fg = f.createLinearGradient(0, peak, 0, base);
         fg.addColorStop(0, mix(pal.far, pal.mist, 0.18)); fg.addColorStop(1, pal.far);
         f.fillStyle = fg; f.fill(fp);
         f.save(); f.clip(fp);
-        const capY = peak + (base - peak) * pal.cap, cap = new Path2D(), cn = noise(9);
+        // the face turned away from the sunset sits in shadow
+        const sh = f.createLinearGradient(fx - half * 0.15, 0, fx + half * 0.9, 0);
+        sh.addColorStop(0, A(pal.near, 0)); sh.addColorStop(1, A(pal.near, 0.45));
+        f.fillStyle = sh; f.fillRect(fx - half, peak - 10, half * 2, fh + 20);
+        // ravines: each follows the slope down from the summit
+        const xf = t => 1 - Math.pow(1 - t, 1 / 2.5), gullies = [];
+        for (let i = 0; i < 34; i++) {
+          const u = (i / 33) * 1.9 - 0.95 + (fr() - 0.5) * 0.04;
+          if (Math.abs(u) < 0.06) continue;
+          const pts = [], tEnd = 0.45 + fr() * 0.55, wob = noise(200 + i);
+          for (let t = 0.03; t <= tEnd; t += 0.02) pts.push([fx + Math.sign(u) * Math.abs(u) * xf(t) * half + (wob(t * 6) - 0.5) * 3, peak + fh * (0.082 + t * 0.918)]);
+          gullies.push(pts);
+        }
+        const line = pts => { f.beginPath(); pts.forEach(([x, y], k) => (k ? f.lineTo(x, y) : f.moveTo(x, y))); f.stroke(); };
+        f.lineCap = 'round';
+        f.strokeStyle = A(mix(pal.far, '#05040c', 0.45), 0.28);
+        gullies.forEach(g => { f.lineWidth = 0.6 + fr() * 0.9; line(g); });
+        // the snow cap
+        const capY = peak + fh * pal.cap, cap = new Path2D(), cn = noise(9);
         cap.moveTo(fx - half, peak - 10);
         for (let x = fx - half; x <= fx + half; x += 2) {
           const u = (x - fx) / half;
-          cap.lineTo(x, capY + Math.pow(Math.abs(Math.sin(u * 23)), 3) * (base - peak) * 0.09 * cn(u * 9) - Math.abs(u) * 4);
+          cap.lineTo(x, capY + Math.pow(Math.abs(Math.sin(u * 23)), 3) * fh * 0.09 * cn(u * 9) - Math.abs(u) * 4);
         }
         cap.lineTo(fx + half, peak - 10); cap.closePath();
         const cg = f.createLinearGradient(fx - half * 0.3, 0, fx + half * 0.3, 0);
         cg.addColorStop(0, mix(pal.far, '#f6f2ff', 0.58)); cg.addColorStop(1, mix(pal.far, '#f6f2ff', 0.3));
         f.fillStyle = cg; f.fill(cap);
+        // in the snow the ravines read as bright ridges with a shadow beside each
+        f.save(); f.clip(cap);
+        gullies.forEach(g => {
+          f.lineWidth = 1.1;
+          f.strokeStyle = A(mix(pal.far, '#05040c', 0.3), 0.3); line(g.map(([x, y]) => [x + 1.2, y]));
+          f.strokeStyle = A('#ffffff', 0.35); line(g);
+        });
+        f.globalAlpha = 0.6; f.fillStyle = sh; f.fillRect(fx - half, peak - 10, half * 2, fh + 20); f.globalAlpha = 1;
+        f.restore();
+        // snow fingers running down the ravines below the cap line
+        gullies.forEach(g => {
+          if (fr() < 0.35) return;
+          const start = g.findIndex(([, y]) => y > capY - 2);
+          if (start < 0) return;
+          const len = 2 + ((fr() * 6) | 0);
+          for (let k = 0; k < len && start + k + 1 < g.length; k++) {
+            f.strokeStyle = A(mix(pal.far, '#f6f2ff', 0.5), 0.55 * (1 - k / len)); f.lineWidth = 2.2 * (1 - k / len) + 0.4;
+            f.beginPath(); f.moveTo(...g[start + k]); f.lineTo(...g[start + k + 1]); f.stroke();
+          }
+        });
+        // the forest at its feet, a darker band of tiny treetops
+        const fb = base - fh * 0.1, tn = noise(17);
+        f.fillStyle = mix(pal.far, pal.near, 0.55);
+        f.beginPath(); f.moveTo(fx - half, base + 4);
+        for (let x = fx - half; x <= fx + half; x += 3) f.lineTo(x, fb + (tn(x / 40) - 0.5) * fh * 0.06 - fr() * 2);
+        f.lineTo(fx + half, base + 4); f.closePath(); f.fill();
+        f.restore();
+        // a lit edge on the sunset side
+        f.beginPath();
+        for (let u = -1; u <= 0.02; u += 0.01) (u === -1 ? f.moveTo(fx + u * half, prof(u)) : f.lineTo(fx + u * half, prof(u)));
+        f.strokeStyle = A(pal.rim, 0.35); f.lineWidth = 1.2; f.stroke();
+        // and a belt of cloud around the lower slopes
+        f.save(); f.filter = `blur(${Math.max(2, fh * 0.025).toFixed(1)}px)`;
+        const belt = peak + fh * 0.6, br = rng(29);
+        for (let i = 0; i < 9; i++) {
+          const x = fx + (br() * 1.5 - 0.7) * half * 0.8, ew = half * (0.12 + br() * 0.16), eh = fh * (0.025 + br() * 0.03), y = belt + (br() - 0.5) * fh * 0.06;
+          f.fillStyle = A(pal.mist, 0.22 + br() * 0.18); f.beginPath(); f.ellipse(x, y, ew, eh, 0, 0, Math.PI * 2); f.fill();
+          f.fillStyle = A(pal.rim, 0.12); f.beginPath(); f.ellipse(x - ew * 0.1, y - eh * 0.6, ew * 0.8, eh * 0.4, 0, 0, Math.PI * 2); f.fill();
+        }
         f.restore();
       }
       ridge(f, 11, H - h * 0.005, h * 0.05, 340, pal.far, pal.mist, 0.12);
