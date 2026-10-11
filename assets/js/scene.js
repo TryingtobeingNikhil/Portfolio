@@ -583,6 +583,36 @@
   // extras.js calls this while Spotify says I'm listening: the lanterns sway a little more
   window.FIELD = { tempo(v) { if (heroScene) heroScene.tempo(v); } };
 
+  /* ---------------- the hanging scroll unrolls as you read down to it ---------------- */
+  // Scroll position sets a target; the paper eases toward it, so it has a little weight.
+  // Scrolling back up rolls it up again. Reduced motion: it simply hangs open.
+  (function kakejiku() {
+    const fig = document.querySelector('.portrait.scroll'), paper = fig && fig.querySelector('.scroll__paper');
+    if (!fig || !paper || reduce) return;
+    let cur = 0, target = 0, raf = 0, last = 0;
+    const measure = () => fig.style.setProperty('--hpx', `${paper.offsetHeight}px`);
+    const tick = now => {
+      raf = 0;
+      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
+      cur += (target - cur) * Math.min(1, dt * 7);
+      if (Math.abs(target - cur) < 0.002) cur = target;
+      fig.style.setProperty('--u', cur.toFixed(4));
+      fig.classList.toggle('is-open', cur > 0.995);
+      if (cur !== target) raf = requestAnimationFrame(tick); else last = 0;
+    };
+    const aim = () => {
+      const top = fig.getBoundingClientRect().top, vh = window.innerHeight;
+      const t = Math.min(1, Math.max(0, (vh * 0.95 - top) / (vh * 0.55)));
+      target = t * t * (3 - 2 * t);
+      if (!raf && target !== cur) raf = requestAnimationFrame(tick);
+    };
+    measure();
+    fig.style.setProperty('--u', '0');
+    aim();
+    window.addEventListener('scroll', aim, { passive: true });
+    window.addEventListener('resize', () => { measure(); aim(); }, { passive: true });
+  })();
+
   /* ---------------- the rest of the page: a few things still falling ---------------- */
   // Sparse, behind nothing interactive, and asleep while either painting is on screen.
   (function drift() {

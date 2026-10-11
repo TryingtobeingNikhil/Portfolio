@@ -1370,15 +1370,33 @@ body { background: linear-gradient(180deg, #0e1020 0, var(--bg) 40%, #090a13 100
 
 /* ---------- the portrait, hung as a scroll (掛軸) ---------- */
 .about__side { display: grid; gap: 40px; }
+/* --u is how far it has unrolled (0 rolled up, 1 open), set from the page scroll in scene.js */
 .portrait.scroll {
   position: relative; justify-self: center; width: 100%; max-width: 252px; margin-top: 30px;
-  padding: 16px 13px 14px; border: 0; border-radius: 2px; overflow: visible;
+  padding: 0; border: 0; border-radius: 0; overflow: visible; background: none; box-shadow: none;
+  transform-origin: 50% -30px;
+}
+.portrait.scroll.is-open { animation: hang 1.6s var(--ease); }
+@keyframes hang { 25% { transform: rotate(0.9deg); } 55% { transform: rotate(-0.5deg); } 80% { transform: rotate(0.2deg); } }
+.scroll__paper {
+  padding: 16px 13px 14px; border-radius: 2px;
   background: var(--shippo) 0 0 / 22px 22px, linear-gradient(180deg, #1c2244, #141831);
   box-shadow: 0 34px 60px -28px rgba(0, 0, 0, 0.95), inset 0 0 0 1px rgba(var(--accent-rgb), 0.16);
+  clip-path: inset(0 0 calc((1 - var(--u, 1)) * 100%) 0);
 }
-.portrait.scroll::before { content: ''; position: absolute; left: 50%; top: -32px; width: 84px; height: 30px; transform: translateX(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 30' fill='none' stroke='rgb(228,173,98)' stroke-opacity='0.55'%3E%3Cpath d='M4 30 L40 2 L76 30'/%3E%3Ccircle cx='40' cy='3' r='2.5' fill='rgb(228,173,98)' fill-opacity='0.7'/%3E%3C/svg%3E") center / contain no-repeat; }
+.scroll__end {
+  position: absolute; left: 0; right: 0; bottom: -7px; height: 12px; z-index: 2;
+  transform: translateY(calc((var(--u, 1) - 1) * (var(--hpx, 0px) - 16px)));
+}
+/* the paper still wound round the bottom rod: thick when rolled up, a sliver when open */
+.scroll__roll {
+  position: absolute; left: 2px; right: 2px; bottom: 9px;
+  height: calc(3px + (1 - var(--u, 1)) * 11px); border-radius: 5px;
+  background: linear-gradient(180deg, #11152b, #2a3260 45%, #161a34);
+  box-shadow: 0 -1px 0 rgba(var(--accent-rgb), 0.18) inset;
+}
 .scroll__rod { position: absolute; left: -9px; right: -9px; top: -6px; height: 10px; border-radius: 5px; background: linear-gradient(180deg, #6a4428, #2b170b); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); }
-.scroll__rod--end { top: auto; bottom: -7px; height: 12px; }
+.scroll__rod--end { top: 0; height: 12px; }
 .scroll__rod::before, .scroll__rod::after { content: ''; position: absolute; top: -1px; bottom: -1px; width: 7px; border-radius: 3px; background: linear-gradient(180deg, #e9c27f, #8a6328); }
 .scroll__rod::before { left: -3px; }
 .scroll__rod::after { right: -3px; }
