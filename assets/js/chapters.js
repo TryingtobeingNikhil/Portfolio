@@ -19,9 +19,12 @@
       rows.forEach(li => { li.hidden = cat !== 'all' && li.dataset.cat !== cat; });
       if (chips) $$('[data-wf]', chips).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.wf === cat)));
     };
+    // each project is an ema plaque: the front turns it over, the back (away from its links) turns it back
     list.addEventListener('click', e => {
       const btn = e.target.closest('.wx__row');
-      if (btn) setOpen(btn.parentElement, !btn.parentElement.classList.contains('is-open'));
+      if (btn) { const li = btn.closest('.wx'); setOpen(li, !li.classList.contains('is-open')); return; }
+      const back = e.target.closest('.wx__body');
+      if (back && !e.target.closest('a')) { const li = back.closest('.wx'); setOpen(li, false); $('.wx__row', li).focus({ preventScroll: true }); }
     });
     if (chips) chips.addEventListener('click', e => { const b = e.target.closest('[data-wf]'); if (b) filter(b.dataset.wf); });
 

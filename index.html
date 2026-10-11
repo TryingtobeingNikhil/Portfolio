@@ -6,7 +6,7 @@
   <title>Nikhil Mourya · ML Engineer · LLM Inference · Multi-Agent Systems</title>
   <meta name="description" content="Nikhil Mourya is an ML engineer who builds the parts of AI most people import: PageServe, a vLLM-style inference engine, and RLForge, a from-scratch C++ RL library with its own autograd.">
   <meta name="author" content="Nikhil Mourya">
-  <meta name="theme-color" content="#0b0b0a">
+  <meta name="theme-color" content="#0e0d0f">
   <link rel="canonical" href="https://tryingtobenikhil.space/">
 
   <meta property="og:type" content="website">
@@ -28,10 +28,42 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=35">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/main.css?v=49">
 
-  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+  <script>
+    document.documentElement.classList.replace('no-js', 'js');
+    // season before first paint: the visitor's last pick, else the Japanese calendar
+    (function () { var s; try { s = localStorage.getItem('season'); } catch (e) {}
+      document.documentElement.dataset.season = s || ['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'][new Date().getMonth()]; })();
+  </script>
+  <script>
+    // the tab icon is a different piece of old Japan on every visit, never the same one twice running:
+    // a lantern, a torii, Fuji, sakura, a maple leaf or seigaiha waves
+    (function () {
+      var I = [
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='t'><rect width='64' height='64' rx='14'/></clipPath></defs><rect width='64' height='64' rx='14' fill='#14162f'/><g clip-path='url(#t)'><rect x='30' y='3' width='4' height='7' fill='#8a6328'/><rect x='21' y='9' width='22' height='5' rx='1.5' fill='#0d0a10'/><ellipse cx='32' cy='33' rx='18' ry='20' fill='#d2452e'/><ellipse cx='32' cy='33' rx='9' ry='15' fill='#ffb070' opacity='.55'/><path d='M15 25 Q32 29 49 25 M14 33 Q32 37 50 33 M15 41 Q32 45 49 41' fill='none' stroke='#7e1d12' stroke-width='1.4' opacity='.55'/><rect x='21' y='52' width='22' height='5' rx='1.5' fill='#0d0a10'/><path d='M32 57v5' stroke='#d2452e' stroke-width='2'/></g></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='t'><rect width='64' height='64' rx='14'/></clipPath></defs><rect width='64' height='64' rx='14' fill='#14162f'/><g clip-path='url(#t)'><circle cx='50' cy='50' r='16' fill='#2a2854'/><path d='M4 12 Q32 20 60 12 L61 6 Q32 14 3 6Z' fill='#e0553b'/><rect x='11' y='18' width='42' height='4.5' fill='#e0553b'/><rect x='9' y='29' width='46' height='4.5' fill='#e0553b'/><rect x='17' y='18' width='5.5' height='46' fill='#e0553b'/><rect x='41.5' y='18' width='5.5' height='46' fill='#e0553b'/><rect x='30' y='22' width='4' height='7' fill='#e0553b'/></g></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='t'><rect width='64' height='64' rx='14'/></clipPath></defs><rect width='64' height='64' rx='14' fill='#14162f'/><g clip-path='url(#t)'><circle cx='47' cy='19' r='8.5' fill='#d9553b'/><path d='M0 60 L26 22 Q32 17 38 22 L64 60Z' fill='#3d5b95'/><path d='M26 22 Q32 17 38 22 L44 31 L39.5 28.5 L36 32 L32 27.5 L28 32 L24.5 28.5 L20 31Z' fill='#f2ebde'/><rect y='58' width='64' height='6' fill='#22305f'/></g></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='t'><rect width='64' height='64' rx='14'/></clipPath></defs><rect width='64' height='64' rx='14' fill='#14162f'/><g clip-path='url(#t)'><path transform='translate(32 32) rotate(0) translate(0 -14) scale(13)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z' fill='#f6bccb'/><path transform='translate(32 32) rotate(72) translate(0 -14) scale(13)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z' fill='#f6bccb'/><path transform='translate(32 32) rotate(144) translate(0 -14) scale(13)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z' fill='#f6bccb'/><path transform='translate(32 32) rotate(216) translate(0 -14) scale(13)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z' fill='#f6bccb'/><path transform='translate(32 32) rotate(288) translate(0 -14) scale(13)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z' fill='#f6bccb'/><circle cx='32' cy='32' r='4.5' fill='#e0607e'/><circle cx='38.1' cy='36.4' r='1.3' fill='#c43c5c'/><circle cx='29.7' cy='39.1' r='1.3' fill='#c43c5c'/><circle cx='24.5' cy='32.0' r='1.3' fill='#c43c5c'/><circle cx='29.7' cy='24.9' r='1.3' fill='#c43c5c'/><circle cx='38.1' cy='27.6' r='1.3' fill='#c43c5c'/></g></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='t'><rect width='64' height='64' rx='14'/></clipPath></defs><rect width='64' height='64' rx='14' fill='#14162f'/><g clip-path='url(#t)'><path d='M16.9 28.7 L11.4 25.6 L17.7 25.1 L25.1 25.8 L18.9 17.8 L16.0 11.0 L22.3 15.0 L29.2 22.4 L29.6 10.7 L32.0 3.0 L34.4 10.7 L34.8 22.4 L41.7 15.0 L48.0 11.0 L45.1 17.8 L38.9 25.8 L46.3 25.1 L52.6 25.6 L47.1 28.7 L40.0 31.3 L40.9 33.8 L43.7 36.8 L39.8 35.8 L32.0 38.1 L24.2 35.8 L20.3 36.8 L23.1 33.8 L24.0 31.3Z' fill='#e0602f'/><path d='M32 37 L33.5 60 L30.5 60Z' fill='#e0602f'/><path d='M32 34 L32 8 M32 34 L52 14 M32 34 L12 14 M32 34 L56 28 M32 34 L8 28' stroke='#a8361a' stroke-width='1.1' opacity='.6'/></g></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='t'><rect width='64' height='64' rx='14'/></clipPath></defs><rect width='64' height='64' rx='14' fill='#14162f'/><g clip-path='url(#t)'><circle cx='-16' cy='22' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='-16' cy='22' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='-16' cy='22' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='16' cy='22' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='16' cy='22' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='16' cy='22' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='48' cy='22' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='48' cy='22' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='48' cy='22' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='80' cy='22' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='80' cy='22' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='80' cy='22' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='0' cy='38' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='0' cy='38' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='0' cy='38' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='32' cy='38' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='32' cy='38' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='32' cy='38' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='64' cy='38' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='64' cy='38' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='64' cy='38' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='-16' cy='54' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='-16' cy='54' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='-16' cy='54' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='16' cy='54' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='16' cy='54' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='16' cy='54' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='48' cy='54' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='48' cy='54' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='48' cy='54' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='80' cy='54' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='80' cy='54' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='80' cy='54' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='0' cy='70' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='0' cy='70' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='0' cy='70' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='32' cy='70' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='32' cy='70' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='32' cy='70' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/><circle cx='64' cy='70' r='16' fill='#2b5c9e' stroke='#f2ebde' stroke-width='1.6'/><circle cx='64' cy='70' r='10.5' fill='none' stroke='#f2ebde' stroke-width='1.4'/><circle cx='64' cy='70' r='5' fill='none' stroke='#f2ebde' stroke-width='1.3'/></g></svg>"
+      ];
+      var last = -1; try { last = parseInt(localStorage.getItem('icon'), 10); } catch (e) {}
+      var i = Math.floor(Math.random() * (I.length - 1)); if (last >= 0 && i >= last) i++;
+      try { localStorage.setItem('icon', i); } catch (e) {}
+      var svg = 'data:image/svg+xml,' + encodeURIComponent(I[i]);
+      var put = function (href, type) {
+        document.querySelectorAll('link[rel~="icon"]').forEach(function (l) { l.remove(); });
+        var l = document.createElement('link'); l.rel = 'icon'; l.type = type; l.href = href; document.head.appendChild(l);
+      };
+      put(svg, 'image/svg+xml');
+      // Safari is happier with a PNG: rasterise it once the SVG has loaded
+      var img = new Image();
+      img.onload = function () { var c = document.createElement('canvas'); c.width = c.height = 64; c.getContext('2d').drawImage(img, 0, 0, 64, 64); try { put(c.toDataURL('image/png'), 'image/png'); } catch (e) {} };
+      img.src = svg;
+    })();
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -57,34 +89,37 @@
     <div class="nav__capsule">
       <a class="brand" href="#top" aria-label="Nikhil Mourya, back to top">
         <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 6 L12 12 L5 18 M12 12 L19 6 M12 12 L19 18" />
-          <circle cx="5" cy="6" r="2.2"/><circle cx="5" cy="18" r="2.2"/><circle class="core" cx="12" cy="12" r="2.6"/><circle cx="19" cy="6" r="2.2"/><circle cx="19" cy="18" r="2.2"/>
+          <circle class="ring" cx="12" cy="12" r="10.6"/>
+          <g class="torii"><path d="M4.6 7.6 Q12 9.7 19.4 7.6 L19.7 6.1 Q12 8.2 4.3 6.1Z"/><rect x="6.4" y="9" width="11.2" height="1.1"/><rect x="6.1" y="11.6" width="11.8" height="1.2"/><rect x="8.1" y="9" width="1.5" height="9.4"/><rect x="14.4" y="9" width="1.5" height="9.4"/></g>
         </svg>
         <span>Nikhil Mourya</span>
       </a>
 
       <nav class="nav__links" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Work</a>
-        <a href="#lab">Lab</a>
-        <a href="#writing">Writing</a>
-        <a href="#contact">Contact</a>
+        <a href="#about"><i lang="ja" aria-hidden="true">序</i>About</a>
+        <a href="#experience"><i lang="ja" aria-hidden="true">道</i>Experience</a>
+        <a href="#projects"><i lang="ja" aria-hidden="true">匠</i>Work</a>
+        <a href="#lab"><i lang="ja" aria-hidden="true">遊</i>Lab</a>
+        <a href="#writing"><i lang="ja" aria-hidden="true">書</i>Writing</a>
+        <a href="#contact"><i lang="ja" aria-hidden="true">縁</i>Contact</a>
       </nav>
 
+      <button class="nav__icon nav__season" type="button" data-season-next aria-label="Change the season" title="Change the season"><span data-season-kanji>秋</span></button>
+      <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Ambient sound" title="Sound: an original score over the sounds of the village, synthesised live in your browser. No audio files."><span class="nav__sndk">音</span><span class="snd" aria-hidden="true"><i></i><i></i><i></i></span></button>
       <span class="nav__status" title="Reading this page like a model: tokens decoded so far, and which chapters sit in your KV cache"><span class="kvm" data-kvm aria-hidden="true"></span><span class="nav__tok"><b data-tok>0</b> tok</span></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
 
     <div class="mobile-menu" id="mobile-menu" hidden>
-      <a href="#about"><span>01</span>About</a>
-      <a href="#experience"><span>02</span>Experience</a>
-      <a href="#projects"><span>03</span>Work</a>
-      <a href="#lab"><span>04</span>Lab</a>
-      <a href="#writing"><span>05</span>Writing</a>
-      <a href="#contact"><span>06</span>Contact</a>
+      <a href="#about"><span lang="ja">序</span>About</a>
+      <a href="#experience"><span lang="ja">道</span>Experience</a>
+      <a href="#projects"><span lang="ja">匠</span>Work</a>
+      <a href="#lab"><span lang="ja">遊</span>Lab</a>
+      <a href="#writing"><span lang="ja">書</span>Writing</a>
+      <a href="#contact"><span lang="ja">縁</span>Contact</a>
       <button type="button" data-cmdk><span>⌘K</span>Search the site</button>
+      <button type="button" data-sound aria-pressed="false"><span>音</span>Sound and score</button>
     </div>
   </header>
 
@@ -92,7 +127,8 @@
 
     <!-- ============================== HERO ============================== -->
     <section class="hero" id="top">
-      <canvas class="hero__field" id="field" aria-hidden="true"></canvas>
+      <canvas class="hero__scene" id="scene" aria-hidden="true"></canvas>
+      <div class="hero__veil" aria-hidden="true"></div>
 
       <div class="wrap hero__grid">
         <div class="hero__copy">
@@ -126,24 +162,16 @@
           </div>
         </div>
 
-        <figure class="portrait" aria-label="Portrait of Nikhil">
-          <div class="portrait__bar">
-            <span><i class="led" aria-hidden="true"></i>nikhil.exe</span>
-            <span class="dim">online</span>
+        <div class="hero__jp">
+          <span class="hero__kana" aria-hidden="true">ニキル・マウリヤ</span>
+          <span class="seal seal--name" aria-hidden="true">ニ<br>キ<br>ル</span>
+          <div class="season" role="group" aria-label="Season">
+            <button type="button" data-season-btn="spring" aria-pressed="false" title="春 haru · spring">春</button>
+            <button type="button" data-season-btn="summer" aria-pressed="false" title="夏 natsu · summer">夏</button>
+            <button type="button" data-season-btn="autumn" aria-pressed="false" title="秋 aki · autumn">秋</button>
+            <button type="button" data-season-btn="winter" aria-pressed="false" title="冬 fuyu · winter">冬</button>
           </div>
-          <div class="portrait__img">
-            <canvas id="ascii" aria-hidden="true"></canvas>
-          </div>
-          <figcaption class="portrait__foot">
-            <span>Jaipur, IN</span>
-            <span class="loss"><span>train/loss</span><svg viewBox="0 0 80 20" preserveAspectRatio="none" aria-hidden="true"><path id="loss-path" d=""/></svg><b id="loss-val">0.000</b></span>
-          </figcaption>
-          <div class="quant">
-            <label class="quant__k" for="quant">precision <b data-quant-label>FP32</b></label>
-            <input id="quant" type="range" min="0" max="5" step="1" value="0" aria-valuetext="FP32, full precision" data-quant-range>
-            <p class="quant__note" data-quant-note>full precision</p>
-          </div>
-        </figure>
+        </div>
       </div>
 
       <div class="wrap">
@@ -154,14 +182,15 @@
           <div data-reveal style="--d:.2s"><dt>based</dt><dd>Jaipur · <b data-clock>--:--</b> IST<small class="tzdiff" data-tzdiff></small></dd></div>
         </dl>
       </div>
+
     </section>
 
     <!-- ============================== ABOUT ============================== -->
-    <section class="section" id="about">
+    <section class="section" id="about" data-kanji="序">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>01</span>About</p>
+          <p class="tag"><span class="seal">一</span>About<em class="tag__jp" lang="ja">自己紹介</em></p>
           <h2 class="shead__title">The math decides when to stop, <span class="dim">not the model's confidence.</span></h2>
         </header>
 
@@ -179,17 +208,42 @@
             <p data-temp-p>Lately that means going one layer down. I write the scheduler instead of calling <code>generate()</code>, and the autograd instead of importing it. It's slower, it's humbling, and it's the only way I've found to actually understand the thing instead of nodding along to it.</p>
             <p data-temp-p>BIT Mesra, studying what doesn't fit in a lecture hall. I write up everything I build, and I'm always maintaining the unbroken eye contact with that single code block like we have beef.</p>
 
-            <div class="stack">
-              <div class="stack__row"><span class="stack__k">languages</span><ul class="pills"><li>Python</li><li>C++20</li><li>TypeScript</li><li>SQL</li></ul></div>
-              <div class="stack__row"><span class="stack__k">modeling</span><ul class="pills"><li>PyTorch</li><li>HuggingFace</li><li>PEFT / LoRA</li><li>scikit-learn</li></ul></div>
-              <div class="stack__row"><span class="stack__k">inference</span><ul class="pills"><li>Continuous batching</li><li>Paged KV cache</li><li>Pruning</li><li>ONNX</li><li>Ollama</li></ul></div>
-              <div class="stack__row"><span class="stack__k">agents · rag</span><ul class="pills"><li>LangGraph</li><li>ChromaDB</li><li>FAISS</li><li>RAGAS</li><li>LangSmith</li></ul></div>
-              <div class="stack__row"><span class="stack__k">infra</span><ul class="pills"><li>FastAPI</li><li>Docker</li><li>AWS</li><li>Redis</li><li>OpenTelemetry</li></ul></div>
+            <div class="stack" aria-label="Skills, hung like name plaques on a dojo board. Each plaque says where I used it.">
+              <div class="stack__row"><span class="stack__k">languages</span><ul class="pills"><li tabindex="0" data-used="HireBuddy · HiveMind · PEGASUS + LoRA">Python</li><li tabindex="0" data-used="RLForge">C++20</li><li tabindex="0" data-used="CodeLens">TypeScript</li><li>SQL</li></ul></div>
+              <div class="stack__row"><span class="stack__k">modeling</span><ul class="pills"><li tabindex="0" data-used="PEGASUS + LoRA · AttentionIsALLICode">PyTorch</li><li tabindex="0" data-used="PEGASUS + LoRA · HireBuddy">HuggingFace</li><li tabindex="0" data-used="PEGASUS + LoRA">PEFT / LoRA</li><li>scikit-learn</li></ul></div>
+              <div class="stack__row"><span class="stack__k">inference</span><ul class="pills"><li tabindex="0" data-used="PageServe">Continuous batching</li><li tabindex="0" data-used="PageServe">Paged KV cache</li><li tabindex="0" data-used="Pruned U-Net, with IIT Kharagpur">Pruning</li><li tabindex="0" data-used="DermaVision">ONNX</li><li tabindex="0" data-used="CodeLens">Ollama</li></ul></div>
+              <div class="stack__row"><span class="stack__k">agents · rag</span><ul class="pills"><li>LangGraph</li><li tabindex="0" data-used="HiveMind">ChromaDB</li><li>FAISS</li><li tabindex="0" data-used="HireBuddy">RAGAS</li><li tabindex="0" data-used="HireBuddy">LangSmith</li></ul></div>
+              <div class="stack__row"><span class="stack__k">infra</span><ul class="pills"><li tabindex="0" data-used="HireBuddy · HiveMind">FastAPI</li><li tabindex="0" data-used="HireBuddy · HiveMind">Docker</li><li tabindex="0" data-used="HireBuddy">AWS</li><li tabindex="0" data-used="HiveMind">Redis</li><li tabindex="0" data-used="HiveMind">OpenTelemetry</li></ul></div>
             </div>
           </div>
 
+          <div class="about__side">
+          <figure class="portrait scroll" aria-label="Portrait of Nikhil">
+            <span class="scroll__rod" aria-hidden="true"></span>
+            <div class="scroll__paper">
+            <div class="portrait__bar">
+              <span><i class="led" aria-hidden="true"></i>肖像 · nikhil.exe</span>
+              <span class="dim" data-print-status>online</span>
+            </div>
+            <div class="portrait__img" title="Pressed live as an indigo woodblock print. The ink is still wet: touch it. Click to press it again.">
+              <canvas id="print" aria-hidden="true"></canvas>
+            </div>
+            <figcaption class="portrait__foot">
+              <span>Jaipur, IN</span>
+              <span class="loss"><span>train/loss</span><svg viewBox="0 0 80 20" preserveAspectRatio="none" aria-hidden="true"><path id="loss-path" d=""/></svg><b id="loss-val">0.000</b></span>
+            </figcaption>
+            <div class="quant">
+              <label class="quant__k" for="quant">precision <b data-quant-label>FP32</b></label>
+              <input id="quant" type="range" min="0" max="5" step="1" value="0" aria-valuetext="FP32, full precision" data-quant-range>
+              <p class="quant__note" data-quant-note>full precision</p>
+            </div>
+            </div>
+            <span class="scroll__end" aria-hidden="true" title="Grab the rod and give it a swing"><i class="scroll__roll"></i><span class="scroll__rod scroll__rod--end"></span></span>
+          </figure>
           <div class="info" data-reveal style="--d:.08s">
-            <div class="info__bar"><span><span class="p">$</span> nikhil --info</span><span class="dim">v2026</span></div>
+            <div class="info__bar"><span lang="ja">名刺 <span class="dim" lang="en">nikhil --info</span></span><span class="dim">v2026</span></div>
+              <div class="meishi__side" aria-hidden="true"><span class="meishi__name">ニキル・マウリヤ</span><span class="seal seal--name">ニ<br>キ<br>ル</span></div>
+              <span class="meishi__stamp" aria-hidden="true">募集中</span>
             <dl>
               <div><dt>location</dt><dd>Jaipur, India</dd></div>
               <div><dt>college</dt><dd>BIT Mesra</dd></div>
@@ -200,6 +254,7 @@
               <div><dt>reading</dt><dd>The Humans, Matt Haig</dd></div>
               <div><dt>status</dt><dd class="ok"><i class="led" aria-hidden="true"></i>Open to ML roles</dd></div>
             </dl>
+          </div>
           </div>
         </div>
 
@@ -290,19 +345,18 @@
     </section>
 
     <!-- ============================== EXPERIENCE ============================== -->
-    <section class="section" id="experience">
+    <section class="section" id="experience" data-kanji="道">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>02</span>Experience</p>
+          <p class="tag"><span class="seal">二</span>Experience<em class="tag__jp" lang="ja">経歴</em></p>
           <h2 class="shead__title">Where it runs <span class="dim">in production.</span></h2>
           <p class="shead__desc">Notebooks are cheap. These are the places where my code had to survive real users, real traffic and someone else's pager.</p>
         </header>
 
         <ol class="timeline">
           <li class="role" data-reveal>
-            <span class="role__dot" aria-hidden="true"></span>
-            <div class="role__when">2025</div>
+            <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">2025</span></div>
             <div class="role__main">
               <div class="role__head">
                 <h3><a href="https://www.hirebuddy.net" target="_blank" rel="noopener">HireBuddy <span aria-hidden="true">↗</span></a></h3>
@@ -320,9 +374,8 @@
               </div>
             </div>
           </li>
-          <li class="role" data-reveal>
-            <span class="role__dot is-live" aria-hidden="true"></span>
-            <div class="role__when">Founder</div>
+          <li class="role is-live" data-reveal>
+            <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">Founder</span></div>
             <div class="role__main">
               <div class="role__head">
                 <h3><a href="https://dev-path.site" target="_blank" rel="noopener">DevPath <span aria-hidden="true">↗</span></a></h3>
@@ -332,8 +385,7 @@
             </div>
           </li>
           <li class="role" data-reveal>
-            <span class="role__dot" aria-hidden="true"></span>
-            <div class="role__when">Research</div>
+            <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">Research</span></div>
             <div class="role__main">
               <div class="role__head">
                 <h3>IIT Kharagpur</h3>
@@ -348,11 +400,11 @@
     </section>
 
     <!-- ============================== PROJECTS ============================== -->
-    <section class="section" id="projects">
+    <section class="section" id="projects" data-kanji="匠">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>03</span>Work<em class="tag__n">10 projects</em></p>
+          <p class="tag"><span class="seal">三</span>Work<em class="tag__jp" lang="ja">作品</em><em class="tag__n">10 projects</em></p>
           <h2 class="shead__title">Rebuilt from first principles. <span class="dim">No black boxes I didn't open.</span></h2>
           <p class="shead__desc">Two systems I wrote end to end because reading the library source stopped being enough. One serves LLMs. The other trains agents.</p>
         </header>
@@ -506,11 +558,12 @@
           <div class="chips" role="group" aria-label="Filter projects" data-wf-chips><button type="button" data-wf="all" aria-pressed="true">All <i>8</i></button><button type="button" data-wf="agents" aria-pressed="false">Agents & RAG <i>2</i></button><button type="button" data-wf="models" aria-pressed="false">Models <i>3</i></button><button type="button" data-wf="tools" aria-pressed="false">Tools <i>2</i></button><button type="button" data-wf="research" aria-pressed="false">Research <i>1</i></button></div>
           <ul class="wx__list" data-wx-list>
             <li class="wx" data-cat="agents">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-hivemind">
                 <span class="wx__name">HiveMind</span>
                 <span class="wx__q">Can a research system know its own answer isn't good enough, and fix it?</span>
                 <span class="wx__stat">5 agents · self-checking</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-hivemind" role="region" aria-label="HiveMind">
                 <div class="wx__inner">
@@ -519,13 +572,15 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/HiveMind" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="tools">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-codelens">
                 <span class="wx__name">CodeLens</span>
                 <span class="wx__q">Can you search a codebase by intent, not keywords, fully offline?</span>
                 <span class="wx__stat">offline · results under 10 ms</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-codelens" role="region" aria-label="CodeLens">
                 <div class="wx__inner">
@@ -534,13 +589,15 @@
                   <p class="wx__links"><a class="textlink" href="https://youtu.be/d2I2omkHVLE" target="_blank" rel="noopener">Demo ↗</a><a class="textlink" href="https://github.com/TryingtobeingNikhil/CodeLens" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="agents">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-vectorless">
                 <span class="wx__name">Vectorless RAG</span>
                 <span class="wx__q">Do you actually need a vector database for RAG?</span>
                 <span class="wx__stat"><span data-stars="Vectorless-RAGs">9</span>★ · zero embeddings</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-vectorless" role="region" aria-label="Vectorless RAG">
                 <div class="wx__inner">
@@ -549,13 +606,15 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/Vectorless-RAGs" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="models">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-pegasus">
                 <span class="wx__name">PEGASUS + LoRA</span>
                 <span class="wx__q">Can 0.2% of the weights do the job of all of them?</span>
                 <span class="wx__stat">−99.8% params · 27× faster</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-pegasus" role="region" aria-label="PEGASUS + LoRA">
                 <div class="wx__inner">
@@ -564,13 +623,15 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/pegasus-lora-efficient-summarization" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="research">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-unet">
                 <span class="wx__name">Pruned U-Net</span>
                 <span class="wx__q">How much of a segmentation model is load-bearing?</span>
                 <span class="wx__stat">−97.3% params · IoU > 0.95</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-unet" role="region" aria-label="Pruned U-Net">
                 <div class="wx__inner">
@@ -579,13 +640,15 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="models">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-attention">
                 <span class="wx__name">AttentionIsALLICode</span>
                 <span class="wx__q">What does a Transformer look like with nothing imported?</span>
                 <span class="wx__stat">from scratch</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-attention" role="region" aria-label="AttentionIsALLICode">
                 <div class="wx__inner">
@@ -594,13 +657,15 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/AttentionIsALLICode" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="models">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-dermavision">
                 <span class="wx__name">DermaVision</span>
                 <span class="wx__q">Can a classifier stay honest under a 57:1 class imbalance?</span>
                 <span class="wx__stat">7 classes · explainable</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-dermavision" role="region" aria-label="DermaVision">
                 <div class="wx__inner">
@@ -609,13 +674,15 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/dermavision" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
             <li class="wx" data-cat="tools">
+              <div class="ema">
               <button class="wx__row" type="button" aria-expanded="false" aria-controls="wx-sbd">
                 <span class="wx__name">Second Brain Debugger</span>
                 <span class="wx__q">What if a senior engineer code-reviewed your thoughts?</span>
                 <span class="wx__stat">6 stages · SSE</span>
-                <span class="wx__chev" aria-hidden="true"></span>
+                <span class="wx__chev" aria-hidden="true">turn over ↻</span>
               </button>
               <div class="wx__body" id="wx-sbd" role="region" aria-label="Second Brain Debugger">
                 <div class="wx__inner">
@@ -624,6 +691,7 @@
                   <p class="wx__links"><a class="textlink" href="https://github.com/TryingtobeingNikhil/Second-Brain-Debugger" target="_blank" rel="noopener">GitHub ↗</a></p>
                 </div>
               </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -631,11 +699,11 @@
     </section>
 
     <!-- ============================== LAB ============================== -->
-    <section class="section" id="lab">
+    <section class="section" id="lab" data-kanji="遊">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>04</span>Lab<em class="tag__n">5 toys</em></p>
+          <p class="tag"><span class="seal">四</span>Lab<em class="tag__jp" lang="ja">実験室</em><em class="tag__n">5 toys</em></p>
           <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
           <p class="shead__desc">Small toys for the ideas I explain to anyone who stands still long enough. Everything runs in your browser, nothing phones home.</p>
         </header>
@@ -713,11 +781,11 @@
     </section>
 
     <!-- ============================== WRITING ============================== -->
-    <section class="section" id="writing">
+    <section class="section" id="writing" data-kanji="書">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>05</span>Writing<em class="tag__n"><b data-article-count>20</b> articles</em></p>
+          <p class="tag"><span class="seal">五</span>Writing<em class="tag__jp" lang="ja">文章</em><em class="tag__n"><b data-article-count>20</b> articles</em></p>
           <h2 class="shead__title">I build it, then I write it down. <span class="dim">Usually in that order.</span></h2>
           <p class="shead__desc">One part at a time. Scheduler traces, memory bugs, and the math that has to be exactly right or nothing works.</p>
         </header>
@@ -752,10 +820,10 @@
     </section>
 
     <!-- ============================== CONTACT ============================== -->
-    <section class="section contact" id="contact">
+    <section class="section contact" id="contact" data-kanji="縁">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
-        <p class="tag" data-reveal><span>06</span>Contact</p>
+        <p class="tag" data-reveal><span class="seal">六</span>Contact<em class="tag__jp" lang="ja">便り</em></p>
         <h2 class="contact__title" data-reveal>If you've made it this far, you might as well <span class="accent">say hi.</span></h2>
         <p class="contact__lede" data-reveal>Open to ML engineering roles in inference, serving and agent infrastructure. Email is fastest. DMs on X work too, I check them more than I should.</p>
         <p class="contact__time" data-reveal><i class="led" aria-hidden="true"></i><span>It's <b data-clock>--:--</b> in Jaipur (IST)<span data-tzdiff-long></span></span></p>
@@ -765,13 +833,11 @@
           <button class="btn btn--ghost btn--lg" type="button" id="copy-email" data-email="tsmftxnikhil14@gmail.com">Copy email</button>
         </div>
 
-        <figure class="agent" data-agent data-reveal>
-          <canvas data-agent-canvas role="img" aria-label="A tabular Q-learning agent on a 6 by 6 grid learning, episode by episode, the shortest path around the walls to the cell that says hi."></canvas>
-          <figcaption class="agent__cap">
-            <span class="agent__k">tabular Q-learning, running live in your browser</span>
-            <b class="agent__t" data-ag-title>Even my agent is figuring out how to reach me.</b>
-            <span class="agent__stats"><span>episode <b data-ag-ep>0</b></span><span>steps <b data-ag-steps>…</b></span><span>ε <b data-ag-eps>1.00</b></span></span>
-            <button class="btn btn--ghost btn--sm" type="button" data-ag-reset>Retrain from scratch <span aria-hidden="true">↻</span></button>
+        <figure class="pond" data-pond data-reveal>
+          <canvas role="img" aria-label="A koi pond with lily pads and a bamboo spout. Tap the water and the koi come for the food."></canvas>
+          <figcaption class="pond__cap">
+            <span class="pond__k" lang="ja">鯉 <span lang="en">· tap the water to feed them</span></span>
+            <b class="pond__t">They come when you tap the water. I come when you send an email.</b>
           </figcaption>
         </figure>
 
@@ -787,6 +853,7 @@
   </main>
 
   <footer class="footer">
+    <div class="footer__scene" aria-hidden="true"><canvas id="scene-end"></canvas></div>
     <div class="wrap">
       <div class="outro">
         <svg class="sig" id="signature" viewBox="0 0 330 120" role="img" aria-label="Nikhil Mourya">
@@ -863,16 +930,22 @@
     </form>
   </dialog>
 
-  <script src="./assets/js/field.js?v=10" defer></script>
-  <script src="./assets/js/trail.js?v=3" defer></script>
-  <script src="./assets/js/main.js?v=16" defer></script>
+  <script src="./assets/js/season.js?v=2" defer></script>
+  <script src="./assets/js/scene.js?v=9" defer></script>
+  <script src="./assets/js/inkwash.js?v=2" defer></script>
+  <script src="./assets/js/print.js?v=2" defer></script>
+  <script src="./assets/js/japan.js?v=1" defer></script>
+  <script src="./assets/js/koi.js?v=4" defer></script>
+  <script src="./assets/js/ambience.js?v=2" defer></script>
+  <script src="./assets/js/trail.js?v=4" defer></script>
+  <script src="./assets/js/main.js?v=17" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
   <script src="./assets/js/extras.js?v=20" defer></script>
-  <script src="./assets/js/chapters.js?v=1" defer></script>
+  <script src="./assets/js/chapters.js?v=2" defer></script>
   <script src="./assets/js/showcase.js?v=4" defer></script>
   <script src="./assets/js/ask.js?v=3" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
-  <script src="./assets/js/fun.js?v=2" defer></script>
+  <script src="./assets/js/fun.js?v=5" defer></script>
 </body>
 </html>

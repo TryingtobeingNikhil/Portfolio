@@ -1,7 +1,7 @@
-/* The playful layer: the precision slider on the portrait,
+/* The playful layer: the precision slider on the woodblock portrait,
    the temperature dial on About, the reading meter in the nav (tokens decoded,
    chapters in your KV cache), a 429 for over-eager email copiers, a backtick
-   terminal, Konami debug mode, the GridWorld agent in Contact and the Lab
+   terminal, Konami debug mode and the Lab
    tokenizer. Everything degrades to plain content without JS. */
 (() => {
   const $ = (s, el = document) => el.querySelector(s);
@@ -30,9 +30,9 @@
       [32, 'FP32', 'full precision'],
       [16, 'FP16', 'half the bits, nobody can tell'],
       [8, 'INT8', 'still me'],
-      [4, 'INT4', 'getting artsy'],
-      [2, 'INT2', 'a vibe, not a face'],
-      [1, 'INT1', 'one bit. still recognisably me. probably.'],
+      [4, 'INT4', 'sixteen blocks to carve'],
+      [2, 'INT2', 'four blocks. Hokusai would allow it'],
+      [1, 'INT1', 'one block of sumi. still me. probably.'],
     ];
     const kb = bytes => (bytes >= 1024 * 1024 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(0.1, bytes / 1024).toFixed(bytes < 10240 ? 1 : 0)} KB`);
     const label = $('[data-quant-label]'), note = $('[data-quant-note]');
@@ -248,99 +248,6 @@
       });
       toast(on ? '<b>debug mode</b> on. konami again to exit.' : '<b>debug mode</b> off.');
     });
-  })();
-
-  /* ---------------- the agent that learns to say hi ---------------- */
-  // Tabular Q-learning on a 6x6 grid with walls. Reward -1 per step, +10 at
-  // "hi". Faint arrows show the greedy action per cell as it learns.
-  (function agent() {
-    const fig = $('[data-agent]'), canvas = $('[data-agent-canvas]');
-    if (!fig || !canvas) return;
-    const ctx = canvas.getContext('2d');
-    const css = (v, d) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || d;
-    const ACC = css('--accent-rgb', '205, 176, 124'), FG = css('--fg-rgb', '236, 235, 230'), INK = css('--accent-ink', '#17120a');
-    const N = 6, START = [0, 5], GOAL = [5, 0];
-    const WALLS = new Set(['2,1', '2,2', '2,3', '4,2', '4,3', '4,4', '1,4']);
-    const MOVES = [[0, -1], [1, 0], [0, 1], [-1, 0]]; // up right down left
-    const OPTIMAL = 10; // shortest path length around the walls
-    const el = k => $(`[data-ag-${k}]`, fig);
-    let Q, s, ep, steps, eps, settled, trail, raf = 0, visible = false, size = 0, tick = 0;
-
-    const key = ([x, y]) => y * N + x;
-    const reset = () => {
-      Q = Array.from({ length: N * N }, () => [0, 0, 0, 0]);
-      s = [...START]; ep = 0; steps = 0; eps = 1; settled = 0; trail = [];
-      el('title').textContent = 'Even my agent is figuring out how to reach me.';
-    };
-    const stepEnv = ([x, y], a) => {
-      const nx = x + MOVES[a][0], ny = y + MOVES[a][1];
-      if (nx < 0 || ny < 0 || nx >= N || ny >= N || WALLS.has(`${nx},${ny}`)) return [[x, y], -1, false];
-      const done = nx === GOAL[0] && ny === GOAL[1];
-      return [[nx, ny], done ? 10 : -1, done];
-    };
-    const greedy = st => { const q = Q[key(st)]; let b = 0; for (let a = 1; a < 4; a++) if (q[a] > q[b]) b = a; return b; };
-    const learnStep = () => {
-      const a = Math.random() < eps ? (Math.random() * 4) | 0 : greedy(s);
-      const [ns, r, done] = stepEnv(s, a);
-      const q = Q[key(s)];
-      q[a] += 0.5 * (r + (done ? 0 : 0.95 * Math.max(...Q[key(ns)])) - q[a]);
-      s = ns; steps++; trail.push([...s]); if (trail.length > 24) trail.shift();
-      if (done || steps > 200) {
-        settled = done && steps <= OPTIMAL ? settled + 1 : 0;
-        el('steps').textContent = done ? steps : '200+';
-        ep++; eps = Math.max(0.03, eps * 0.93); steps = 0; s = [...START]; trail = [];
-        el('ep').textContent = ep; el('eps').textContent = eps.toFixed(2);
-        if (settled === 3) el('title').textContent = `Even my agent figured out how to reach me. Took it ${ep} episodes.`;
-      }
-    };
-    const resize = () => {
-      const w = canvas.getBoundingClientRect().width;
-      if (!w) return;
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      size = w; canvas.width = canvas.height = Math.round(w * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    const draw = () => {
-      if (!size) resize();
-      const c = size / N;
-      ctx.clearRect(0, 0, size, size);
-      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
-        const k = `${x},${y}`;
-        if (WALLS.has(k)) { ctx.fillStyle = `rgba(${FG}, 0.09)`; ctx.fillRect(x * c + 1, y * c + 1, c - 2, c - 2); continue; }
-        ctx.strokeStyle = `rgba(${FG}, 0.08)`; ctx.strokeRect(x * c + 0.5, y * c + 0.5, c - 1, c - 1);
-        if (x === GOAL[0] && y === GOAL[1]) continue;
-        // greedy arrow, brighter where the agent is more certain
-        const q = Q[y * N + x], best = Math.max(...q);
-        if (best === 0 && Math.min(...q) === 0) continue;
-        const a = greedy([x, y]), cx = x * c + c / 2, cy = y * c + c / 2, L = c * 0.18;
-        ctx.strokeStyle = `rgba(${FG}, ${Math.min(0.5, 0.12 + Math.abs(best) * 0.04)})`; ctx.lineWidth = 1.2;
-        ctx.beginPath(); ctx.moveTo(cx - MOVES[a][0] * L, cy - MOVES[a][1] * L); ctx.lineTo(cx + MOVES[a][0] * L, cy + MOVES[a][1] * L); ctx.stroke();
-        ctx.beginPath(); ctx.arc(cx + MOVES[a][0] * L, cy + MOVES[a][1] * L, 1.4, 0, Math.PI * 2); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
-      }
-      // goal
-      ctx.fillStyle = `rgb(${ACC})`; ctx.fillRect(GOAL[0] * c + 3, GOAL[1] * c + 3, c - 6, c - 6);
-      ctx.fillStyle = INK; ctx.font = `500 ${Math.round(c * 0.32)}px Geist, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('hi', GOAL[0] * c + c / 2, GOAL[1] * c + c / 2 + 1);
-      // trail + agent
-      trail.forEach(([x, y], i) => { ctx.fillStyle = `rgba(${ACC}, ${(i / trail.length) * 0.35})`; ctx.beginPath(); ctx.arc(x * c + c / 2, y * c + c / 2, c * 0.1, 0, Math.PI * 2); ctx.fill(); });
-      ctx.fillStyle = `rgb(${FG})`; ctx.beginPath(); ctx.arc(s[0] * c + c / 2, s[1] * c + c / 2, c * 0.16, 0, Math.PI * 2); ctx.fill();
-    };
-    const loop = () => {
-      raf = 0;
-      if (!visible || document.hidden) return;
-      tick++;
-      // fast while exploring, walking pace once it has learned, so you can watch it go
-      const perFrame = settled >= 3 ? (tick % 6 === 0 ? 1 : 0) : eps > 0.3 ? 12 : eps > 0.08 ? 3 : 1;
-      for (let i = 0; i < perFrame; i++) learnStep();
-      draw();
-      raf = requestAnimationFrame(loop);
-    };
-    reset();
-    if (reduce) { for (let i = 0; i < 20000 && settled < 3; i++) learnStep(); s = [...START]; trail = []; draw(); }
-    else new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(loop); }).observe(canvas);
-    el('reset').addEventListener('click', () => { reset(); el('ep').textContent = '0'; el('eps').textContent = '1.00'; el('steps').textContent = '…'; if (reduce) { for (let i = 0; i < 20000 && settled < 3; i++) learnStep(); s = [...START]; } draw(); });
-    addEventListener('resize', () => { size = 0; draw(); });
-    draw();
   })();
 
   /* ---------------- Lab: GPT-2's pre-tokenizer, live ---------------- */
