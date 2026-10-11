@@ -1,29 +1,33 @@
 /* ==========================================================================
    Nikhil Mourya · portfolio
-   "Graphite & Brass": warm graphite, paper-white type, a silver-print portrait
-   and one muted brass accent, used sparingly. Slate for the rare second state.
-   Flat colour, no glows. No framework.
+   "夕暮れの村", a dusk village: night indigo, washi-white type, one lantern-gold
+   accent, vermilion only for seals and the torii. Each season (html[data-season])
+   swaps a single secondary colour and the painting in the hero. No framework.
    ========================================================================== */
 
 :root {
   /* palette: every colour on the site (CSS and canvases) comes from these */
-  --bg: #0b0b0a;              /* graphite */
-  --bg-1: #111110;
-  --bg-2: #171715;
-  --fg: #ecebe6;              /* paper */
-  --fg-rgb: 236, 235, 230;
-  --w-rgb: 236, 233, 224;     /* hairlines and washes */
-  --hi-rgb: 250, 244, 230;    /* brightest glyphs in the hero field */
-  --accent: #cdb07c;          /* brass: the headline word, live dots, key numbers */
-  --accent-rgb: 205, 176, 124;
-  --accent-ink: #17120a;      /* text on the accent */
-  --accent-2: #cdb07c;        /* labels: decoded glyphs, cursor trail (brass too, for now) */
-  --accent-2-rgb: 205, 176, 124;
-  --accent-3: #93a3b4;        /* slate, the rare second state: swapped, refused, rejected */
-  --accent-3-rgb: 147, 163, 180;
-  --portrait-lo: 10, 10, 9;   /* silver print: shadows, mids, highlights */
-  --portrait-mid: 126, 124, 119;
-  --portrait-hi: 242, 238, 227;
+  --bg: #0c0e19;              /* 夜藍, night indigo */
+  --bg-1: #111424;
+  --bg-2: #181c2f;
+  --fg: #f1ebdd;              /* 胡粉, washi white */
+  --fg-rgb: 241, 235, 221;
+  --w-rgb: 236, 228, 210;     /* hairlines and washes */
+  --hi-rgb: 255, 246, 226;
+  --accent: #e4ad62;          /* 提灯, lantern gold: the headline word, live dots, key numbers */
+  --accent-rgb: 228, 173, 98;
+  --accent-ink: #1a1206;      /* text on the accent */
+  --accent-2: #e4ad62;
+  --accent-2-rgb: 228, 173, 98;
+  --accent-3: #8fa6c2;        /* 藍鼠, indigo grey, the rare second state: swapped, refused, rejected */
+  --accent-3-rgb: 143, 166, 194;
+  --shu: #d4553b;             /* 朱, vermilion: seals and the torii only */
+  --shu-rgb: 212, 85, 59;
+  --portrait-lo: 12, 14, 30;  /* woodblock print: indigo ink, mids, washi */
+  --portrait-mid: 104, 104, 134;
+  --portrait-hi: 246, 236, 214;
+  --season: #e0673e;          /* set per season below */
+  --season-rgb: 224, 103, 62;
 
   --fg-2: rgba(var(--fg-rgb), 0.64);
   --fg-3: rgba(var(--fg-rgb), 0.42);
@@ -33,6 +37,8 @@
   --line-3: rgba(var(--w-rgb), 0.2);
 
   --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
+  --brush: 'Yuji Syuku', 'Shippori Mincho', serif;
   --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --max: 1160px;
@@ -42,6 +48,10 @@
 
   color-scheme: dark;
 }
+[data-season="spring"] { --season: #f1b3c2; --season-rgb: 241, 179, 194; }
+[data-season="summer"] { --season: #c8e07a; --season-rgb: 200, 224, 122; }
+[data-season="autumn"] { --season: #e0673e; --season-rgb: 224, 103, 62; }
+[data-season="winter"] { --season: #cfdcec; --season-rgb: 207, 220, 236; }
 
 /* ---------- reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -251,14 +261,6 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
   overflow: hidden;
   isolation: isolate;
 }
-.hero__field {
-  position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1;
-  opacity: 0.8;
-  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 68% 40%, #000 35%, transparent 100%), linear-gradient(#000 55%, transparent 82%);
-  -webkit-mask-composite: source-in;
-  mask-image: radial-gradient(ellipse 75% 70% at 68% 40%, #000 35%, transparent 100%), linear-gradient(#000 55%, transparent 82%);
-  mask-composite: intersect;
-}
 .hero__grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: 48px; align-items: center; }
 
 .status-pill {
@@ -431,7 +433,7 @@ code { font: 400 0.86em var(--mono); color: var(--fg); background: var(--bg-2); 
   display: flex; flex-direction: column; gap: 16px;
   padding: 22px 24px 26px;
   border-left: 1px solid var(--line);
-  background: radial-gradient(rgba(var(--w-rgb), 0.05) 1px, transparent 1.2px) 0 0 / 18px 18px, rgba(0, 0, 0, 0.25);
+  background: var(--shippo) 0 0 / 28px 28px, rgba(0, 0, 0, 0.25);
 }
 .feature--flip .feature__viz { border-left: 0; border-right: 1px solid var(--line); }
 .viz__head { display: flex; justify-content: space-between; align-items: center; }
@@ -646,7 +648,7 @@ a.hl:hover em { color: var(--fg-2); }
 .toy__stage {
   position: relative; height: 210px; padding: 18px;
   border-radius: 14px; border: 1px solid var(--line-2);
-  background: radial-gradient(rgba(var(--w-rgb), 0.04) 1px, transparent 1.2px) 0 0 / 16px 16px, rgba(0, 0, 0, 0.25);
+  background: var(--shippo) 0 0 / 28px 28px, rgba(0, 0, 0, 0.25);
   display: flex; flex-direction: column; justify-content: center; gap: 14px;
   overflow: hidden;
 }
@@ -788,7 +790,7 @@ kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; 
 .spec {
   margin-bottom: 20px; padding: 26px 28px 22px;
   border-radius: 16px; border: 1px solid var(--line-2);
-  background: radial-gradient(rgba(var(--w-rgb), 0.035) 1px, transparent 1.2px) 0 0 / 16px 16px, rgba(0, 0, 0, 0.22);
+  background: var(--shippo) 0 0 / 28px 28px, rgba(0, 0, 0, 0.22);
 }
 .spec__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
 .spec__head h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.015em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
@@ -1071,7 +1073,7 @@ a.now__cell:hover .now__v { color: var(--accent); }
 .agent__stats b { font-weight: 400; color: var(--fg); font-variant-numeric: tabular-nums; }
 
 /* lab: tokenizer */
-.tokz { margin-top: 20px; padding: 24px 28px 22px; border-radius: 16px; border: 1px solid var(--line-2); background: radial-gradient(rgba(var(--w-rgb), 0.035) 1px, transparent 1.2px) 0 0 / 16px 16px, rgba(0, 0, 0, 0.22); }
+.tokz { margin-top: 20px; padding: 24px 28px 22px; border-radius: 16px; border: 1px solid var(--line-2); background: var(--shippo) 0 0 / 28px 28px, rgba(0, 0, 0, 0.22); }
 .tokz__head h4 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 18px; font-weight: 500; letter-spacing: -0.015em; }
 .tokz__head p { margin-top: 6px; max-width: 48em; font-size: 14.5px; line-height: 1.55; color: var(--fg-3); }
 .tokz__in { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding: 0 14px; height: 46px; border-radius: 12px; border: 1px solid var(--line-2); background: rgba(var(--w-rgb), 0.02); font: 400 16px/1 var(--mono); color: var(--accent); transition: border-color 0.2s; }
@@ -1190,7 +1192,6 @@ a.now__cell:hover .now__v { color: var(--accent); }
   .hero { padding-top: 112px; }
   .hero__title { font-size: clamp(34px, 10vw, 48px); }
   .hero__title .line { white-space: normal; }
-  .hero__field { opacity: 0.4; }
   .portrait { max-width: 210px; }
   .loss > span { display: none; }
   .status-pill { white-space: nowrap; font-size: 12px; gap: 8px; padding: 0 12px 0 10px; }
@@ -1237,3 +1238,177 @@ a.now__cell:hover .now__v { color: var(--accent); }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; transition-delay: 0s !important; }
   [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* ==========================================================================
+   夕暮れの村: the Japan layer. Hero painting (assets/js/scene.js), seasons
+   (season.js), sound (ambience.js), seals, the hanging scroll and the ending.
+   ========================================================================== */
+:root {
+  --shippo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' fill='none' stroke='rgb(236,228,210)' stroke-opacity='0.05'%3E%3Ccircle cx='0' cy='0' r='14'/%3E%3Ccircle cx='28' cy='0' r='14'/%3E%3Ccircle cx='0' cy='28' r='14'/%3E%3Ccircle cx='28' cy='28' r='14'/%3E%3Ccircle cx='14' cy='14' r='14'/%3E%3C/svg%3E");
+  --emblem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M12.3 21.0 L8.0 18.6 L12.8 18.2 L18.6 18.8 L13.8 12.5 L11.6 7.2 L16.4 10.3 L21.8 16.1 L22.2 7.0 L24.0 1.0 L25.8 7.0 L26.2 16.1 L31.6 10.3 L36.4 7.2 L34.2 12.5 L29.4 18.8 L35.2 18.2 L40.0 18.6 L35.7 21.0 L30.2 23.0 L31.0 25.0 L33.1 27.2 L30.0 26.5 L24.0 28.3 L18.0 26.5 L14.9 27.2 L17.0 25.0 L17.8 23.0Z M24 28 L25 45 L23 45Z'/%3E%3C/svg%3E");
+}
+[data-season="spring"] { --emblem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath transform='translate(24 24) rotate(0) translate(0 -12) scale(9)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z'/%3E%3Cpath transform='translate(24 24) rotate(72) translate(0 -12) scale(9)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z'/%3E%3Cpath transform='translate(24 24) rotate(144) translate(0 -12) scale(9)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z'/%3E%3Cpath transform='translate(24 24) rotate(216) translate(0 -12) scale(9)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z'/%3E%3Cpath transform='translate(24 24) rotate(288) translate(0 -12) scale(9)' d='M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z'/%3E%3C/svg%3E"); }
+[data-season="summer"] { --emblem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='#000' stroke-width='2.6'%3E%3Cpath d='M4 40 A20 20 0 0 1 44 40'/%3E%3Cpath d='M10 40 A14 14 0 0 1 38 40'/%3E%3Cpath d='M16 40 A8 8 0 0 1 32 40'/%3E%3Ccircle cx='24' cy='40' r='3' fill='#000' stroke='none'/%3E%3C/svg%3E"); }
+[data-season="autumn"] { --emblem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M12.3 21.0 L8.0 18.6 L12.8 18.2 L18.6 18.8 L13.8 12.5 L11.6 7.2 L16.4 10.3 L21.8 16.1 L22.2 7.0 L24.0 1.0 L25.8 7.0 L26.2 16.1 L31.6 10.3 L36.4 7.2 L34.2 12.5 L29.4 18.8 L35.2 18.2 L40.0 18.6 L35.7 21.0 L30.2 23.0 L31.0 25.0 L33.1 27.2 L30.0 26.5 L24.0 28.3 L18.0 26.5 L14.9 27.2 L17.0 25.0 L17.8 23.0Z M24 28 L25 45 L23 45Z'/%3E%3C/svg%3E"); }
+[data-season="winter"] { --emblem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' stroke='#000' stroke-width='2.4' stroke-linecap='round' fill='none'%3E%3Cline x1='24' y1='24' x2='44.0' y2='24.0'/%3E%3Cline x1='35.0' y1='24.0' x2='38.9' y2='19.4'/%3E%3Cline x1='35.0' y1='24.0' x2='38.9' y2='28.6'/%3E%3Cline x1='40.0' y1='24.0' x2='42.6' y2='20.9'/%3E%3Cline x1='40.0' y1='24.0' x2='42.6' y2='27.1'/%3E%3Cline x1='24' y1='24' x2='34.0' y2='41.3'/%3E%3Cline x1='29.5' y1='33.5' x2='35.4' y2='34.6'/%3E%3Cline x1='29.5' y1='33.5' x2='27.4' y2='39.2'/%3E%3Cline x1='32.0' y1='37.9' x2='35.9' y2='38.6'/%3E%3Cline x1='32.0' y1='37.9' x2='30.6' y2='41.6'/%3E%3Cline x1='24' y1='24' x2='14.0' y2='41.3'/%3E%3Cline x1='18.5' y1='33.5' x2='20.6' y2='39.2'/%3E%3Cline x1='18.5' y1='33.5' x2='12.6' y2='34.6'/%3E%3Cline x1='16.0' y1='37.9' x2='17.4' y2='41.6'/%3E%3Cline x1='16.0' y1='37.9' x2='12.1' y2='38.6'/%3E%3Cline x1='24' y1='24' x2='4.0' y2='24.0'/%3E%3Cline x1='13.0' y1='24.0' x2='9.1' y2='28.6'/%3E%3Cline x1='13.0' y1='24.0' x2='9.1' y2='19.4'/%3E%3Cline x1='8.0' y1='24.0' x2='5.4' y2='27.1'/%3E%3Cline x1='8.0' y1='24.0' x2='5.4' y2='20.9'/%3E%3Cline x1='24' y1='24' x2='14.0' y2='6.7'/%3E%3Cline x1='18.5' y1='14.5' x2='12.6' y2='13.4'/%3E%3Cline x1='18.5' y1='14.5' x2='20.6' y2='8.8'/%3E%3Cline x1='16.0' y1='10.1' x2='12.1' y2='9.4'/%3E%3Cline x1='16.0' y1='10.1' x2='17.4' y2='6.4'/%3E%3Cline x1='24' y1='24' x2='34.0' y2='6.7'/%3E%3Cline x1='29.5' y1='14.5' x2='27.4' y2='8.8'/%3E%3Cline x1='29.5' y1='14.5' x2='35.4' y2='13.4'/%3E%3Cline x1='32.0' y1='10.1' x2='30.6' y2='6.4'/%3E%3Cline x1='32.0' y1='10.1' x2='35.9' y2='9.4'/%3E%3C/svg%3E"); }
+
+body { background: linear-gradient(180deg, #0e1020 0, var(--bg) 40%, #090a13 100%); }
+.drift { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 3; }
+
+/* type: mincho for everything that is a title, Geist for reading, mono for the machine */
+.hero__title, .shead__title, .contact__title, .feature__name, .index__caption h3, .role h3,
+.quote__text, .agent__t, .spec__head h4, .tokz__head h4, .toy h4, .latest__t, .shelf__h, .publish__head h2, .about__text > p:first-child, .wx__name {
+  font-family: var(--serif); letter-spacing: -0.005em;
+}
+.shead__title { font-weight: 500; line-height: 1.22; font-size: clamp(30px, 3.6vw, 46px); }
+.shead__title .dim { color: rgba(var(--fg-rgb), 0.46); }
+.contact__title { font-weight: 500; line-height: 1.16; letter-spacing: -0.01em; }
+.feature__name { font-weight: 600; letter-spacing: 0; }
+.index__caption h3, .role h3 { font-weight: 600; letter-spacing: 0; }
+.wx__name { font-weight: 600; font-size: 18px; }
+.about__text > p:first-child { font-size: 22px; line-height: 1.6; letter-spacing: 0; }
+.quote__text { font-size: 22px; line-height: 1.55; }
+.quote__mark { font-family: var(--serif); color: var(--shu); }
+
+/* seals: 判子, the only place vermilion shows up besides the torii */
+.seal {
+  display: inline-grid; place-items: center; flex: none;
+  background: var(--shu); color: #fbefe0;
+  font: 700 14px/1 var(--serif);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1.5px rgba(251, 239, 224, 0.5), inset 0 0 0 3px var(--shu);
+}
+.tag { gap: 14px; }
+.tag .seal { width: 28px; height: 28px; color: #fbefe0; transform: rotate(-4deg); }
+.tag .seal::after { display: none; }
+.tag__jp { font: 500 13px/1 var(--serif); font-style: normal; color: var(--fg-3); letter-spacing: 0.12em; }
+.tag__jp::before { content: ''; display: inline-block; width: 18px; height: 1px; margin-right: 12px; vertical-align: middle; background: var(--line-3); }
+
+/* each chapter has its kanji brushed faintly down the right edge */
+.section[data-kanji]::before {
+  content: attr(data-kanji);
+  position: absolute; top: 88px; right: max(8px, calc((100vw - var(--max)) / 2 - 56px));
+  font: 400 clamp(110px, 12vw, 200px)/1 var(--brush);
+  color: rgba(var(--fg-rgb), 0.05);
+  pointer-events: none; user-select: none;
+}
+
+/* chapter divider: a hairline with the season's crest in the middle */
+.axon { background: linear-gradient(90deg, transparent, var(--line-3) 18%, var(--line-3) 82%, transparent); }
+.axon::before { left: 50%; top: -12px; width: 44px; height: 24px; border: 0; border-radius: 0; transform: translateX(-50%); background: var(--bg); }
+.axon::after {
+  left: 50%; right: auto; top: -9px; width: 18px; height: 18px; border: 0; border-radius: 0; transform: translateX(-50%);
+  background: var(--season);
+  -webkit-mask: var(--emblem) center / contain no-repeat; mask: var(--emblem) center / contain no-repeat;
+  opacity: 0.85; transition: background-color 0.6s;
+}
+.axon i { background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.9)); }
+
+/* textures: 七宝 (shippō) where there used to be a dot grid */
+.feature__viz { background: var(--shippo) 0 0 / 28px 28px, rgba(0, 0, 0, 0.22); }
+.toy__stage, .spec, .tokz { background: var(--shippo) 0 0 / 28px 28px, rgba(0, 0, 0, 0.2); }
+.feature { background: linear-gradient(180deg, rgba(var(--w-rgb), 0.025), rgba(var(--w-rgb), 0.008)); }
+
+/* nav: season and sound */
+.nav__capsule { background: rgba(14, 16, 32, 0.5); }
+.nav.is-scrolled .nav__capsule { background: rgba(12, 14, 26, 0.86); }
+.brand__mark .core { fill: var(--shu); stroke: var(--shu); }
+.nav__icon {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 34px; min-width: 34px; padding: 0 9px; margin-left: 2px;
+  border-radius: 999px; border: 1px solid var(--line);
+  font: 500 14px/1 var(--serif); color: var(--fg-2);
+  transition: border-color 0.2s, color 0.2s;
+}
+.nav__icon:hover { border-color: var(--line-3); color: var(--fg); }
+.nav__season span { color: var(--season); transition: color 0.6s; }
+.snd { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; }
+.snd i { width: 2px; height: 3px; border-radius: 1px; background: var(--fg-3); transition: height 0.3s, background-color 0.3s; }
+.nav__sound.is-on { border-color: rgba(var(--accent-rgb), 0.45); color: var(--fg); }
+.nav__sound.is-on .snd i { height: 100%; background: var(--accent); transform-origin: bottom; animation: eq 1.1s ease-in-out infinite; }
+.nav__sound.is-on .snd i:nth-child(2) { animation-delay: -0.4s; }
+.nav__sound.is-on .snd i:nth-child(3) { animation-delay: -0.75s; }
+.nav__sound.is-on .snd i:nth-child(4) { animation-delay: -0.2s; }
+.mobile-menu button[aria-pressed="true"] span { color: var(--fg); }
+
+/* ---------- hero: the painting ---------- */
+.hero { padding: 132px 0 40px; }
+.hero__scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
+.hero__veil {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 11, 26, 0.6) 0%, rgba(10, 11, 26, 0.34) 36%, rgba(10, 11, 26, 0) 60%),
+    linear-gradient(180deg, rgba(12, 14, 25, 0) 64%, rgba(12, 14, 25, 0.6) 86%, #0e1020 100%);
+}
+.hero__grid { grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: start; }
+.hero__copy { max-width: 680px; text-shadow: 0 1px 22px rgba(8, 9, 22, 0.55); }
+.hero__title { font-weight: 600; font-size: clamp(40px, 4.4vw, 66px); line-height: 1.12; letter-spacing: -0.012em; }
+.hero__prompt { color: rgba(var(--fg-rgb), 0.55); }
+.hero__gen { color: rgba(var(--fg-rgb), 0.52); }
+.hero__lede { color: rgba(var(--fg-rgb), 0.8); }
+.status-pill { background: rgba(12, 14, 30, 0.5); }
+.btn--ghost { background: rgba(12, 14, 30, 0.35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.hero__jp { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 6px; }
+.hero__kana {
+  writing-mode: vertical-rl;
+  font: 500 clamp(20px, 1.8vw, 28px)/1 var(--serif); letter-spacing: 0.32em;
+  color: rgba(var(--fg-rgb), 0.9); text-shadow: 0 0 22px rgba(10, 10, 26, 0.7);
+}
+.seal--name { width: 30px; padding: 7px 0; font-size: 13px; line-height: 1.2; transform: rotate(-3deg); }
+.facts { border-top-color: rgba(var(--w-rgb), 0.16); }
+.facts dd { color: rgba(var(--fg-rgb), 0.78); }
+.facts dt { color: rgba(var(--fg-rgb), 0.5); }
+
+.season {
+  display: flex; flex-direction: column; gap: 2px; margin-top: 10px; padding: 3px;
+  border-radius: 999px; border: 1px solid rgba(var(--w-rgb), 0.16);
+  background: rgba(12, 14, 30, 0.45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.season button { width: 30px; height: 30px; border-radius: 50%; font: 500 14px/1 var(--serif); color: rgba(var(--fg-rgb), 0.55); transition: color 0.2s, background-color 0.3s; }
+.season button:hover { color: var(--fg); }
+.season button[aria-pressed="true"] { color: var(--bg); background: var(--season); }
+
+/* ---------- the portrait, hung as a scroll (掛軸) ---------- */
+.about__side { display: grid; gap: 40px; }
+.portrait.scroll {
+  position: relative; justify-self: center; width: 100%; max-width: 252px; margin-top: 30px;
+  padding: 16px 13px 14px; border: 0; border-radius: 2px; overflow: visible;
+  background: var(--shippo) 0 0 / 22px 22px, linear-gradient(180deg, #1c2244, #141831);
+  box-shadow: 0 34px 60px -28px rgba(0, 0, 0, 0.95), inset 0 0 0 1px rgba(var(--accent-rgb), 0.16);
+}
+.portrait.scroll::before { content: ''; position: absolute; left: 50%; top: -32px; width: 84px; height: 30px; transform: translateX(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 30' fill='none' stroke='rgb(228,173,98)' stroke-opacity='0.55'%3E%3Cpath d='M4 30 L40 2 L76 30'/%3E%3Ccircle cx='40' cy='3' r='2.5' fill='rgb(228,173,98)' fill-opacity='0.7'/%3E%3C/svg%3E") center / contain no-repeat; }
+.scroll__rod { position: absolute; left: -9px; right: -9px; top: -6px; height: 10px; border-radius: 5px; background: linear-gradient(180deg, #6a4428, #2b170b); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); }
+.scroll__rod--end { top: auto; bottom: -7px; height: 12px; }
+.scroll__rod::before, .scroll__rod::after { content: ''; position: absolute; top: -1px; bottom: -1px; width: 7px; border-radius: 3px; background: linear-gradient(180deg, #e9c27f, #8a6328); }
+.scroll__rod::before { left: -3px; }
+.scroll__rod::after { right: -3px; }
+.portrait.scroll .portrait__bar, .portrait.scroll .portrait__foot, .portrait.scroll .quant { background: rgba(10, 11, 24, 0.7); }
+.portrait.scroll .portrait__bar { border: 1px solid var(--line); border-bottom: 0; }
+.portrait.scroll .portrait__img { background: #0c0e1c; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+.portrait.scroll .portrait__foot { border: 1px solid var(--line); }
+.portrait.scroll .quant { border: 1px solid var(--line); border-top: 0; }
+
+/* ---------- the ending: the village again, later that night ---------- */
+.footer { position: relative; border-top: 0; }
+.footer__scene { position: relative; height: clamp(260px, 32vw, 440px); -webkit-mask-image: linear-gradient(180deg, transparent, #000 28%, #000 78%, transparent); mask-image: linear-gradient(180deg, transparent, #000 28%, #000 78%, transparent); }
+.footer__scene canvas { width: 100%; height: 100%; }
+.outro { padding-top: 24px; }
+.footer__inner .eos { color: var(--shu); }
+
+@media (max-width: 1040px) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (max-width: 880px) {
+  .nav__icon { display: none; }
+  .nav__season { display: inline-flex; margin-left: auto; margin-right: 4px; }
+}
+@media (max-width: 680px) {
+  .hero__jp { display: none; }
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__title { font-size: clamp(31px, 8.8vw, 46px); }
+  .hero__title .line { text-wrap: balance; }
+  .hero__veil { background: linear-gradient(180deg, rgba(10, 11, 26, 0.5) 0%, rgba(10, 11, 26, 0.25) 45%, rgba(12, 14, 25, 0.55) 78%, #0e1020 100%); }
+  .section[data-kanji]::before { top: 70px; font-size: 96px; right: 6px; }
+  .portrait.scroll { max-width: 230px; }
+}
+

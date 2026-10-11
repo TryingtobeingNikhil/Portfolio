@@ -6,7 +6,7 @@
   <title>Nikhil Mourya · ML Engineer · LLM Inference · Multi-Agent Systems</title>
   <meta name="description" content="Nikhil Mourya is an ML engineer who builds the parts of AI most people import: PageServe, a vLLM-style inference engine, and RLForge, a from-scratch C++ RL library with its own autograd.">
   <meta name="author" content="Nikhil Mourya">
-  <meta name="theme-color" content="#0b0b0a">
+  <meta name="theme-color" content="#0c0e19">
   <link rel="canonical" href="https://tryingtobenikhil.space/">
 
   <meta property="og:type" content="website">
@@ -28,10 +28,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=35">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/main.css?v=36">
 
-  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+  <script>
+    document.documentElement.classList.replace('no-js', 'js');
+    // season before first paint: the visitor's last pick, else the Japanese calendar
+    (function () { var s; try { s = localStorage.getItem('season'); } catch (e) {}
+      document.documentElement.dataset.season = s || ['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'][new Date().getMonth()]; })();
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -72,6 +77,8 @@
         <a href="#contact">Contact</a>
       </nav>
 
+      <button class="nav__icon nav__season" type="button" data-season-next aria-label="Change the season" title="Change the season"><span data-season-kanji>秋</span></button>
+      <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Ambient sound" title="Ambient sound, made live in your browser. No audio files."><span class="snd" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="nav__sndk">音</span></button>
       <span class="nav__status" title="Reading this page like a model: tokens decoded so far, and which chapters sit in your KV cache"><span class="kvm" data-kvm aria-hidden="true"></span><span class="nav__tok"><b data-tok>0</b> tok</span></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
@@ -85,6 +92,7 @@
       <a href="#writing"><span>05</span>Writing</a>
       <a href="#contact"><span>06</span>Contact</a>
       <button type="button" data-cmdk><span>⌘K</span>Search the site</button>
+      <button type="button" data-sound aria-pressed="false"><span>音</span>Ambient sound</button>
     </div>
   </header>
 
@@ -92,7 +100,8 @@
 
     <!-- ============================== HERO ============================== -->
     <section class="hero" id="top">
-      <canvas class="hero__field" id="field" aria-hidden="true"></canvas>
+      <canvas class="hero__scene" id="scene" aria-hidden="true"></canvas>
+      <div class="hero__veil" aria-hidden="true"></div>
 
       <div class="wrap hero__grid">
         <div class="hero__copy">
@@ -126,24 +135,16 @@
           </div>
         </div>
 
-        <figure class="portrait" aria-label="Portrait of Nikhil">
-          <div class="portrait__bar">
-            <span><i class="led" aria-hidden="true"></i>nikhil.exe</span>
-            <span class="dim">online</span>
+        <div class="hero__jp">
+          <span class="hero__kana" aria-hidden="true">ニキル・マウリヤ</span>
+          <span class="seal seal--name" aria-hidden="true">ニ<br>キ<br>ル</span>
+          <div class="season" role="group" aria-label="Season">
+            <button type="button" data-season-btn="spring" aria-pressed="false" title="春 haru · spring">春</button>
+            <button type="button" data-season-btn="summer" aria-pressed="false" title="夏 natsu · summer">夏</button>
+            <button type="button" data-season-btn="autumn" aria-pressed="false" title="秋 aki · autumn">秋</button>
+            <button type="button" data-season-btn="winter" aria-pressed="false" title="冬 fuyu · winter">冬</button>
           </div>
-          <div class="portrait__img">
-            <canvas id="ascii" aria-hidden="true"></canvas>
-          </div>
-          <figcaption class="portrait__foot">
-            <span>Jaipur, IN</span>
-            <span class="loss"><span>train/loss</span><svg viewBox="0 0 80 20" preserveAspectRatio="none" aria-hidden="true"><path id="loss-path" d=""/></svg><b id="loss-val">0.000</b></span>
-          </figcaption>
-          <div class="quant">
-            <label class="quant__k" for="quant">precision <b data-quant-label>FP32</b></label>
-            <input id="quant" type="range" min="0" max="5" step="1" value="0" aria-valuetext="FP32, full precision" data-quant-range>
-            <p class="quant__note" data-quant-note>full precision</p>
-          </div>
-        </figure>
+        </div>
       </div>
 
       <div class="wrap">
@@ -154,14 +155,15 @@
           <div data-reveal style="--d:.2s"><dt>based</dt><dd>Jaipur · <b data-clock>--:--</b> IST<small class="tzdiff" data-tzdiff></small></dd></div>
         </dl>
       </div>
+
     </section>
 
     <!-- ============================== ABOUT ============================== -->
-    <section class="section" id="about">
+    <section class="section" id="about" data-kanji="序">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>01</span>About</p>
+          <p class="tag"><span class="seal">一</span>About<em class="tag__jp" lang="ja">自己紹介</em></p>
           <h2 class="shead__title">The math decides when to stop, <span class="dim">not the model's confidence.</span></h2>
         </header>
 
@@ -188,6 +190,27 @@
             </div>
           </div>
 
+          <div class="about__side">
+          <figure class="portrait scroll" aria-label="Portrait of Nikhil">
+            <span class="scroll__rod" aria-hidden="true"></span>
+            <div class="portrait__bar">
+              <span><i class="led" aria-hidden="true"></i>肖像 · nikhil.exe</span>
+              <span class="dim">online</span>
+            </div>
+            <div class="portrait__img">
+              <canvas id="ascii" aria-hidden="true"></canvas>
+            </div>
+            <figcaption class="portrait__foot">
+              <span>Jaipur, IN</span>
+              <span class="loss"><span>train/loss</span><svg viewBox="0 0 80 20" preserveAspectRatio="none" aria-hidden="true"><path id="loss-path" d=""/></svg><b id="loss-val">0.000</b></span>
+            </figcaption>
+            <div class="quant">
+              <label class="quant__k" for="quant">precision <b data-quant-label>FP32</b></label>
+              <input id="quant" type="range" min="0" max="5" step="1" value="0" aria-valuetext="FP32, full precision" data-quant-range>
+              <p class="quant__note" data-quant-note>full precision</p>
+            </div>
+            <span class="scroll__rod scroll__rod--end" aria-hidden="true"></span>
+          </figure>
           <div class="info" data-reveal style="--d:.08s">
             <div class="info__bar"><span><span class="p">$</span> nikhil --info</span><span class="dim">v2026</span></div>
             <dl>
@@ -200,6 +223,7 @@
               <div><dt>reading</dt><dd>The Humans, Matt Haig</dd></div>
               <div><dt>status</dt><dd class="ok"><i class="led" aria-hidden="true"></i>Open to ML roles</dd></div>
             </dl>
+          </div>
           </div>
         </div>
 
@@ -290,11 +314,11 @@
     </section>
 
     <!-- ============================== EXPERIENCE ============================== -->
-    <section class="section" id="experience">
+    <section class="section" id="experience" data-kanji="道">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>02</span>Experience</p>
+          <p class="tag"><span class="seal">二</span>Experience<em class="tag__jp" lang="ja">経歴</em></p>
           <h2 class="shead__title">Where it runs <span class="dim">in production.</span></h2>
           <p class="shead__desc">Notebooks are cheap. These are the places where my code had to survive real users, real traffic and someone else's pager.</p>
         </header>
@@ -348,11 +372,11 @@
     </section>
 
     <!-- ============================== PROJECTS ============================== -->
-    <section class="section" id="projects">
+    <section class="section" id="projects" data-kanji="匠">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>03</span>Work<em class="tag__n">10 projects</em></p>
+          <p class="tag"><span class="seal">三</span>Work<em class="tag__jp" lang="ja">作品</em><em class="tag__n">10 projects</em></p>
           <h2 class="shead__title">Rebuilt from first principles. <span class="dim">No black boxes I didn't open.</span></h2>
           <p class="shead__desc">Two systems I wrote end to end because reading the library source stopped being enough. One serves LLMs. The other trains agents.</p>
         </header>
@@ -631,11 +655,11 @@
     </section>
 
     <!-- ============================== LAB ============================== -->
-    <section class="section" id="lab">
+    <section class="section" id="lab" data-kanji="遊">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>04</span>Lab<em class="tag__n">5 toys</em></p>
+          <p class="tag"><span class="seal">四</span>Lab<em class="tag__jp" lang="ja">実験室</em><em class="tag__n">5 toys</em></p>
           <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
           <p class="shead__desc">Small toys for the ideas I explain to anyone who stands still long enough. Everything runs in your browser, nothing phones home.</p>
         </header>
@@ -713,11 +737,11 @@
     </section>
 
     <!-- ============================== WRITING ============================== -->
-    <section class="section" id="writing">
+    <section class="section" id="writing" data-kanji="書">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
         <header class="shead" data-reveal>
-          <p class="tag"><span>05</span>Writing<em class="tag__n"><b data-article-count>20</b> articles</em></p>
+          <p class="tag"><span class="seal">五</span>Writing<em class="tag__jp" lang="ja">文章</em><em class="tag__n"><b data-article-count>20</b> articles</em></p>
           <h2 class="shead__title">I build it, then I write it down. <span class="dim">Usually in that order.</span></h2>
           <p class="shead__desc">One part at a time. Scheduler traces, memory bugs, and the math that has to be exactly right or nothing works.</p>
         </header>
@@ -752,10 +776,10 @@
     </section>
 
     <!-- ============================== CONTACT ============================== -->
-    <section class="section contact" id="contact">
+    <section class="section contact" id="contact" data-kanji="縁">
       <div class="axon" aria-hidden="true"><i></i></div>
       <div class="wrap">
-        <p class="tag" data-reveal><span>06</span>Contact</p>
+        <p class="tag" data-reveal><span class="seal">六</span>Contact<em class="tag__jp" lang="ja">便り</em></p>
         <h2 class="contact__title" data-reveal>If you've made it this far, you might as well <span class="accent">say hi.</span></h2>
         <p class="contact__lede" data-reveal>Open to ML engineering roles in inference, serving and agent infrastructure. Email is fastest. DMs on X work too, I check them more than I should.</p>
         <p class="contact__time" data-reveal><i class="led" aria-hidden="true"></i><span>It's <b data-clock>--:--</b> in Jaipur (IST)<span data-tzdiff-long></span></span></p>
@@ -787,6 +811,7 @@
   </main>
 
   <footer class="footer">
+    <div class="footer__scene" aria-hidden="true"><canvas id="scene-end"></canvas></div>
     <div class="wrap">
       <div class="outro">
         <svg class="sig" id="signature" viewBox="0 0 330 120" role="img" aria-label="Nikhil Mourya">
@@ -863,8 +888,10 @@
     </form>
   </dialog>
 
-  <script src="./assets/js/field.js?v=10" defer></script>
-  <script src="./assets/js/trail.js?v=3" defer></script>
+  <script src="./assets/js/season.js?v=1" defer></script>
+  <script src="./assets/js/scene.js?v=1" defer></script>
+  <script src="./assets/js/ambience.js?v=1" defer></script>
+  <script src="./assets/js/trail.js?v=4" defer></script>
   <script src="./assets/js/main.js?v=16" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
