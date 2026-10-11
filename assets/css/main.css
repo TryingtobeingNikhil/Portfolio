@@ -1719,8 +1719,8 @@ body { background: transparent; }
     repeating-linear-gradient(180deg, rgba(90, 55, 25, 0.1) 0 1px, transparent 1px 9px),
     linear-gradient(90deg, #b88d5c, #cfa877 45%, #b48756);
   box-shadow: 0 8px 12px -8px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(60, 35, 15, 0.4);
-  transform: rotate(var(--tilt, 0deg)); transform-origin: 50% -6px;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s;
+  transform: rotate(calc(var(--tilt, 0deg) + var(--swing, 0rad))); transform-origin: 50% -9px;
+  transition: box-shadow 0.35s;
 }
 .pills li:nth-child(3n + 1) { --tilt: -1deg; }
 .pills li:nth-child(3n + 2) { --tilt: 0.8deg; }
@@ -1733,7 +1733,7 @@ body { background: transparent; }
   font: 400 11.5px/1.4 var(--mono); letter-spacing: 0;
   opacity: 0; transform: translate(-50%, -4px); pointer-events: none; transition: opacity 0.2s, transform 0.25s var(--ease);
 }
-.pills li[data-used]:hover, .pills li[data-used]:focus-visible, .pills li.is-shown { transform: rotate(0deg) translateY(-3px); box-shadow: 0 14px 18px -10px rgba(0, 0, 0, 0.95), inset 0 0 0 1px rgba(60, 35, 15, 0.4); z-index: 5; }
+.pills li[data-used]:hover, .pills li[data-used]:focus-visible, .pills li.is-shown { transform: rotate(var(--swing, 0rad)) translateY(-3px); box-shadow: 0 14px 18px -10px rgba(0, 0, 0, 0.95), inset 0 0 0 1px rgba(60, 35, 15, 0.4); z-index: 5; }
 .pills li[data-used]:hover::after, .pills li[data-used]:focus-visible::after, .pills li.is-shown::after { opacity: 1; transform: translate(-50%, 0); }
 
 /* ---------- 名刺: the info box as a business card ---------- */
