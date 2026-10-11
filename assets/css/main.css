@@ -2108,3 +2108,10 @@ html { overflow-x: clip; }
   .hero__actions { margin-top: 30px; }
   .hero__jp { padding-top: 0; }
 }
+
+/* 道: the winding path is painted by sando.js; the straight stones are the fallback */
+.timeline:has(> .sando)::before { content: none; }
+.sando {
+  position: absolute; top: 0; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 calc(var(--p, 0px) - 120px), transparent var(--p, 0px)); mask: linear-gradient(#000 calc(var(--p, 0px) - 120px), transparent var(--p, 0px));
+}
