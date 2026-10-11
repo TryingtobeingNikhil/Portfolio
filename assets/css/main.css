@@ -2108,3 +2108,19 @@ html { overflow-x: clip; }
   .hero__actions { margin-top: 30px; }
   .hero__jp { padding-top: 0; }
 }
+
+/* 道: the winding path is painted by sando.js; the straight stones are the fallback */
+.timeline:has(> .sando)::before { content: none; }
+.sando {
+  position: absolute; top: 0; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 calc(var(--p, 0px) - 120px), transparent var(--p, 0px)); mask: linear-gradient(#000 calc(var(--p, 0px) - 120px), transparent var(--p, 0px));
+}
+/* the roles sit on the bends: every other one steps out to the right */
+.timeline { --sway: clamp(130px, 19vw, 290px); }
+.timeline > li.role:nth-of-type(even) { margin-left: var(--sway); }
+.timeline > li.role:nth-of-type(odd):not(:last-of-type) { padding-bottom: 84px; }
+@media (max-width: 880px) {
+  .timeline { --sway: 44px; }
+  .timeline > li.role:nth-of-type(odd):not(:last-of-type) { padding-bottom: 44px; }
+}
+@media (max-width: 680px) { .timeline { --sway: 30px; } }

@@ -298,15 +298,17 @@
         const mw = rng(301), ax = opts.river ? -w * 0.05 : w * 0.36, ay = H * 0.95, bx = w * 1.05, by = h * 0.02;
         const len = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / len, uy = (by - ay) / len, nx = -uy, ny = ux, ang = Math.atan2(uy, ux);
         const gauss = () => (mw() + mw() + mw() - 1.5) / 1.5;
+        // on the hero it lives in the top-right sky only, fading out well before the headline
+        const keep = x => opts.river ? 1 : Math.max(0, Math.min(1, (x - w * 0.64) / (w * 0.18)));
         s.save(); s.filter = `blur(${Math.round(h * 0.03)}px)`;
         for (let i = 0; i < 46; i++) {
           const t = mw(), off = gauss() * h * 0.07, x = ax + ux * len * t + nx * off, y = ay + uy * len * t + ny * off;
-          s.fillStyle = A(i % 5 ? '#c7c1e6' : '#e8cfc0', 0.045 + mw() * 0.05);
+          s.fillStyle = A(i % 5 ? '#c7c1e6' : '#e8cfc0', (0.045 + mw() * 0.05) * keep(x));
           s.beginPath(); s.ellipse(x, y, h * (0.07 + mw() * 0.09), h * (0.025 + mw() * 0.03), ang, 0, Math.PI * 2); s.fill();
         }
         for (let i = 0; i < 16; i++) {
           const t = 0.15 + mw() * 0.7, off = gauss() * h * 0.015, x = ax + ux * len * t + nx * off, y = ay + uy * len * t + ny * off;
-          s.fillStyle = A(pal.sky[0], 0.3 + mw() * 0.2);
+          s.fillStyle = A(pal.sky[0], (0.3 + mw() * 0.2) * keep(x));
           s.beginPath(); s.ellipse(x, y, h * (0.03 + mw() * 0.05), h * (0.006 + mw() * 0.01), ang + (mw() - 0.5) * 0.3, 0, Math.PI * 2); s.fill();
         }
         s.restore();
@@ -314,7 +316,8 @@
           const t = mw(), off = gauss() * h * 0.06, x = ax + ux * len * t + nx * off, y = ay + uy * len * t + ny * off;
           if (y > H) continue;
           const sz = 0.4 + mw() * mw() * 1.2;
-          s.fillStyle = `rgba(255, 250, 240, ${(0.12 + mw() * 0.5).toFixed(3)})`; s.fillRect(x, y, sz, sz);
+          const k = keep(x); if (!k) continue;
+          s.fillStyle = `rgba(255, 250, 240, ${((0.12 + mw() * 0.5) * k).toFixed(3)})`; s.fillRect(x, y, sz, sz);
         }
       }
       // moon
