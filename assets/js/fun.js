@@ -57,14 +57,14 @@
     const V = [
       [
         'ML engineer focused on LLM inference and multi-agent systems.',
-        'Built PageServe, a vLLM-style inference engine with continuous batching and a paged KV cache, and RLForge, a dependency-free C++20 reinforcement-learning library with its own autograd. Each system is documented in a public article series.',
-        'Student at BIT Mesra. Codeforces Specialist (1400+). Founder of DevPath. Open to ML engineering roles in inference, serving and agent infrastructure.',
+        'Built PageServe, a vLLM-style inference engine, and RLForge, a dependency-free C++20 RL library.',
+        'BIT Mesra. Codeforces Specialist. Founder of DevPath.',
       ],
       ps.map(p => p.innerHTML),
       [
-        'Retrieval scores over vibes. Pruned weights over hoarding. Shipped code over a screenshot of a loss curve that only went down because of a bug.',
-        "I don't call <code>generate()</code>. I write it, then the scheduler under it, then the autograd under that, then an article about how it all broke, and then it breaks again in a new and educational way. Apparently this is a personality now.",
-        'BIT Mesra by day, staring contest with a single code block by night. The code block is winning. We have beef. It knows what it did.',
+        "Retrieval scores over vibes. Pruned weights over hoarding. Shipped code over a loss curve that only went down because of a bug.",
+        "I don't call <code>generate()</code>. I write it, then the thing under it, then it breaks in a new and educational way.",
+        'BIT Mesra by day, staring contest with one code block by night. The code block is winning.',
       ],
     ];
     let cur = 1;
@@ -86,7 +86,7 @@
     const tokEl = $('[data-tok]'), kvm = $('[data-kvm]'), sum = $('[data-kv-sum]');
     const IDS = ['about', 'experience', 'projects', 'lab', 'writing', 'contact'];
     const secs = IDS.map(id => document.getElementById(id)).filter(Boolean);
-    if (!tokEl || !kvm || !secs.length) return;
+    if (!kvm || !secs.length) return;
 
     // ~4 characters per token, the usual rule of thumb for English
     let total = 0;
@@ -95,7 +95,7 @@
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 1;
-      tokEl.innerHTML = p > 0.995 ? '&lt;EOS&gt;' : fmt(Math.round(total * p));
+      if (tokEl) tokEl.innerHTML = p > 0.995 ? '&lt;EOS&gt;' : fmt(Math.round(total * p));
     };
     setTimeout(() => { count(); onScroll(); }, 1500); // after articles and counters render
     addEventListener('scroll', onScroll, { passive: true });
@@ -164,7 +164,7 @@
     const works = () => [...$$('.feature').map(f => ({ name: $('.feature__name', f).textContent.trim(), run: () => window.open($('.feature__links a', f).href, '_blank', 'noopener') })),
       ...$$('.wx').map(li => ({ name: $('.wx__name', li).textContent.trim(), run: () => { close(); window.WORK && window.WORK.open(li); } }))];
     const CMDS = {
-      help: () => print(['<b>ls</b>  chapters', '<b>cd</b> &lt;chapter&gt;  go there', '<b>cat</b> about.txt', '<b>ls</b> work · <b>open</b> &lt;project&gt;', '<b>articles</b> [series]', '<b>temp</b> 0 | 0.7 | 1.4', '<b>quantize</b> fp32 | int8 | int4 | int2 | int1', '<b>whoami</b> · <b>sudo hire nikhil</b> · <b>clear</b> · <b>exit</b>'].join('<br>')),
+      help: () => print(['<b>ls</b>  chapters', '<b>cd</b> &lt;chapter&gt;  go there', '<b>cat</b> about.txt', '<b>ls</b> work · <b>open</b> &lt;project&gt;', '<b>articles</b> [series]', '<b>temp</b> 0 | 0.7 | 1.4', '<b>quantize</b> fp32 | int8 | int4 | int2 | int1', '<b>whoami</b> · <b>clear</b> · <b>exit</b>'].join('<br>')),
       ls: a => {
         if (/^(work|projects)/.test(a)) return print(works().map(w => esc(w.name)).join('  '));
         print('about/  experience/  work/  lab/  writing/  contact/  about.txt');
@@ -191,11 +191,7 @@
       temp: a => { if (window.TEMP && window.TEMP(a)) print(`temperature set to ${esc(a)}. scroll up to About.`); else print('temp: use 0, 0.7 or 1.4', 'is-err'); },
       quantize: a => { if (window.QUANT && window.QUANT(a)) print(`portrait quantized to ${esc(a.toUpperCase())}. look up.`); else print('quantize: fp32, fp16, int8, int4, int2 or int1', 'is-err'); },
       whoami: () => print('a visitor with good taste. also: this is the site of Nikhil Mourya, ML engineer.'),
-      sudo: a => {
-        if (!/^hire\s+nikhil/i.test(a || '')) return print('sudo: nice try.', 'is-err');
-        print('[sudo] password for recruiter: ********');
-        setTimeout(() => { print('permission granted. opening a draft to tsmftxnikhil14@gmail.com…', 'is-ok'); setTimeout(() => { location.href = 'mailto:tsmftxnikhil14@gmail.com?subject=Let%27s%20talk'; }, 900); }, 600);
-      },
+      sudo: () => print('sudo: nice try.', 'is-err'),
       rm: a => print(/-rf\s+doubts/.test(a || '') ? "removed 'doubts'. it was mostly imposter syndrome." : 'rm: permission denied. this is a portfolio.', /doubts/.test(a || '') ? 'is-ok' : 'is-err'),
       clear: () => { out.innerHTML = ''; },
       exit: () => close(),

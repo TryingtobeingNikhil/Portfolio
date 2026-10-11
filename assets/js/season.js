@@ -12,6 +12,16 @@
     autumn: { kanji: '秋', romaji: 'aki', en: 'autumn', line: 'Momiji season. The maples are shipping their best release.', kind: 'leaf', colors: ['#d9542f', '#e2703a', '#b8402c', '#e9a03c', '#c95a2a'] },
     winter: { kanji: '冬', romaji: 'fuyu', en: 'winter', line: 'Snow on the roofs, and a temple bell somewhere down the valley.', kind: 'snow', colors: ['#f4f7fc', '#e3ebf6', '#ffffff'] },
   };
+
+  // Seasons as symbols anyone can read, with the English name beside them on hover.
+  const PETAL_D = 'M0 1 C-0.5 0.6 -0.78 -0.3 -0.46 -0.9 Q-0.2 -1.06 0 -0.7 Q0.2 -1.06 0.46 -0.9 C0.78 -0.3 0.5 0.6 0 1Z';
+  const ICON = {
+    spring: `<svg viewBox="0 0 48 48" aria-hidden="true">${[0, 72, 144, 216, 288].map(r => `<path fill="currentColor" transform="translate(24 24) rotate(${r}) translate(0 -12) scale(10.5)" d="${PETAL_D}"/>`).join('')}<circle cx="24" cy="24" r="3.2" fill="#000" opacity=".35"/></svg>`,
+    summer: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.4" fill="currentColor" stroke="none"/><path d="M12 2.2v2.6M12 19.2v2.6M2.2 12h2.6M19.2 12h2.6M5.1 5.1l1.8 1.8M17.1 17.1l1.8 1.8M5.1 18.9l1.8-1.8M17.1 6.9l1.8-1.8"/></svg>',
+    autumn: '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="currentColor" d="M12.3 21 8 18.6l4.8-.4 5.8.6-4.8-6.3-2.2-5.3 4.8 3.1 5.4 5.8.4-9.1L24 1l1.8 6 .4 9.1 5.4-5.8 4.8-3.1-2.2 5.3-4.8 6.3 5.8-.6 4.8.4-4.3 2.4-5.5 2 .8 2 2.1 2.2-3.1-.7-6 1.8-6-1.8-3.1.7 2.1-2.2.8-2zM24 28l1 17h-2z"/></svg>',
+    winter: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5M9.6 4.2 12 6.4l2.4-2.2M9.6 19.8 12 17.6l2.4 2.2M4.4 10.4l3.1-.9-.8-3.1M19.6 13.6l-3.1.9.8 3.1M4.4 13.6l3.1.9-.8 3.1M19.6 10.4l-3.1-.9.8-3.1"/></svg>',
+  };
+  const NAME = { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' };
   const subs = new Set();
   let current = ORDER.includes(root.dataset.season) ? root.dataset.season : 'autumn';
   root.dataset.season = current;
@@ -23,8 +33,8 @@
     if (remember) { try { localStorage.setItem('season', s); } catch (_) { /* private mode */ } }
     subs.forEach(fn => fn(s));
     document.querySelectorAll('[data-season-btn]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.seasonBtn === s)));
-    document.querySelectorAll('[data-season-kanji]').forEach(el => { el.textContent = INFO[s].kanji; });
-    document.querySelectorAll('[data-season-next]').forEach(el => { el.title = `${INFO[s].kanji} ${INFO[s].romaji}, ${INFO[s].en}. ${INFO[s].line} Click for the next season.`; });
+    document.querySelectorAll('[data-season-kanji]').forEach(el => { el.innerHTML = ICON[s]; });
+    document.querySelectorAll('[data-season-next]').forEach(el => { el.title = `Season: ${NAME[s]} (${INFO[s].kanji}). ${INFO[s].line} Click for the next one.`; el.setAttribute('aria-label', `Season: ${NAME[s]}. Change the season`); });
   }
 
   /* ---------------- falling things ---------------- */
@@ -125,7 +135,7 @@
   }
 
   window.SEASON = {
-    ORDER, INFO,
+    ORDER, INFO, ICON, NAME,
     get: () => current,
     info: () => INFO[current],
     set,
@@ -140,6 +150,11 @@
     const b = e.target.closest('[data-season-btn]');
     if (b) { set(b.dataset.seasonBtn); return; }
     if (e.target.closest('[data-season-next]')) window.SEASON.next();
+  });
+  document.querySelectorAll('[data-season-btn]').forEach(b => {
+    const k = b.dataset.seasonBtn;
+    b.innerHTML = `${ICON[k]}<span class="season__label">${NAME[k]} <i lang="ja">${INFO[k].kanji}</i></span>`;
+    b.setAttribute('aria-label', NAME[k]); b.title = `${NAME[k]} (${INFO[k].kanji})`;
   });
   // paint the labels for the starting season
   const start = current; current = null; set(start, false);

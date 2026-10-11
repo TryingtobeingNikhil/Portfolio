@@ -18,13 +18,13 @@
 
   // body colour, then patches as [from, to] along the body (0 head, 1 tail), side offset, width
   const VARIETIES = [
-    { name: 'kohaku', base: '#f4eee3', patches: [[0.04, 0.22, 0.1, 0.9, '#d9442a'], [0.32, 0.55, -0.25, 0.85, '#d9442a'], [0.62, 0.74, 0.3, 0.6, '#d9442a']] },
+    { name: 'kohaku', base: '#fbf6ec', patches: [[0.04, 0.22, 0.1, 0.9, '#ec4a26'], [0.32, 0.55, -0.25, 0.85, '#ec4a26'], [0.62, 0.74, 0.3, 0.6, '#ec4a26']] },
     { name: 'sanke', base: '#f3ece0', patches: [[0.06, 0.3, -0.1, 0.9, '#d3402a'], [0.42, 0.6, 0.2, 0.8, '#d3402a'], [0.35, 0.42, -0.5, 0.35, '#1d1b20'], [0.66, 0.72, 0.45, 0.3, '#1d1b20']] },
     { name: 'showa', base: '#1f1c21', patches: [[0.02, 0.18, 0, 0.9, '#d44a2c'], [0.3, 0.48, 0.3, 0.7, '#f1ebdf'], [0.5, 0.64, -0.3, 0.75, '#d44a2c'], [0.7, 0.8, 0.2, 0.5, '#f1ebdf']] },
-    { name: 'ogon', base: '#e3a93f', patches: [], metal: true },
+    { name: 'ogon', base: '#f2b63e', patches: [], metal: true },
     { name: 'tancho', base: '#f6f1e8', patches: [[0.04, 0.1, 0, 0.55, '#d63b28']] },
     { name: 'asagi', base: '#8197ae', patches: [[0.1, 0.7, 0.85, 0.5, '#e2712f'], [0.1, 0.7, -0.85, 0.5, '#e2712f']], scales: true },
-    { name: 'yamabuki', base: '#f0c552', patches: [], metal: true },
+    { name: 'yamabuki', base: '#ffd45a', patches: [], metal: true },
   ];
 
   let w = 0, h = 0, dpr = 1, raf = 0, visible = false, last = 0, time = 0, built = false;
@@ -59,15 +59,15 @@
   function paintBed() {
     const c = document.createElement('canvas'); c.width = w * dpr; c.height = h * dpr;
     const g = c.getContext('2d'); g.scale(dpr, dpr);
-    g.fillStyle = '#1c4a50'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#2b7472'; g.fillRect(0, 0, w, h);
     // deeper, darker water down the middle of the channel
     g.save(); g.filter = `blur(${Math.round(h * 0.06)}px)`;
-    g.strokeStyle = '#0b2530'; g.lineWidth = h * 0.24; g.lineCap = 'round';
+    g.strokeStyle = '#17505a'; g.lineWidth = h * 0.24; g.lineCap = 'round';
     g.beginPath(); for (let x = -40; x <= w + 40; x += 10) (x === -40 ? g.moveTo(x, cy(x)) : g.lineTo(x, cy(x))); g.stroke();
     g.restore();
     for (let i = 0; i < w * h / 150; i++) {
       const x = R() * w, y = R() * h, r = 1 + R() * 3.2;
-      g.fillStyle = R() < 0.5 ? `rgba(10, 30, 34, ${0.25 + R() * 0.3})` : `rgba(140, 170, 150, ${0.06 + R() * 0.1})`;
+      g.fillStyle = R() < 0.5 ? `rgba(14, 44, 46, ${0.22 + R() * 0.25})` : `rgba(190, 215, 190, ${0.1 + R() * 0.12})`;
       g.beginPath(); g.ellipse(x, y, r * 1.3, r, R() * 3, 0, TAU); g.fill();
     }
     return c;
@@ -86,11 +86,11 @@
     water.closePath();
     // the ground: moss and soil
     const gr = g.createLinearGradient(0, 0, 0, h);
-    gr.addColorStop(0, '#141b14'); gr.addColorStop(0.5, '#1c261b'); gr.addColorStop(1, '#121812');
+    gr.addColorStop(0, '#1e2d1c'); gr.addColorStop(0.5, '#2c4127'); gr.addColorStop(1, '#1d2b1a');
     g.fillStyle = gr; g.fillRect(0, 0, w, h);
     for (let i = 0; i < w * h / 90; i++) {
       const x = R() * w, y = R() * h;
-      g.fillStyle = R() < 0.6 ? `rgba(70, 100, 50, ${0.1 + R() * 0.2})` : `rgba(10, 12, 8, ${0.2 + R() * 0.3})`;
+      g.fillStyle = R() < 0.65 ? `rgba(110, 150, 70, ${0.14 + R() * 0.24})` : `rgba(14, 18, 10, ${0.2 + R() * 0.25})`;
       g.fillRect(x, y, 1 + R() * 2, 1 + R() * 2);
     }
     if (snow) for (let i = 0; i < w * h / 600; i++) { g.fillStyle = `rgba(225, 233, 245, ${0.15 + R() * 0.35})`; g.beginPath(); g.ellipse(R() * w, R() * h, 3 + R() * 10, 2 + R() * 4, 0, 0, TAU); g.fill(); }
@@ -123,7 +123,7 @@
         g.beginPath(); g.moveTo(x + (R() - 0.5) * 6, y); g.quadraticCurveTo(x + Math.cos(a) * l * 0.4, y + Math.sin(a) * l * 0.6, x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
       }
     };
-    const grass = { spring: ['#4f7a3a', '#6a9446', '#3d6230'], summer: ['#3f7036', '#57893f', '#2f5a2a'], autumn: ['#7d7a3a', '#9a8240', '#5e6a30', '#8a5a2a'], winter: ['#4a5a4c', '#6c776d', '#8a9590'] }[season];
+    const grass = { spring: ['#6a9e48', '#86b858', '#4f8038'], summer: ['#4f8f40', '#6cab4c', '#3b7334'], autumn: ['#a89a48', '#c49a4a', '#7f8a3c', '#b8743a'], winter: ['#62766a', '#8a978e', '#aab4ae'] }[season];
     const scale = Math.max(0.7, Math.min(1.3, h / 300));
     // stones and grasses along both banks
     for (let x = -10; x < w + 20; x += (26 + R() * 46) * scale) {
@@ -281,7 +281,7 @@
     const P = k.pts, v = k.v, n = k.n;
     const ang = i => Math.atan2(P[i][1] - P[Math.min(n, i + 1)][1], P[i][0] - P[Math.min(n, i + 1)][0]);
     ctx.save();
-    ctx.globalAlpha = 0.55 + k.depth * 0.45;
+    ctx.globalAlpha = 0.84 + k.depth * 0.16;
     // tail fin: two lobes trailing the last segment, swaying with it
     const tp = P[n], ta = ang(n - 1) + Math.PI, sway = Math.sin(k.phase - 1.4) * 0.35, fl = k.L * 0.3;
     ctx.fillStyle = v.metal ? 'rgba(240, 200, 110, 0.55)' : 'rgba(246, 238, 226, 0.5)';
@@ -375,7 +375,7 @@
     if (caustic) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       const S = caustic.width;
-      for (const [k, vx, vy, al] of [[1.7, 7, 4, 0.11], [2.6, -5, 6, 0.08]]) {
+      for (const [k, vx, vy, al] of [[1.7, 7, 4, 0.2], [2.6, -5, 6, 0.13]]) {
         ctx.globalAlpha = al;
         const size = S * k, ox = ((time * vx) % size + size) % size, oy = ((time * vy) % size + size) % size;
         for (let x = -size + ox; x < w; x += size) for (let y = -size + oy; y < h; y += size) ctx.drawImage(caustic, x, y, size, size);
@@ -393,7 +393,7 @@
     koi.slice().sort((a, b) => a.depth - b.depth).forEach(drawKoi);
     // a little caustic light on their backs too, and the water over them
     const wg = ctx.createLinearGradient(0, 0, w, h);
-    wg.addColorStop(0, 'rgba(160, 210, 220, 0.07)'); wg.addColorStop(1, 'rgba(6, 24, 30, 0.12)');
+    wg.addColorStop(0, 'rgba(180, 230, 230, 0.06)'); wg.addColorStop(1, 'rgba(6, 24, 30, 0.04)');
     ctx.fillStyle = wg; ctx.fillRect(0, 0, w, h);
     // surface
     for (const p of pads) { p.a += p.va * dt; drawPad(p); }

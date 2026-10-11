@@ -1,6 +1,8 @@
 # tryingtobenikhil.space
 
-Personal site of Nikhil Mourya. Plain HTML, CSS and JS: no framework, no build step.
+Personal site of Nikhil Mourya: an evening walk through an old Japanese village, dusk to night.
+Plain HTML, CSS and JS: no framework, no build step, and no image or audio assets for the art.
+Every scene, the woodblock portrait, the koi and the music are drawn or synthesised in code.
 Netlify deploys every push to `main`.
 
 ## Add a new article (from the site)
@@ -53,9 +55,12 @@ It stays hidden until these three environment variables are set in Netlify
 
 ## Hidden bits
 
-- **Backtick (`)** opens a terminal: `help`, `ls`, `cd writing`, `open pageserve`, `articles rlforge`, `temp 1.4`, `quantize int2`, `sudo hire nikhil`.
+- **Backtick (`)** opens a terminal: `help`, `ls`, `cd writing`, `open pageserve`, `articles rlforge`, `temp 1.4`, `quantize int2`.
 - **↑↑↓↓←→←→BA** toggles debug mode: every chapter is outlined with its token count, DOM nodes and height.
 - **Writing filters are links**: `/#writing/rlforge` opens the library on one series.
+- **Seasons**: 春 夏 秋 冬 in the hero or the nav. The visitor's pick is remembered.
+- **Time of day**: the hero sky follows the time in Jaipur. `?t=dawn`, `?t=day`, `?t=dusk` or `?t=night` previews one.
+- **音** in the nav plays the original score and the village ambience.
 
 ## Run it locally
 
@@ -70,18 +75,25 @@ Then open http://localhost:5501.
 | File | What it is |
 | --- | --- |
 | `index.html` | All page content |
-| `assets/css/main.css` | Styles |
-| `assets/js/field.js` | Hero neural-net / matrix canvas |
-| `assets/js/main.js` | Nav, reveals, portrait, KV-cache demo, GitHub stars |
-| `assets/js/trail.js` | Binary 0/1 cursor trail (desktop only) |
+| `assets/css/main.css` | Styles; palette tokens at the top, season colours on `html[data-season]` |
+| `assets/js/season.js` | Seasons, and the petals, fireflies, leaves and snow they drop |
+| `assets/js/scene.js` | The hero village, the river ending, the hanging scroll's physics, the time of day |
+| `assets/js/inkwash.js` | The ink-wash landscape in the page margins |
+| `assets/js/print.js` | The portrait as an indigo woodblock print |
+| `assets/js/japan.js` | Shoji in the Lab, swinging ema, skill plaques and lanterns |
+| `assets/js/koi.js` | The koi stream in Contact |
+| `assets/js/ambience.js` | The score and the village sounds (Web Audio, no files) |
+| `assets/js/trail.js` | Cursor trail of whatever the season drops (desktop only) |
+| `assets/js/main.js` | Nav, reveals, KV-cache demo, GitHub stars |
 | `assets/js/showcase.js` | Speculative decoding demo (Lab) |
 | `assets/js/ask.js` | "Ask this page": BM25 search over the page with a refusal threshold |
-| `assets/js/extras.js` | Writing list, highlights, contributions, lab toys, ⌘K palette |
+| `assets/js/extras.js` | Writing list, contributions, lab toys, ⌘K palette |
+| `assets/js/chapters.js` | Work filters and plaques, Highlights, "Right now" strip |
+| `assets/js/fun.js` | Precision slider, temperature dial, reading lanterns, terminal, Konami debug, tokenizer |
 | `assets/data/articles.js` | Article list |
 | `assets/data/quotes.js` | Quote bank |
-| `assets/js/chapters.js` | Work index (filters, rows that open), git-log Highlights, "Right now" strip |
-| `assets/js/fun.js` | Portrait precision slider, temperature dial, reading meter, terminal, Konami debug, GridWorld agent, tokenizer |
-| `404.html` | "Token not in vocabulary" page with nearest-page suggestions |
+| `404.html` | The river at night, and the way back |
+| `scripts/og.html` | The share card; regenerate `assets/images/og.png` with the command inside |
 | `assets/js/publish.js` | Private "Add article" panel (opens with `#publish`) |
 | `netlify/functions/articles.mjs` | Articles added from the site (Netlify Blobs) |
 | `netlify/functions/now-playing.mjs` | Spotify now playing / last played API |
