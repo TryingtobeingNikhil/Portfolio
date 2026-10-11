@@ -2032,3 +2032,54 @@ html { overflow-x: clip; }
 .nav__time { gap: 8px; cursor: default; font: 500 14px/1 var(--serif); color: var(--fg-3); }
 .nav__time .nav__city { letter-spacing: 0.04em; }
 .nav__time b { font: 600 14px/1 var(--serif); color: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* nav: liquid glass, the way macOS draws it. A see-through capsule that blurs and
+   saturates what is behind it, a bright rim, and a sheen that leans toward the cursor */
+.nav__capsule {
+  --mx: 30%; --my: -40%;
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.05)),
+    rgba(22, 22, 34, 0.2);
+  -webkit-backdrop-filter: blur(24px) saturate(185%) brightness(1.06);
+  backdrop-filter: blur(24px) saturate(185%) brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.06),
+    0 12px 32px -12px rgba(0, 0, 0, 0.55),
+    0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.4s, box-shadow 0.4s;
+}
+.nav__capsule::before {
+  left: 0; right: 0; top: 0; bottom: 0; height: auto; border-radius: inherit;
+  background: radial-gradient(90% 140% at var(--mx) var(--my), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 55%);
+  mix-blend-mode: screen; transition: background-position 0.3s;
+}
+.nav.is-scrolled .nav__capsule {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.05)),
+    rgba(18, 17, 26, 0.5);
+}
+.nav__capsule > * { position: relative; z-index: 1; }
+.brand { border-right-color: rgba(255, 255, 255, 0.12); }
+.nav__icon, .nav__status, .nav__cmd {
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.nav__icon:hover, .nav__cmd:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.18); }
+.nav__cmd kbd { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.14); }
+.nav__links a { border-radius: 999px; }
+.nav__links a:hover { background: rgba(255, 255, 255, 0.06) !important; }
+.nav__toggle { border-radius: 999px; border-color: rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); }
+.mobile-menu {
+  border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)), rgba(18, 17, 26, 0.55);
+  -webkit-backdrop-filter: blur(28px) saturate(185%); backdrop-filter: blur(28px) saturate(185%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav__capsule, .mobile-menu { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(18, 17, 26, 0.94); }
+}
