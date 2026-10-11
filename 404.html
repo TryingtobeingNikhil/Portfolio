@@ -3,67 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>404 · Nikhil Mourya</title>
+  <title>Lost · Nikhil Mourya</title>
   <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#0c0e19">
-  <link rel="icon" href="/assets/images/logo.ico" sizes="any">
+  <meta name="theme-color" content="#0e0d0f">
+  <link rel="icon" href="/assets/images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/main.css?v=36">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Shippori+Mincho:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css?v=55">
+  <script>
+    (function () { var s; try { s = localStorage.getItem('season'); } catch (e) {}
+      document.documentElement.dataset.season = s || ['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'][new Date().getMonth()]; })();
+  </script>
   <style>
-    .nf { min-height: 100vh; min-height: 100svh; display: grid; align-content: center; gap: 22px; max-width: 760px; margin: 0 auto; padding: 64px 24px; }
-    .nf h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 500; line-height: 1.04; letter-spacing: -0.045em; text-wrap: balance; }
-    .nf h1 .accent { color: var(--accent); }
-    .nf__q { font-size: 17px; color: var(--fg-2); }
-    .nf__logits { display: grid; gap: 2px; margin-top: 4px; border-top: 1px solid var(--line-2); }
-    .nf__logits a { display: grid; grid-template-columns: minmax(0, 1fr) 160px 56px; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); font: 400 14px/1.3 var(--mono); color: var(--fg); transition: color 0.2s; }
-    .nf__logits a:hover { color: var(--accent); }
-    .nf__logits i { height: 3px; border-radius: 3px; background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.85) calc(var(--p) * 100%), rgba(var(--w-rgb), 0.07) 0); }
-    .nf__logits b { font-weight: 400; color: var(--fg-3); text-align: right; font-variant-numeric: tabular-nums; }
-    .nf__foot { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
-    @media (max-width: 560px) { .nf__logits a { grid-template-columns: minmax(0, 1fr) 56px; } .nf__logits i { display: none; } }
+    html, body { height: 100%; }
+    body { overflow: hidden; background: #0b0c14; }
+    .lost { position: fixed; inset: 0; }
+    .lost canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .lost__copy { position: absolute; left: 50%; top: 13vh; width: min(600px, calc(100vw - 48px)); transform: translateX(-50%); text-align: center; text-shadow: 0 2px 20px rgba(6, 7, 16, 0.8); }
+    .lost__links { justify-content: center; }
+    .lost__copy .seal { width: 38px; height: 38px; font-size: 19px; transform: rotate(-4deg); }
+    .lost__copy h1 { margin-top: 26px; font: 600 clamp(34px, 5vw, 58px)/1.1 var(--serif); }
+    .lost__copy p { margin-top: 16px; font: 400 18px/1.5 var(--serif); color: rgba(var(--fg-rgb), 0.78); }
+    .lost__links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
   </style>
 </head>
 <body>
-  <main class="nf">
-    <p class="tag"><span>404</span>token not in vocabulary</p>
-    <h1>That page isn't in my vocabulary. <span class="accent">Sampling the nearest ones.</span></h1>
-    <p class="nf__q">You asked for <code data-path>this page</code>. Closest valid tokens, by edit distance, softmaxed:</p>
-    <ol class="nf__logits" data-logits></ol>
-    <div class="nf__foot">
-      <a class="btn btn--primary" href="/">Back to the start <span aria-hidden="true">→</span></a>
-      <a class="btn btn--ghost" href="/#writing">Read something instead</a>
+  <main class="lost">
+    <canvas id="scene-end" aria-hidden="true"></canvas>
+    <div class="lost__copy">
+      <span class="seal" lang="ja" aria-hidden="true">迷</span>
+      <h1>This path doesn't exist.</h1>
+      <p>Even the village has dead ends. The lanterns are lit on the way back.</p>
+      <div class="lost__links">
+        <a class="btn btn--primary" href="/">Back to the start <span aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href="/#writing">Read something instead</a>
+      </div>
     </div>
   </main>
-  <script>
-    (() => {
-      const path = decodeURIComponent(location.pathname).replace(/\/+$/, '') || '/';
-      document.querySelector('[data-path]').textContent = path;
-      const word = path.toLowerCase().replace(/\.(html?|php|aspx?)$/, '').split('/').filter(Boolean).pop() || '';
-      const PAGES = [
-        ['/', 'home', ['home', 'index', 'start']],
-        ['/#about', 'about', ['about', 'me', 'bio', 'who']],
-        ['/#experience', 'experience', ['experience', 'work', 'jobs', 'career', 'hirebuddy']],
-        ['/#projects', 'work', ['projects', 'work', 'portfolio', 'pageserve', 'rlforge', 'github']],
-        ['/#lab', 'lab', ['lab', 'demos', 'toys', 'playground']],
-        ['/#writing', 'writing', ['writing', 'blog', 'articles', 'posts', 'notes']],
-        ['/#contact', 'contact', ['contact', 'email', 'hire', 'hello', 'resume', 'cv']],
-      ];
-      const lev = (a, b) => {
-        const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
-        for (let j = 1; j <= b.length; j++) d[0][j] = j;
-        for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
-          d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-        return d[a.length][b.length];
-      };
-      const scored = PAGES.map(([href, name, keys]) => ({ href, name, d: Math.min(...keys.map(k => lev(word, k) / Math.max(word.length, k.length, 1))) }));
-      const T = 0.18, ex = scored.map(s => Math.exp(-s.d / T)), Z = ex.reduce((a, b) => a + b, 0);
-      scored.forEach((s, i) => { s.p = ex[i] / Z; });
-      scored.sort((a, b) => b.p - a.p);
-      document.querySelector('[data-logits]').innerHTML = scored.slice(0, 4).map(s =>
-        `<li><a href="${s.href}"><span>${s.href === '/' ? '/' : s.href.replace('/', '')}</span><i style="--p:${s.p.toFixed(3)}"></i><b>${s.p.toFixed(2)}</b></a></li>`).join('');
-    })();
-  </script>
+  <script src="/assets/js/season.js"></script>
+  <script src="/assets/js/scene.js"></script>
 </body>
 </html>

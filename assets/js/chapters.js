@@ -41,20 +41,16 @@
     };
   })();
 
-  /* ---------------- Highlights as a git log ---------------- */
-  // The hashes are content hashes of each line (FNV-1a), so they stay put
-  // until the line itself changes, like a real commit would.
+  /* ---------------- Highlights: five lines, the rest folded ---------------- */
   (function gitlog() {
     const log = $('[data-gitlog]');
     if (!log) return;
-    const fnv = str => { let h = 0x811c9dc5; for (const c of str) { h ^= c.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0').slice(0, 7); };
-    $$('[data-hash]', log).forEach(el => { el.textContent = fnv(el.parentElement.textContent.replace(/\s+/g, ' ').trim()); });
     const more = $('[data-gitlog-more]');
     const total = $$('li', log).length, extra = $$('li[data-more]', log).length;
     if (!more || !extra) { if (more) more.hidden = true; return; }
     const label = () => {
       const all = log.classList.contains('is-all');
-      more.firstChild.textContent = all ? 'git log -n 5 ' : 'git log --all ';
+      more.firstChild.textContent = all ? 'Show fewer ' : 'Show all ';
       $('[data-gitlog-n]', more).textContent = all ? '' : `(${total})`;
       more.setAttribute('aria-expanded', String(all));
     };

@@ -1908,3 +1908,81 @@ body { background: transparent; }
 @media (prefers-reduced-motion: reduce) {
   .hero__title .line, .hero__lede, .hero__actions { opacity: 1; transform: none; filter: none; animation: none; }
 }
+
+/* ==========================================================================
+   The last of the old site, brought into the village, quietly.
+   ========================================================================== */
+
+/* nav: an ensō in washi white, brushed again on hover */
+.brand__mark { width: 24px; height: 24px; }
+.brand__mark .enso { fill: none; stroke: rgba(var(--fg-rgb), 0.92); stroke-linecap: round; }
+.brand__mark .enso path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.brand:hover .brand__mark { transform: none; }
+.brand:hover .brand__mark .enso path { animation: ensoBrush 1s cubic-bezier(0.6, 0.05, 0.3, 1); }
+@keyframes ensoBrush { from { stroke-dashoffset: 1; } }
+
+/* highlights: plain lines, a small paper strip marking each one */
+.gitlog { border-top: 1px solid var(--line-2); }
+.hl { grid-template-columns: 10px minmax(0, 1fr) auto; gap: 18px; padding: 15px 0; font: 400 17px/1.45 var(--serif); }
+.hl::before { content: ''; width: 6px; height: 22px; align-self: center; border-radius: 1px; background: linear-gradient(180deg, #efe4cc, #d9c7a4); box-shadow: inset 0 2px 0 rgba(var(--shu-rgb), 0.9); transform: rotate(-3deg); }
+.gitlog li:nth-child(even) .hl::before { background: linear-gradient(180deg, #e6a493, #c9735e); box-shadow: inset 0 2px 0 rgba(255, 240, 220, 0.6); transform: rotate(2deg); }
+.hl b { font-weight: 600; color: var(--accent); }
+.hl em { font: 400 13px/1 var(--serif); color: var(--fg-3); }
+.gitlog__more, .shelf__more { border: 0; padding: 8px 0; border-radius: 0; font: 500 15px/1 var(--serif); color: var(--fg-3); }
+.gitlog__more:hover, .shelf__more:hover { color: var(--accent); border: 0; }
+.gitlog__more span { font: 400 12px/1 var(--serif); color: var(--fg-4); }
+
+/* right now: serif, and the year of commits as brush dots */
+.now__note { font: 400 13px/1 var(--serif); }
+.now__k { font: 400 13px/1.3 var(--serif); }
+.now__v { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+.now__sub { font-family: var(--serif); }
+.contrib__total { font-family: var(--serif); font-size: 15px; }
+.contrib__svg rect { rx: 50%; }
+.contrib__svg text { font-family: var(--serif); font-size: 10px; }
+.contrib__legend { font-family: var(--serif); font-size: 12px; }
+.contrib__legend i { border-radius: 50%; }
+[data-l="0"] { background: rgba(var(--w-rgb), 0.06); fill: rgba(var(--w-rgb), 0.06); }
+[data-l="1"] { background: rgba(var(--fg-rgb), 0.24); fill: rgba(var(--fg-rgb), 0.24); }
+[data-l="2"] { background: rgba(var(--fg-rgb), 0.46); fill: rgba(var(--fg-rgb), 0.46); }
+[data-l="3"] { background: rgba(var(--accent-rgb), 0.75); fill: rgba(var(--accent-rgb), 0.75); }
+[data-l="4"] { background: var(--accent); fill: var(--accent); }
+
+/* writing: serif rows on ruled paper, views as a thin ink line */
+.writing__stats span { font: 400 13px/1.4 var(--serif); }
+.writing__stats b { font-family: var(--serif); font-weight: 600; }
+.art { font-family: var(--serif); font-size: 16px; }
+.art__n, .art__d, .art__s { font: 400 13px/1 var(--serif); }
+.art__v i { height: 1px; background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.9) calc(var(--w) * 100%), rgba(var(--w-rgb), 0.08) 0); }
+.art__v b { font: 400 13px/1 var(--serif); }
+.lib__search, .lib__sort { height: 34px; padding: 0 2px; border: 0; border-bottom: 1px solid var(--line-3); border-radius: 0; }
+.lib__search input, .lib__sort select { font: 400 15px/1 var(--serif); }
+.lib__sortk { font: 400 13px/1 var(--serif); }
+
+/* ask: write on a line, not into a box */
+.ask__form { padding: 4px 0; border: 0; border-bottom: 1px solid var(--line-3); border-radius: 0; background: none; }
+.ask__form:focus-within { border-color: var(--accent); }
+.ask__form input { font: 400 18px/1 var(--serif); }
+.ask__form .btn { height: auto; padding: 6px 2px; border: 0; background: none; color: var(--accent); font: 600 16px/1 var(--serif); }
+.ask__form .btn:hover { color: var(--fg); background: none; }
+.ask__note { font-family: var(--serif); font-size: 14px; }
+.ask__answer { font-family: var(--serif); }
+
+/* ⌘K, the terminal and toasts wear the nav's lintel */
+.cmdk__panel, .tx, .toast { background: rgba(16, 15, 20, 0.96); border-color: rgba(var(--w-rgb), 0.1); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(var(--accent-rgb), 0.35); }
+.cmdk__panel { border-radius: 14px; }
+.cmdk__input input, .cmdk__item { font-family: var(--serif); }
+.cmdk__item { font-size: 16px; }
+.cmdk__group { font-family: var(--serif); font-size: 12px; letter-spacing: 0.08em; }
+.cmdk__item small, .cmdk__foot { font-family: var(--serif); }
+.tx { border-radius: 12px; }
+.toast { font-family: var(--serif); font-size: 14px; }
+
+/* the sign-off: a seal and a name; one quiet line under it */
+.outro { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px 48px; }
+.signoff { display: flex; align-items: center; gap: 18px; }
+.signoff .seal--name { width: 34px; padding: 8px 0; font-size: 15px; }
+.signoff__name { font: 600 30px/1 var(--serif); letter-spacing: 0.01em; }
+.outro__note { padding-bottom: 0; font-family: var(--serif); }
+.footer__inner { font: 400 13px/1.4 var(--serif); }
+.footer__inner > * + *:not([hidden])::before { color: var(--fg-4); }

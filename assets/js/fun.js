@@ -86,7 +86,7 @@
     const tokEl = $('[data-tok]'), kvm = $('[data-kvm]'), sum = $('[data-kv-sum]');
     const IDS = ['about', 'experience', 'projects', 'lab', 'writing', 'contact'];
     const secs = IDS.map(id => document.getElementById(id)).filter(Boolean);
-    if (!tokEl || !kvm || !secs.length) return;
+    if (!kvm || !secs.length) return;
 
     // ~4 characters per token, the usual rule of thumb for English
     let total = 0;
@@ -95,7 +95,7 @@
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 1;
-      tokEl.innerHTML = p > 0.995 ? '&lt;EOS&gt;' : fmt(Math.round(total * p));
+      if (tokEl) tokEl.innerHTML = p > 0.995 ? '&lt;EOS&gt;' : fmt(Math.round(total * p));
     };
     setTimeout(() => { count(); onScroll(); }, 1500); // after articles and counters render
     addEventListener('scroll', onScroll, { passive: true });

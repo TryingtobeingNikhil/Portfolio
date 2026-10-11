@@ -28,8 +28,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Mrs+Saint+Delafield&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=54">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/main.css?v=55">
 
   <script>
     document.documentElement.classList.replace('no-js', 'js');
@@ -88,10 +88,7 @@
   <header class="nav" id="nav">
     <div class="nav__capsule">
       <a class="brand" href="#top" aria-label="Nikhil Mourya, back to top">
-        <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
-          <circle class="ring" cx="12" cy="12" r="10.6"/>
-          <g class="torii"><path d="M4.6 7.6 Q12 9.7 19.4 7.6 L19.7 6.1 Q12 8.2 4.3 6.1Z"/><rect x="6.4" y="9" width="11.2" height="1.1"/><rect x="6.1" y="11.6" width="11.8" height="1.2"/><rect x="8.1" y="9" width="1.5" height="9.4"/><rect x="14.4" y="9" width="1.5" height="9.4"/></g>
-        </svg>
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true"><g class="enso"><path pathLength="1" d="M22.81 7.88A10.6 10.6 0 1 1 15.08 5.44" stroke-width="2"/><path pathLength="1" d="M22.81 7.88A10.6 10.6 0 0 1 10.7 25.18" stroke-width="2.7"/><path pathLength="1" d="M22.81 7.88A10.6 10.6 0 0 1 25.96 19.63" stroke-width="3.5"/></g></svg>
         <span>Nikhil Mourya</span>
       </a>
 
@@ -106,7 +103,7 @@
 
       <button class="nav__icon nav__season" type="button" data-season-next aria-label="Change the season" title="Change the season"><span data-season-kanji>秋</span></button>
       <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Ambient sound" title="Sound: an original score over the sounds of the village, synthesised live in your browser. No audio files."><span class="nav__sndk">音</span><span class="snd" aria-hidden="true"><i></i><i></i><i></i></span></button>
-      <span class="nav__status" title="Reading this page like a model: tokens decoded so far, and which chapters sit in your KV cache"><span class="kvm" data-kvm aria-hidden="true"></span><span class="nav__tok"><b data-tok>0</b> tok</span></span>
+      <span class="nav__status" title="A lantern lights for each chapter you read"><span class="kvm" data-kvm aria-hidden="true"></span></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
@@ -272,21 +269,20 @@
         <div class="index highlights" data-reveal>
           <div class="index__caption">
             <h3>Highlights</h3>
-            <span class="hl__cmd" aria-hidden="true">$ git log --oneline --highlights</span>
           </div>
           <ul class="gitlog" data-gitlog>
-            <li><a class="hl" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>feat(pageserve):</i> <span class="hl__text">PageServe crossed <b data-stars="vLLM_Inference_Engine">97</b> stars and <b data-forks="vLLM_Inference_Engine">10</b> forks</span></span><em>GitHub</em></a></li>
-            <li><a class="hl" href="https://x.com/GonnabeNikhil/status/2101327791258263694" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>perf(writing):</i> <span class="hl__text">"Build an LLM inference system yourself" reached 45.7K views</span></span><em>X</em></a></li>
-            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>docs(reach):</i> <span class="hl__text"><b>~2M</b> impressions on X since July, building in public</span></span><em>X</em></a></li>
-            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>docs(reach):</i> <span class="hl__text"><b>~120K</b> views on inference &amp; vLLM posts, <b>~20K</b> on RL</span></span><em>X</em></a></li>
-            <li><a class="hl" href="#writing"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>docs(writing):</i> <span class="hl__text"><b data-article-count>20</b> build-along articles on inference and RL, <b data-article-views>33.5K</b> views</span></span><em>Writing</em></a></li>
-            <li data-more><a class="hl" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>test(rlforge):</i> <span class="hl__text">RLForge: 148/148 tests, zero dependencies, own autograd</span></span><em>GitHub</em></a></li>
-            <li data-more><a class="hl" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>research(iit-kgp):</i> <span class="hl__text">Model-compression research collaboration with IIT Kharagpur</span></span><em>Research</em></a></li>
-            <li data-more><div class="hl"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>rank(cf):</i> <span class="hl__text">Codeforces Specialist, 1400+</span></span><em>Codeforces</em></div></li>
-            <li data-more><div class="hl"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>ship(sih):</i> <span class="hl__text">Finalist, Smart India Hackathon 2024</span></span><em>SIH</em></div></li>
-            <li data-more><div class="hl"><code class="hl__hash" data-hash></code><span class="hl__msg"><i>ship(iiitd):</i> <span class="hl__text">Finalist, IIIT Delhi 2023, ResNet-50 at 94% accuracy</span></span><em>IIIT Delhi</em></div></li>
+            <li><a class="hl" href="https://github.com/TryingtobeingNikhil/vLLM_Inference_Engine" target="_blank" rel="noopener"><span class="hl__msg"><span class="hl__text">PageServe crossed <b data-stars="vLLM_Inference_Engine">97</b> stars and <b data-forks="vLLM_Inference_Engine">10</b> forks</span></span><em>GitHub</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil/status/2101327791258263694" target="_blank" rel="noopener"><span class="hl__msg"><span class="hl__text">"Build an LLM inference system yourself" reached 45.7K views</span></span><em>X</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span class="hl__msg"><span class="hl__text"><b>~2M</b> impressions on X since July, building in public</span></span><em>X</em></a></li>
+            <li><a class="hl" href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener"><span class="hl__msg"><span class="hl__text"><b>~120K</b> views on inference &amp; vLLM posts, <b>~20K</b> on RL</span></span><em>X</em></a></li>
+            <li><a class="hl" href="#writing"><span class="hl__msg"><span class="hl__text"><b data-article-count>20</b> build-along articles on inference and RL, <b data-article-views>33.5K</b> views</span></span><em>Writing</em></a></li>
+            <li data-more><a class="hl" href="https://github.com/TryingtobeingNikhil/RLForge" target="_blank" rel="noopener"><span class="hl__msg"><span class="hl__text">RLForge: 148/148 tests, zero dependencies, own autograd</span></span><em>GitHub</em></a></li>
+            <li data-more><a class="hl" href="https://github.com/TryingtobeingNikhil/Pruned-UNet-Biomedical-Segmentation" target="_blank" rel="noopener"><span class="hl__msg"><span class="hl__text">Model-compression research collaboration with IIT Kharagpur</span></span><em>Research</em></a></li>
+            <li data-more><div class="hl"><span class="hl__msg"><span class="hl__text">Codeforces Specialist, 1400+</span></span><em>Codeforces</em></div></li>
+            <li data-more><div class="hl"><span class="hl__msg"><span class="hl__text">Finalist, Smart India Hackathon 2024</span></span><em>SIH</em></div></li>
+            <li data-more><div class="hl"><span class="hl__msg"><span class="hl__text">Finalist, IIIT Delhi 2023, ResNet-50 at 94% accuracy</span></span><em>IIIT Delhi</em></div></li>
           </ul>
-          <button class="gitlog__more" type="button" data-gitlog-more aria-expanded="false">git log --all <span data-gitlog-n></span></button>
+          <button class="gitlog__more" type="button" data-gitlog-more aria-expanded="false">Show all <span data-gitlog-n></span></button>
         </div>
 
         <div class="now" id="now" data-reveal>
@@ -828,23 +824,14 @@
     <div class="footer__scene" aria-hidden="true"><canvas id="scene-end"></canvas></div>
     <div class="wrap">
       <div class="outro">
-        <svg class="sig" id="signature" viewBox="0 0 330 120" role="img" aria-label="Nikhil Mourya">
-          <defs><clipPath id="sig-pen"><rect class="sig__pen" x="0" y="0" width="0" height="120"/></clipPath></defs>
-          <g clip-path="url(#sig-pen)">
-            <text class="sig__text" x="8" y="74">Nikhil Mourya</text>
-          </g>
-          <path class="sig__flourish" d="M18 92 C 90 104, 190 100, 262 88 S 318 70, 300 82" />
-        </svg>
-        <p class="outro__note">Thanks for reading all the way down. Most people stop at the headline.<span>Building the parts of AI most people import.</span></p>
+        <div class="signoff"><span class="seal seal--name" aria-hidden="true">ニ<br>キ<br>ル</span><p class="signoff__name">Nikhil Mourya</p></div>
+        <p class="outro__note">Thanks for reading all the way down. Most people stop at the headline.</p>
       </div>
       <p class="footer__inner">
-        <span class="eos">&lt;EOS&gt;</span>
+        <span>© 2026 · Jaipur</span>
         <span class="visits" data-visits hidden><b data-visits-n></b> <span data-visits-word>visitors</span> so far</span>
-        <span class="kv-sum" data-kv-sum hidden></span>
-        <span>held together by coffee and hope</span>
-        <span>© 2026</span>
         <button class="footer__cmd" type="button" data-cmdk><span class="on-kbd"><kbd>⌘</kbd><kbd>K</kbd> search</span><span class="on-touch">search</span></button>
-        <a href="#top">↑ rewind</a>
+        <a href="#top">back to the top ↑</a>
       </p>
     </div>
   </footer>
@@ -914,10 +901,10 @@
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
   <script src="./assets/js/extras.js?v=21" defer></script>
-  <script src="./assets/js/chapters.js?v=2" defer></script>
+  <script src="./assets/js/chapters.js?v=3" defer></script>
   <script src="./assets/js/showcase.js?v=4" defer></script>
   <script src="./assets/js/ask.js?v=5" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
-  <script src="./assets/js/fun.js?v=7" defer></script>
+  <script src="./assets/js/fun.js?v=8" defer></script>
 </body>
 </html>
