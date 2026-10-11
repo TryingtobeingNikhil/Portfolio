@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- The share card (assets/images/og.png), drawn by the same code as the hero.
+     Regenerate with the site served on :5501:
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+       --window-size=1200,630 --virtual-time-budget=8000 --screenshot=assets/images/og.png \
+       "http://localhost:5501/scripts/og.html?t=dusk" -->
+<html lang="en" data-season="autumn">
+<head>
+  <meta charset="UTF-8">
+  <title>Share card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400&family=Shippori+Mincho:wght@500;600;700&display=block" rel="stylesheet">
+  <style>
+    html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #0e1020; }
+    .card { position: relative; width: 1200px; height: 630px; overflow: hidden; }
+    #scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .veil { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 11, 26, 0.72) 0%, rgba(10, 11, 26, 0.45) 40%, rgba(10, 11, 26, 0) 64%), linear-gradient(180deg, rgba(12, 14, 25, 0) 70%, rgba(12, 14, 25, 0.55) 100%); }
+    .copy { position: absolute; left: 72px; top: 92px; width: 640px; color: #f1ebdd; font-family: 'Geist', sans-serif; text-shadow: 0 2px 24px rgba(8, 9, 22, 0.6); }
+    .tag { display: flex; align-items: center; gap: 14px; font: 500 15px/1 'Shippori Mincho', serif; color: rgba(241, 235, 221, 0.7); letter-spacing: 0.12em; }
+    .seal { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 3px; background: #d4553b; color: #fbefe0; font: 700 17px/1 'Shippori Mincho', serif; letter-spacing: 0; transform: rotate(-4deg); box-shadow: inset 0 0 0 1.5px rgba(251, 239, 224, 0.5), inset 0 0 0 3px #d4553b; text-shadow: none; }
+    h1 { margin: 30px 0 0; font: 700 74px/1.04 'Shippori Mincho', serif; letter-spacing: -0.01em; }
+    h1 .line { display: block; font-size: 46px; font-weight: 600; line-height: 1.18; margin-top: 14px; }
+    h1 b { color: #e4ad62; font-weight: 600; }
+    .sub { margin-top: 26px; font: 400 17px/1.5 'Geist', sans-serif; color: rgba(241, 235, 221, 0.82); }
+    .url { position: absolute; left: 72px; bottom: 46px; font: 400 15px/1 'Geist Mono', monospace; color: rgba(241, 235, 221, 0.75); letter-spacing: 0.02em; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8); }
+    .url i { font-style: normal; color: #e4ad62; }
+    .jp { position: absolute; right: 56px; top: 64px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .kana { writing-mode: vertical-rl; font: 600 28px/1 'Shippori Mincho', serif; letter-spacing: 0.32em; color: rgba(241, 235, 221, 0.92); text-shadow: 0 0 22px rgba(10, 10, 26, 0.8); }
+    .seal--name { width: 32px; height: auto; padding: 8px 0; font-size: 14px; line-height: 1.2; transform: rotate(-3deg); }
+  </style>
+</head>
+<body>
+  <div class="card hero">
+    <canvas id="scene"></canvas>
+    <div class="veil"></div>
+    <div class="copy">
+      <p class="tag"><span class="seal">夕</span>夕暮れの村 · a portfolio</p>
+      <h1>Nikhil Mourya.<span class="line">I build the parts of AI most people <b>import.</b></span></h1>
+      <p class="sub">ML engineer. LLM inference and multi-agent systems.<br>PageServe, a vLLM-style engine · RLForge, RL from scratch in C++.</p>
+    </div>
+    <p class="url"><i>›</i> tryingtobenikhil.space</p>
+    <div class="jp"><span class="kana">ニキル・マウリヤ</span><span class="seal seal--name">ニ<br>キ<br>ル</span></div>
+  </div>
+  <script src="../assets/js/season.js"></script>
+  <script src="../assets/js/scene.js"></script>
+</body>
+</html>
