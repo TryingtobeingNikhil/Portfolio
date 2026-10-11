@@ -2097,3 +2097,14 @@ html { overflow-x: clip; }
 .hero__title .hero__sub { font-size: 0.6em; line-height: 1.25; font-weight: 500; color: rgba(var(--fg-rgb), 0.9); }
 .hero__title .hero__sub:nth-child(2) { margin-top: 0.35em; }
 @media (max-width: 680px) { .hero__title .hero__sub { font-size: 0.62em; } }
+
+/* hero arrangement: the words sit up in the open sky on the left, the vertical
+   name level with them, and the two lines small enough to stay off Fuji */
+@media (min-width: 681px) {
+  .hero { justify-content: flex-start; padding-top: clamp(150px, 22vh, 250px); }
+  .hero__title { font-size: clamp(44px, 4.6vw, 72px); }
+  .hero__title .hero__sub { font-size: 0.44em; line-height: 1.4; letter-spacing: 0.005em; }
+  .hero__title .hero__sub:nth-child(2) { margin-top: 0.7em; }
+  .hero__actions { margin-top: 30px; }
+  .hero__jp { padding-top: 0; }
+}
