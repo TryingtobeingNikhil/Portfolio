@@ -98,7 +98,7 @@
     const mail = $('#copy-email')?.dataset.email;
     if (mail) add($('.mail'), `Email: ${mail}. Email is fastest; DMs on X work too.`, 'Email');
     const socials = $$('.social');
-    if (socials.length) add(socials[0].parentElement, 'Contact links: ' + socials.map(x => `${t(x, '.social__k')} ${clean(txt(x.querySelector('b')))}`).join(', ') + '.', 'Links');
+    if (socials.length) add(socials[0].parentElement, 'Contact links: ' + socials.map(x => `${(x.getAttribute('aria-label') || '').split(':')[0]} ${clean(txt(x.querySelector('.social__h')))}`).join(', ') + '.', 'Links');
 
     // a passage's title counts extra, so "What is PageServe?" lands on PageServe itself, not a passing mention
     docs.forEach(d => { d.terms = tokens(d.boost ? `${d.text} ${d.title} ${d.title} ${d.title}` : d.text); d.len = d.terms.length; d.tf = new Map(); d.terms.forEach(t => d.tf.set(t, (d.tf.get(t) || 0) + 1)); });

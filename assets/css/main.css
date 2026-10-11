@@ -1861,12 +1861,49 @@ body { background: transparent; }
 .art__flag { border: 0; padding: 0; margin-left: 12px; font: 600 12px/1 var(--serif); color: var(--fg-3); }
 .art__flag.is-new { color: var(--shu); }
 
-/* elsewhere: one line of links */
-.elsewhere { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 26px; max-width: none; font-size: 15px; line-height: 1.4; }
-.elsewhere__k { font: 500 13px/1 var(--serif); color: var(--shu); letter-spacing: 0.15em; }
-.elsewhere .social { color: var(--fg-3); transition: color 0.2s; }
-.elsewhere .social b { font-family: var(--serif); font-weight: 600; color: var(--fg); border: 0; margin-right: 6px; }
-.elsewhere .social:hover, .elsewhere .social:hover b { color: var(--accent); }
+/* elsewhere: festival lanterns on a rope, each painted with its place's crest */
+.elsewhere { display: block; max-width: none; margin-top: 72px; padding-top: 34px; border-top: 1px solid var(--line-2); }
+.elsewhere__k { display: flex; align-items: baseline; gap: 12px; font: 600 22px/1 var(--serif); color: var(--shu); letter-spacing: 0.12em; }
+.elsewhere__k small { font: 400 12px/1 var(--serif); letter-spacing: 0.2em; color: var(--fg-3); }
+.lanterns { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); justify-items: center; margin-top: 26px; padding-top: 4px; }
+.lanterns::before { content: ''; position: absolute; left: -2%; right: -2%; top: 0; height: 40px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 4 Q50 40 100 4' fill='none' stroke='%23463020' stroke-width='2.4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat; pointer-events: none; }
+.lanterns .social { display: grid; justify-items: center; gap: 14px; min-width: 0; color: var(--fg-2); }
+.lanterns .social:nth-child(1), .lanterns .social:nth-child(5) { --drop: 10px; }
+.lanterns .social:nth-child(2), .lanterns .social:nth-child(4) { --drop: 19px; }
+.lanterns .social:nth-child(3) { --drop: 22px; }
+.lamp { position: relative; display: grid; justify-items: center; padding-top: calc(var(--drop, 10px) + 18px); transform-origin: 50% var(--drop, 10px); transform: rotate(var(--swing, 0rad)); }
+.lamp::before { content: ''; position: absolute; left: 50%; top: var(--drop, 10px); width: 1.5px; height: 18px; margin-left: -0.75px; background: #2a1e14; }
+.lamp__body {
+  position: relative; display: grid; place-items: center; width: 70px; height: 86px; border-radius: 46% / 40%;
+  color: #1a1410;
+  background:
+    repeating-linear-gradient(180deg, rgba(60, 30, 10, 0.12) 0 1px, transparent 1px 9px),
+    radial-gradient(ellipse at 50% 45%, #fff3d6 0%, #efd9ad 55%, #c7a874 100%);
+  box-shadow: 0 0 26px rgba(255, 180, 100, 0.28), inset 0 -8px 14px rgba(120, 70, 20, 0.25);
+  filter: brightness(0.82) saturate(0.9);
+  transition: filter 0.4s, box-shadow 0.4s;
+}
+.lanterns .social:nth-child(odd) .lamp__body {
+  color: #fbefe0;
+  background:
+    repeating-linear-gradient(180deg, rgba(40, 0, 0, 0.16) 0 1px, transparent 1px 9px),
+    radial-gradient(ellipse at 50% 45%, #f28a62 0%, #cf4a2e 55%, #8e2a1b 100%);
+  box-shadow: 0 0 26px rgba(255, 120, 70, 0.3), inset 0 -8px 14px rgba(60, 10, 0, 0.3);
+}
+.lamp__body::before, .lamp__body::after { content: ''; position: absolute; left: 50%; width: 38px; height: 8px; margin-left: -19px; border-radius: 2px; background: #17110d; box-shadow: inset 0 1px 0 rgba(255, 220, 160, 0.15); }
+.lamp__body::before { top: -3px; }
+.lamp__body::after { bottom: -3px; }
+.lamp__body svg { width: 30px; height: 30px; filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2)); }
+.lamp__body b { font: 700 30px/1 var(--serif); }
+.lanterns .social:hover .lamp__body, .lanterns .social:focus-visible .lamp__body { filter: brightness(1.12) saturate(1.05); box-shadow: 0 0 60px 6px rgba(255, 170, 90, 0.5), inset 0 -8px 14px rgba(120, 70, 20, 0.2); }
+.social__h { max-width: 100%; font: 500 15px/1.2 var(--serif); text-align: center; overflow-wrap: anywhere; transition: color 0.2s; }
+.lanterns .social:hover .social__h { color: var(--fg); }
+@media (max-width: 680px) {
+  .lamp__body { width: 54px; height: 66px; }
+  .lamp__body svg { width: 24px; height: 24px; }
+  .lamp__body b { font-size: 24px; }
+  .social__h { font-size: 11.5px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hero__title .line, .hero__lede, .hero__actions { opacity: 1; transform: none; filter: none; animation: none; }

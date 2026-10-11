@@ -533,7 +533,7 @@
         add('Writing', `${s.series} series`, `${s.items.length} articles`, () => { window.WRITING.show(s.series); go('#writing')(); }, 'series articles read');
         s.items.forEach(a => add('Writing', a.title, s.series, open(a.url), 'article'));
       });
-      $$('.social').forEach(a => add('Links', txt($('.social__k', a)), txt($('b', a)), open(a.href)));
+      $$('.social').forEach(a => add('Links', (a.getAttribute('aria-label') || '').split(':')[0], txt($('.social__h', a)), open(a.href)));
       if (email) add('Actions', 'Copy email', email, () => navigator.clipboard?.writeText(email), 'mail contact');
       add('Actions', 'Back to top', 'scroll', go('#top'), 'home');
       if (window.TERMINAL) add('Actions', 'Open terminal', 'press `', () => window.TERMINAL.open(), 'shell console command');
