@@ -54,6 +54,40 @@
   const rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
   const mix = (a, b, t) => '#' + rgb(a).map((v, i) => Math.round(v + (rgb(b)[i] - v) * t).toString(16).padStart(2, '0')).join('');
 
+  /* ---------------- the clock: the sky follows the time in Jaipur ---------------- */
+  // dawn 5 to 7, a hazy day 7 to 16, dusk 16 to 20, night after that. ?t=dawn|day|dusk|night previews one.
+  const hourIST = () => Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', hour12: false }).format(new Date())) % 24;
+  const timeOfDay = () => {
+    const forced = new URLSearchParams(location.search).get('t');
+    if (['dawn', 'day', 'dusk', 'night'].includes(forced)) return forced;
+    const hr = hourIST();
+    return hr >= 5 && hr < 7 ? 'dawn' : hr >= 7 && hr < 16 ? 'day' : hr >= 16 && hr < 20 ? 'dusk' : 'night';
+  };
+  // the palettes above are dusk; the other times are drawn from them
+  function tune(p, tod) {
+    if (tod === 'dusk') return p;
+    const q = { ...p, moon: { ...p.moon } };
+    const toward = (keys, col, k) => keys.forEach(key => { q[key] = mix(p[key], col, k); });
+    if (tod === 'night') {
+      q.sky = p.sky.map((c, i) => mix(c, '#04050d', [0.3, 0.38, 0.5, 0.62, 0.66][i]));
+      q.glow = mix(p.glow, '#33405f', 0.65); q.mist = mix(p.mist, '#3a4260', 0.55); q.rim = mix(p.rim, p.moon.c, 0.6);
+      toward(['far', 'mid', 'near', 'fg'], '#05060e', 0.22);
+      q.stars = p.stars * 1.6 + 0.35;
+      const hr = hourIST(); q.lit = hr >= 0 && hr < 5 ? 0.2 : 0.5; // the village goes to bed
+    } else if (tod === 'dawn') {
+      q.sky = ['#1a2043', '#3c3e74', '#9a7296', '#f0a38a', '#ffdab2'];
+      q.glow = '#ffd3a2'; q.rim = '#ffd9b8'; q.mist = mix(p.mist, '#f3c9c0', 0.4);
+      q.stars = 0.25; q.lit = 0.35;
+    } else {
+      q.sky = ['#2b4068', '#41608c', '#7190b4', '#a8bfd3', '#d6e1e6'];
+      q.glow = '#fff2d8'; q.rim = '#f4f1ea'; q.mist = '#dce5ec';
+      toward(['far'], '#93a7c3', 0.5); toward(['mid'], '#62779b', 0.38); toward(['near'], '#3f4d6c', 0.3); toward(['fg'], '#1d2537', 0.25);
+      q.stars = 0; q.lit = 0.04; q.day = true;
+    }
+    q.tod = tod;
+    return q;
+  }
+
   /* ---------------- one scene ---------------- */
   function makeScene(canvas, opts) {
     const host = canvas.parentElement;
@@ -61,7 +95,8 @@
     const M = 48; // margin painted around every layer, for parallax
     let w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
     let time = 0, last = 0, raf = 0, visible = true, booted = false, tempo = 1;
-    let mx = 0, my = 0, tx = 0, ty = 0, wind = 0, px = -1, py = -1, pt = 0, fade = null;
+    let mx = 0, my = 0, tx = 0, ty = 0, wind = 0, px = -1, py = -1, pt = 0, fade = null, tod = timeOfDay();
+    if (!opts.end) document.documentElement.dataset.tod = tod;
 
     // Offscreen canvases are made once and repainted in place: Safari caps total
     // canvas memory, and a fresh set per season change used to run it out.
@@ -209,7 +244,7 @@
       const p = roof(g, x + hw / 2, gy - hh, hw * 0.64, hh * 0.62, rf, 0.55);
       g.save(); g.strokeStyle = A(pal.rim, 0.22); g.lineWidth = 0.9;
       g.beginPath(); g.moveTo(x + hw / 2 - hw * 0.15, gy - hh - hh * 0.62); g.lineTo(x + hw / 2 + hw * 0.15, gy - hh - hh * 0.62); g.stroke(); g.restore();
-      if (rnd() < 0.68) {
+      if (rnd() < (pal.lit ?? 0.68)) {
         const n = 1 + ((rnd() * 2) | 0);
         for (let i = 0; i < n; i++) {
           const ww = hw * 0.2, wh = hh * 0.44, wx = x + hw * (0.15 + i * 0.42 + rnd() * 0.08), wy = gy - hh * 0.8;
@@ -240,7 +275,7 @@
 
     /* ---------- compose: paint every static layer for this size + season ---------- */
     function compose() {
-      pal = PAL[SEASON.get()];
+      pal = tune(PAL[SEASON.get()], opts.end ? 'night' : tod);
       nLayer = 0;
       const end = opts.end, wide = w > h, S = Math.min(w, h * 1.5) / 1000;
       const H = h * (end ? 0.56 : wide ? 0.64 : 0.6);
@@ -260,10 +295,10 @@
       const mo = pal.moon, mr = Math.max(9, mo.r * Math.min(w * 1.1, h * 1.6)), mX = w * (end ? 0.16 : wide ? mo.x : 0.56), mY = h * (end ? 0.22 : wide ? mo.y : 0.12);
       const halo = s.createRadialGradient(mX, mY, mr * 0.8, mX, mY, mr * 7);
       halo.addColorStop(0, A(mo.c, 0.22)); halo.addColorStop(1, A(mo.c, 0));
-      s.fillStyle = halo; s.beginPath(); s.arc(mX, mY, mr * 7, 0, Math.PI * 2); s.fill();
+      if (!pal.day) { s.fillStyle = halo; s.beginPath(); s.arc(mX, mY, mr * 7, 0, Math.PI * 2); s.fill(); }
       const ring = s.createRadialGradient(mX, mY, mr * 1.02, mX, mY, mr * 1.65);
       ring.addColorStop(0, A(mo.c, 0.18)); ring.addColorStop(1, A(mo.c, 0));
-      s.fillStyle = ring; s.beginPath(); s.arc(mX, mY, mr * 1.65, 0, Math.PI * 2); s.fill();
+      if (!pal.day) { s.fillStyle = ring; s.beginPath(); s.arc(mX, mY, mr * 1.65, 0, Math.PI * 2); s.fill(); }
       const { c: mc, g: m } = surface('moon', mr * 2.4 * ldpr, mr * 2.4 * ldpr); m.scale(ldpr, ldpr);
       const mcx = mr * 1.2, mcy = mr * 1.2, mrn = rng(97), sea = mix(mo.c, '#5e5668', 0.42);
       // the disc, darker toward the limb
@@ -306,7 +341,9 @@
         m.beginPath(); m.arc(mcx + mr * 0.45, mcy - mr * 0.18, mr * 0.92, 0, Math.PI * 2); m.fill();
         m.globalCompositeOperation = 'source-over';
       }
+      s.globalAlpha = pal.day ? 0.22 : 1; // a pale daytime moon
       s.drawImage(mc, mX - mr * 1.2, mY - mr * 1.2, mr * 2.4, mr * 2.4);
+      s.globalAlpha = 1;
       // a few wisps of cloud across it, silver on the edge that faces the moon
       s.save(); s.filter = `blur(${Math.max(1.5, mr * 0.06).toFixed(1)}px)`;
       const wisp = mix(stops[1], stops[2], 0.4);
@@ -526,7 +563,7 @@
         const cy = 6 * s + bh / 2;
         ctx.globalCompositeOperation = 'lighter';
         const gl = ctx.createRadialGradient(0, cy, 0, 0, cy, bw * 2.6);
-        gl.addColorStop(0, A(red ? '#ff8a4a' : pal.light, 0.28)); gl.addColorStop(1, A(pal.light, 0));
+        gl.addColorStop(0, A(red ? '#ff8a4a' : pal.light, pal.day ? 0.06 : 0.28)); gl.addColorStop(1, A(pal.light, 0));
         ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(0, cy, bw * 2.6, 0, Math.PI * 2); ctx.fill();
         ctx.globalCompositeOperation = 'source-over';
         const bg = ctx.createRadialGradient(0, cy, 0, 0, cy, bw * 0.75);
@@ -546,7 +583,7 @@
         ctx.fillStyle = `rgba(255,248,232,${a.toFixed(3)})`;
         ctx.fillRect(st.x - st.r / 2, st.y + oy - st.r / 2, st.r, st.r);
       }
-      if (!meteor && Math.random() < 0.0016) meteor = { x: w * (0.3 + Math.random() * 0.6), y: h * Math.random() * 0.25, t: 0 };
+      if (!meteor && pal.stars > 0.3 && Math.random() < 0.0016) meteor = { x: w * (0.3 + Math.random() * 0.6), y: h * Math.random() * 0.25, t: 0 };
       if (meteor) {
         meteor.t += 1 / 60;
         const k = meteor.t / 0.9, x = meteor.x - k * 220, y = meteor.y + k * 90 + oy;
@@ -609,7 +646,7 @@
       wind *= Math.pow(0.35, dt);
       const top = canvas.getBoundingClientRect().top, sc = Math.max(0, -top);
       const put = (lay, depth, k) => ctx.drawImage(lay.c, 0, 0, lay.c.width, lay.c.height, -M - tx * depth * 22, -M - ty * depth * 10 + sc * k, w + 2 * M, h + 2 * M);
-      ctx.fillStyle = (opts.end ? PAL[SEASON.get()].sky[0] : pal.sky[0]);
+      ctx.fillStyle = pal.sky[0];
       ctx.fillRect(0, 0, w, h);
       put(L.sky, 0.05, 0.6);
       drawSky(sc * 0.6);
@@ -668,7 +705,7 @@
       }, 160);
     });
 
-    SEASON.on(() => {
+    const repaint = () => {
       if (!booted) return;
       if (!reduce) {
         const { c, g } = surface('fade', canvas.width, canvas.height);
@@ -677,7 +714,9 @@
       }
       compose(); syncParts();
       if (reduce) still();
-    });
+    };
+    SEASON.on(repaint);
+    if (!opts.end) setInterval(() => { const t = timeOfDay(); if (t !== tod) { tod = t; document.documentElement.dataset.tod = t; repaint(); } }, 60000);
 
     // the painting uses no web fonts, so it does not wait for them
     const boot = () => { if (!resize()) { requestAnimationFrame(boot); return; } booted = true; still(); start(); };

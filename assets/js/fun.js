@@ -269,7 +269,7 @@
     const key = ([x, y]) => y * N + x;
     const reset = () => {
       Q = Array.from({ length: N * N }, () => [0, 0, 0, 0]);
-      s = [...START]; ep = 0; steps = 0; eps = 1; settled = 0; trail = [];
+      s = [...START]; ep = 0; steps = 0; eps = 1; settled = 0; trail = []; kx = START[0]; ky = START[1];
       el('title').textContent = 'Even my agent is figuring out how to reach me.';
     };
     const stepEnv = ([x, y], a) => {
@@ -300,30 +300,112 @@
       size = w; canvas.width = canvas.height = Math.round(w * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
+    // The pond. Walls are rocks, the goal is a little shrine island that says hi,
+    // the agent is a koi, its recent path leaves ripples, and the faint current
+    // in each cell is the greedy policy it has learned so far.
+    let kx = START[0], ky = START[1], ang = -Math.PI / 2;
+    const seeded = (n => () => ((n = (n * 16807) % 2147483647) / 2147483647))(42);
+    const rocks = [...WALLS].map(k => {
+      const [x, y] = k.split(',').map(Number);
+      return { x, y, r: Array.from({ length: 10 }, () => 0.36 + seeded() * 0.1), tone: 0.85 + seeded() * 0.3 };
+    });
+    const pads = [[1, 1], [4, 0], [0, 3], [3, 5], [5, 3]].filter(([x, y]) => !WALLS.has(`${x},${y}`)).map(([x, y]) => ({ x, y, a: seeded() * 6, r: 0.22 + seeded() * 0.08 }));
+    const koi = (x, y, a, len, t) => {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(a);
+      const w = len * 0.15, sw = Math.sin(t * 7) * len * 0.09, h = len / 2;
+      // tail fin
+      ctx.fillStyle = 'rgba(246, 238, 226, 0.72)';
+      ctx.beginPath(); ctx.moveTo(-h * 0.8, sw * 0.6);
+      ctx.quadraticCurveTo(-h * 1.25, sw - w * 1.6, -h * 1.45, sw - w * 1.2); ctx.quadraticCurveTo(-h * 1.15, sw, -h * 1.45, sw + w * 1.2);
+      ctx.quadraticCurveTo(-h * 1.25, sw + w * 1.6, -h * 0.8, sw * 0.6); ctx.fill();
+      // pectoral fins
+      ctx.fillStyle = 'rgba(246, 238, 226, 0.5)';
+      [-1, 1].forEach(d => { ctx.beginPath(); ctx.ellipse(h * 0.25, d * w * 1.15, w * 0.9, w * 0.45, d * 0.6 + Math.sin(t * 5) * 0.2 * d, 0, Math.PI * 2); ctx.fill(); });
+      // body, with kohaku patches clipped to it
+      const body = new Path2D();
+      body.moveTo(h, 0);
+      body.bezierCurveTo(h * 0.8, -w * 1.1, -h * 0.2, -w * 1.2, -h * 0.85, sw * 0.6 - w * 0.3);
+      body.lineTo(-h * 0.85, sw * 0.6 + w * 0.3);
+      body.bezierCurveTo(-h * 0.2, w * 1.2, h * 0.8, w * 1.1, h, 0);
+      ctx.fillStyle = '#f6efe3'; ctx.fill(body);
+      ctx.save(); ctx.clip(body);
+      ctx.fillStyle = '#e1542d';
+      [[h * 0.55, -w * 0.2, w * 0.9], [h * 0.05, w * 0.3, w * 1.05], [-h * 0.45, -w * 0.4, w * 0.7]].forEach(([px, py, r]) => { ctx.beginPath(); ctx.ellipse(px, py, r * 1.4, r, 0, 0, Math.PI * 2); ctx.fill(); });
+      ctx.restore();
+      ctx.fillStyle = '#1a1210';
+      [-1, 1].forEach(d => { ctx.beginPath(); ctx.arc(h * 0.72, d * w * 0.45, Math.max(0.7, w * 0.14), 0, Math.PI * 2); ctx.fill(); });
+      ctx.restore();
+    };
     const draw = () => {
       if (!size) resize();
-      const c = size / N;
-      ctx.clearRect(0, 0, size, size);
+      const c = size / N, t = performance.now() / 1000;
+      // water, with slow caustics
+      const wg = ctx.createRadialGradient(size * 0.4, size * 0.35, size * 0.1, size / 2, size / 2, size * 0.75);
+      wg.addColorStop(0, '#14394a'); wg.addColorStop(1, '#081a26');
+      ctx.fillStyle = wg; ctx.fillRect(0, 0, size, size);
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 6; i++) {
+        const x = size * (0.5 + 0.4 * Math.sin(t * 0.13 + i * 1.9)), y = size * (0.5 + 0.4 * Math.cos(t * 0.11 + i * 2.7)), r = size * (0.16 + 0.05 * Math.sin(t * 0.4 + i));
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, 'rgba(120, 190, 200, 0.07)'); g.addColorStop(1, 'rgba(120, 190, 200, 0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      // lily pads
+      pads.forEach(p => {
+        const x = p.x * c + c / 2, y = p.y * c + c / 2, r = p.r * c;
+        ctx.fillStyle = 'rgba(70, 120, 80, 0.55)';
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.arc(x, y, r, p.a + 0.35, p.a + Math.PI * 2 - 0.05); ctx.closePath(); ctx.fill();
+      });
+      // the current: what the agent has learned, cell by cell
       for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
-        const k = `${x},${y}`;
-        if (WALLS.has(k)) { ctx.fillStyle = `rgba(${FG}, 0.09)`; ctx.fillRect(x * c + 1, y * c + 1, c - 2, c - 2); continue; }
-        ctx.strokeStyle = `rgba(${FG}, 0.08)`; ctx.strokeRect(x * c + 0.5, y * c + 0.5, c - 1, c - 1);
-        if (x === GOAL[0] && y === GOAL[1]) continue;
-        // greedy arrow, brighter where the agent is more certain
+        if (WALLS.has(`${x},${y}`) || (x === GOAL[0] && y === GOAL[1])) continue;
         const q = Q[y * N + x], best = Math.max(...q);
         if (best === 0 && Math.min(...q) === 0) continue;
-        const a = greedy([x, y]), cx = x * c + c / 2, cy = y * c + c / 2, L = c * 0.18;
-        ctx.strokeStyle = `rgba(${FG}, ${Math.min(0.5, 0.12 + Math.abs(best) * 0.04)})`; ctx.lineWidth = 1.2;
-        ctx.beginPath(); ctx.moveTo(cx - MOVES[a][0] * L, cy - MOVES[a][1] * L); ctx.lineTo(cx + MOVES[a][0] * L, cy + MOVES[a][1] * L); ctx.stroke();
-        ctx.beginPath(); ctx.arc(cx + MOVES[a][0] * L, cy + MOVES[a][1] * L, 1.4, 0, Math.PI * 2); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
+        const a = greedy([x, y]), cx = x * c + c / 2, cy = y * c + c / 2, L = c * 0.22, drift = ((t * 0.6 + (x + y) * 0.13) % 1) * 2 - 1;
+        const al = Math.min(0.42, 0.08 + Math.abs(best) * 0.035);
+        ctx.strokeStyle = `rgba(190, 228, 236, ${al.toFixed(3)})`; ctx.lineWidth = 1; ctx.lineCap = 'round';
+        const ox = -MOVES[a][1] * c * 0.08, oy = MOVES[a][0] * c * 0.08;
+        [-1, 1].forEach(d => {
+          const sx = cx + ox * d + MOVES[a][0] * L * drift * 0.4, sy = cy + oy * d + MOVES[a][1] * L * drift * 0.4;
+          ctx.beginPath(); ctx.moveTo(sx - MOVES[a][0] * L * 0.6, sy - MOVES[a][1] * L * 0.6); ctx.lineTo(sx + MOVES[a][0] * L * 0.6, sy + MOVES[a][1] * L * 0.6); ctx.stroke();
+        });
       }
-      // goal
-      ctx.fillStyle = `rgb(${ACC})`; ctx.fillRect(GOAL[0] * c + 3, GOAL[1] * c + 3, c - 6, c - 6);
-      ctx.fillStyle = INK; ctx.font = `500 ${Math.round(c * 0.32)}px Geist, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('hi', GOAL[0] * c + c / 2, GOAL[1] * c + c / 2 + 1);
-      // trail + agent
-      trail.forEach(([x, y], i) => { ctx.fillStyle = `rgba(${ACC}, ${(i / trail.length) * 0.35})`; ctx.beginPath(); ctx.arc(x * c + c / 2, y * c + c / 2, c * 0.1, 0, Math.PI * 2); ctx.fill(); });
-      ctx.fillStyle = `rgb(${FG})`; ctx.beginPath(); ctx.arc(s[0] * c + c / 2, s[1] * c + c / 2, c * 0.16, 0, Math.PI * 2); ctx.fill();
+      // rocks
+      rocks.forEach(rk => {
+        const x = rk.x * c + c / 2, y = rk.y * c + c / 2;
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.beginPath(); ctx.ellipse(x + c * 0.05, y + c * 0.08, c * 0.44, c * 0.4, 0, 0, Math.PI * 2); ctx.fill();
+        const path = new Path2D();
+        rk.r.forEach((r, i) => { const a = (i / rk.r.length) * Math.PI * 2, px = x + Math.cos(a) * r * c * 1.15, py = y + Math.sin(a) * r * c; i ? path.lineTo(px, py) : path.moveTo(px, py); });
+        path.closePath();
+        const rg = ctx.createLinearGradient(x - c / 2, y - c / 2, x + c / 2, y + c / 2);
+        rg.addColorStop(0, `rgb(${Math.round(120 * rk.tone)}, ${Math.round(122 * rk.tone)}, ${Math.round(128 * rk.tone)})`); rg.addColorStop(1, '#2c3036');
+        ctx.fillStyle = rg; ctx.fill(path);
+        ctx.fillStyle = 'rgba(96, 130, 70, 0.55)';
+        ctx.beginPath(); ctx.ellipse(x - c * 0.08, y - c * 0.16, c * 0.2, c * 0.08, -0.3, 0, Math.PI * 2); ctx.fill();
+      });
+      // ripples where the koi has just been
+      trail.forEach(([x, y], i) => {
+        const k = i / trail.length;
+        ctx.strokeStyle = `rgba(200, 235, 240, ${(k * 0.28).toFixed(3)})`; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(x * c + c / 2, y * c + c / 2, c * (0.12 + (1 - k) * 0.3), 0, Math.PI * 2); ctx.stroke();
+      });
+      // the shrine island that says hi
+      const gx = GOAL[0] * c + c / 2, gy = GOAL[1] * c + c / 2;
+      ctx.fillStyle = '#c9b184'; ctx.beginPath(); ctx.ellipse(gx, gy + c * 0.05, c * 0.44, c * 0.38, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.stroke();
+      const u = c / 46;
+      ctx.fillStyle = '#d4553b';
+      ctx.fillRect(gx - 9 * u, gy - 13 * u, 18 * u, 2.4 * u); ctx.fillRect(gx - 7.5 * u, gy - 9 * u, 15 * u, 1.8 * u);
+      ctx.fillRect(gx - 6 * u, gy - 12 * u, 2 * u, 13 * u); ctx.fillRect(gx + 4 * u, gy - 12 * u, 2 * u, 13 * u);
+      ctx.fillStyle = '#1d1a26'; ctx.font = `600 ${Math.round(c * 0.26)}px 'Shippori Mincho', serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('hi', gx, gy + c * 0.24);
+      // the koi glides toward wherever the agent is now
+      const dx = s[0] - kx, dy = s[1] - ky, d = Math.hypot(dx, dy);
+      if (d > 2.5) { kx = s[0]; ky = s[1]; } else { kx += dx * 0.3; ky += dy * 0.3; }
+      if (d > 0.02) { const target = Math.atan2(dy, dx); let da = target - ang; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2; ang += da * 0.3; }
+      koi(kx * c + c / 2, ky * c + c / 2, ang, c * 0.82, t);
     };
     const loop = () => {
       raf = 0;
