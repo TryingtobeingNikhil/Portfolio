@@ -820,7 +820,7 @@
       if (opts.river) drawRiver(dt);
       drawParts(dt, true);
       if (fade) {
-        fade.a -= dt * 1.4;
+        fade.a -= dt * 0.75; // a slow dissolve, not a cut
         if (fade.a <= 0) fade = null;
         else { ctx.globalAlpha = fade.a; ctx.drawImage(fade.c, 0, 0, w, h); ctx.globalAlpha = 1; }
       }
@@ -1015,7 +1015,7 @@
     window.addEventListener('resize', size, { passive: true });
     window.addEventListener('scroll', () => { const y = window.scrollY; wind = Math.max(-90, Math.min(90, wind + (lastY - y) * 0.4)); lastY = y; }, { passive: true });
     document.addEventListener('visibilitychange', wake);
-    SEASON.on(() => { items = []; wake(); });
+    SEASON.on(wake); // the ones already falling finish; new ones are the new season
     const io = new IntersectionObserver(es => { es.forEach(e => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target))); if (!onScreen.size) wake(); });
     [hero, tail].forEach(el => el && io.observe(el));
     wake();

@@ -29,7 +29,7 @@
 
   let w = 0, h = 0, dpr = 1, raf = 0, visible = false, last = 0, time = 0, built = false;
   let koi = [], food = [], ripples = [], pads = [], floaters = [], glints = [];
-  let bed = null, caustic = null, rim = null, spoutAt = 0, streaks = [];
+  let bed = null, caustic = null, rim = null, spoutAt = 0, streaks = [], oldRim = null, rimFade = 0, oldFloaters = [];
   // the stream: a centre line that meanders, and a half-width that breathes
   const cy = x => h * 0.5 + Math.sin(x * 0.0042 + 0.6) * h * 0.12 + Math.sin(x * 0.011 + 2) * h * 0.035;
   const hw = x => h * (0.25 + 0.05 * Math.sin(x * 0.0063 + 1));
@@ -397,11 +397,15 @@
     ctx.fillStyle = wg; ctx.fillRect(0, 0, w, h);
     // surface
     for (const p of pads) { p.a += p.va * dt; drawPad(p); }
+    // last season's leaves fade as they drift on; the new season's fade in
+    oldFloaters = oldFloaters.filter(p => (p.fade -= dt / 1.3) > 0);
+    for (const p of oldFloaters) { p.x += CURRENT * 1.6 * dt; p.y = cy(p.x) + p.lane * hw(p.x); window.SEASON.particle.draw(ctx, p, 0.9 * p.fade); }
     for (const p of floaters) {
+      p.fade = Math.min(1, (p.fade ?? 1) + dt / 1.3);
       p.x += (CURRENT * 1.6 + Math.sin(time * 0.3 + p.t) * 2) * dt; p.rot += 0.08 * dt;
       if (p.x > w + 20) p.x = -20;
       p.y = cy(p.x) + p.lane * hw(p.x) + Math.sin(time * 0.7 + p.t) * 2;
-      window.SEASON.particle.draw(ctx, p, 0.9);
+      window.SEASON.particle.draw(ctx, p, 0.9 * p.fade);
     }
     // the current, as faint streaks of light following the channel
     ctx.lineCap = 'round'; ctx.lineWidth = 1;
@@ -432,6 +436,11 @@
       ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x - 4, y + (land.y - y) * 0.3, land.x, land.y); ctx.stroke();
     }
     ctx.drawImage(rim, 0, 0, w, h);
+    // a season change dissolves the old banks over the new ones
+    if (oldRim && rimFade > 0) {
+      ctx.globalAlpha = rimFade; ctx.drawImage(oldRim, 0, 0, w, h); ctx.globalAlpha = 1;
+      rimFade = Math.max(0, rimFade - dt / 1.3); if (!rimFade) oldRim = null;
+    }
   }
 
   function step(dt) {
@@ -491,5 +500,14 @@
   document.addEventListener('visibilitychange', start);
   let rt;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (built && build()) draw(0); }, 200); });
-  if (window.SEASON) window.SEASON.on(() => { if (built) { rim = paintGarden(); makeSurface(); if (reduce) draw(0); } });
+  if (window.SEASON) window.SEASON.on(() => {
+    if (!built) return;
+    oldRim = rim; rimFade = 1; rim = paintGarden();
+    oldFloaters = floaters.map(p => ({ ...p, fade: 1 }));
+    const keepPads = pads, keepGlints = glints, keepStreaks = streaks;
+    makeSurface();
+    pads = keepPads; glints = keepGlints; streaks = keepStreaks; // only what the season owns changes
+    floaters.forEach(p => { p.fade = 0; });
+    if (reduce) { oldRim = null; oldFloaters = []; floaters.forEach(p => { p.fade = 1; }); draw(0); }
+  });
 })();
