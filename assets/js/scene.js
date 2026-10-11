@@ -59,16 +59,27 @@
     const host = canvas.parentElement;
     const ctx = canvas.getContext('2d');
     const M = 48; // margin painted around every layer, for parallax
-    let w = 0, h = 0, dpr = 1, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
+    let w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
     let time = 0, last = 0, raf = 0, visible = true, booted = false, tempo = 1;
     let mx = 0, my = 0, tx = 0, ty = 0, wind = 0, px = -1, py = -1, pt = 0, fade = null;
 
-    function layer() {
-      const c = document.createElement('canvas');
-      c.width = Math.ceil((w + 2 * M) * dpr); c.height = Math.ceil((h + 2 * M) * dpr);
+    // Offscreen canvases are made once and repainted in place: Safari caps total
+    // canvas memory, and a fresh set per season change used to run it out.
+    const pool = {};
+    function surface(key, W, H) {
+      let c = pool[key];
+      if (!c) c = pool[key] = document.createElement('canvas');
+      W = Math.max(1, Math.ceil(W)); H = Math.max(1, Math.ceil(H));
+      if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
       const g = c.getContext('2d');
-      g.setTransform(dpr, 0, 0, dpr, M * dpr, M * dpr);
+      g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none';
+      g.clearRect(0, 0, W, H);
       return { c, g };
+    }
+    function layer() {
+      const l = surface(`layer${nLayer++}`, (w + 2 * M) * ldpr, (h + 2 * M) * ldpr);
+      l.g.setTransform(ldpr, 0, 0, ldpr, M * ldpr, M * ldpr);
+      return l;
     }
 
     // a filled ridge line with a hazy top, a lit rim and the function that traces it
@@ -230,6 +241,7 @@
     /* ---------- compose: paint every static layer for this size + season ---------- */
     function compose() {
       pal = PAL[SEASON.get()];
+      nLayer = 0;
       const end = opts.end, wide = w > h, S = Math.min(w, h * 1.5) / 1000;
       const H = h * (end ? 0.56 : wide ? 0.64 : 0.6);
       const R = rng(opts.seed || 7);
@@ -249,8 +261,7 @@
       const halo = s.createRadialGradient(mX, mY, mr * 0.8, mX, mY, mr * 7);
       halo.addColorStop(0, A(mo.c, 0.22)); halo.addColorStop(1, A(mo.c, 0));
       s.fillStyle = halo; s.beginPath(); s.arc(mX, mY, mr * 7, 0, Math.PI * 2); s.fill();
-      const mc = document.createElement('canvas'); mc.width = mc.height = Math.ceil(mr * 2.4 * dpr);
-      const m = mc.getContext('2d'); m.scale(dpr, dpr);
+      const { c: mc, g: m } = surface('moon', mr * 2.4 * ldpr, mr * 2.4 * ldpr); m.scale(ldpr, ldpr);
       m.fillStyle = mo.c; m.beginPath(); m.arc(mr * 1.2, mr * 1.2, mr, 0, Math.PI * 2); m.fill();
       if (mo.full) { m.fillStyle = 'rgba(120,90,60,0.08)'; [[0.8, 0.9, 0.28], [1.45, 1.1, 0.2], [1.1, 1.55, 0.24], [1.5, 0.75, 0.12]].forEach(([a, b, c]) => { m.beginPath(); m.arc(mr * a, mr * b, mr * c, 0, Math.PI * 2); m.fill(); }); }
       else { m.globalCompositeOperation = 'destination-out'; m.beginPath(); m.arc(mr * 1.2 + mr * 0.45, mr * 1.2 - mr * 0.18, mr * 0.92, 0, Math.PI * 2); m.fill(); }
@@ -378,9 +389,8 @@
 
       // two drifting mist bands, painted twice as wide so they can wrap
       L.mist = [0, 1].map(k => {
-        const c = document.createElement('canvas'), mh = h * (k ? 0.12 : 0.1);
-        c.width = Math.ceil(w * 2 * dpr); c.height = Math.ceil(mh * 2 * dpr);
-        const mg = c.getContext('2d'); mg.scale(dpr, dpr); mg.filter = `blur(${Math.round(mh * 0.3)}px)`;
+        const mh = h * (k ? 0.12 : 0.1), { c, g: mg } = surface(`mist${k}`, w * 2 * ldpr, mh * 2 * ldpr);
+        mg.scale(ldpr, ldpr); mg.filter = `blur(${Math.round(mh * 0.3)}px)`;
         const r = rng(80 + k);
         for (let i = 0; i < 9; i++) {
           const x = r() * w, ew = (0.12 + r() * 0.2) * w, eh = mh * (0.3 + r() * 0.4);
@@ -485,6 +495,7 @@
     }
 
     function render(dt) {
+      if (!Number.isFinite(tx + ty + mx + my + wind)) tx = ty = mx = my = wind = 0;
       tx += (mx - tx) * Math.min(1, dt * 2.2); ty += (my - ty) * Math.min(1, dt * 2.2);
       wind *= Math.pow(0.35, dt);
       const top = canvas.getBoundingClientRect().top, sc = Math.max(0, -top);
@@ -516,6 +527,7 @@
       if (!r.width || !r.height) return false;
       w = r.width; h = r.height;
       dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      ldpr = Math.min(dpr, Math.sqrt(3.2e6 / ((w + 2 * M) * (h + 2 * M)))); // keep each layer near 3 megapixels
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       compose();
@@ -527,6 +539,7 @@
     const still = () => { render(0); };
 
     host.addEventListener('pointermove', e => {
+      if (!booted || !w || !h) return; // before the first layout there is no size to divide by
       const r = canvas.getBoundingClientRect();
       const x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
       if (px > 0 && now - pt < 120) wind = Math.max(-260, Math.min(260, wind + ((x - px) / Math.max(8, now - pt)) * 40));
@@ -549,16 +562,17 @@
     SEASON.on(() => {
       if (!booted) return;
       if (!reduce) {
-        const c = document.createElement('canvas'); c.width = canvas.width; c.height = canvas.height;
-        c.getContext('2d').drawImage(canvas, 0, 0);
+        const { c, g } = surface('fade', canvas.width, canvas.height);
+        g.drawImage(canvas, 0, 0);
         fade = { c, a: 1 };
       }
       compose(); syncParts();
       if (reduce) still();
     });
 
-    const boot = () => { if (!resize()) return; booted = true; still(); start(); };
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot); else boot();
+    // the painting uses no web fonts, so it does not wait for them
+    const boot = () => { if (!resize()) { requestAnimationFrame(boot); return; } booted = true; still(); start(); };
+    boot();
     return { tempo(v) { tempo = Math.max(0.5, Math.min(3, v || 1)); } };
   }
 
