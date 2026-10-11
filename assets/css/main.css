@@ -1606,7 +1606,7 @@ body { background: transparent; }
   border: 0; border-radius: 0; background: none; box-shadow: none;
 }
 .shelf__h::before {
-  content: counter(shelf, cjk-decimal); position: absolute; left: 4px; top: -4px; width: 30px; height: 70px;
+  content: attr(data-num); position: absolute; left: 4px; top: -4px; width: 30px; height: 70px;
   display: grid; place-items: center; writing-mode: vertical-rl;
   font: 600 15px/1 var(--serif); color: #2a1f16;
   background: linear-gradient(180deg, #efe4cc, #e2d3b2); border-radius: 1px;
@@ -2022,3 +2022,89 @@ body { background: transparent; }
   .lanterns .social { gap: 0; }
 }
 html { overflow-x: clip; }
+
+/* the hero, pared back: headline, one line, two buttons */
+.hero__lede { max-width: 48em; font-size: clamp(15px, 1.15vw, 17px); color: rgba(var(--fg-rgb), 0.72); }
+.hero__lede a { color: var(--fg); border-bottom: 1px solid rgba(var(--accent-rgb), 0.5); transition: color 0.2s, border-color 0.2s; }
+.hero__lede a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* the nav's clock: the time where I am, in place of the reading lanterns */
+.nav__time { gap: 8px; cursor: default; font: 500 14px/1 var(--serif); color: var(--fg-3); }
+.nav__time .nav__city { letter-spacing: 0.04em; }
+.nav__time b { font: 600 14px/1 var(--serif); color: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* nav: liquid glass, the way macOS draws it. A see-through capsule that blurs and
+   saturates what is behind it, a bright rim, and a sheen that leans toward the cursor */
+.nav__capsule {
+  --mx: 30%; --my: -40%;
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.05)),
+    rgba(22, 22, 34, 0.2);
+  -webkit-backdrop-filter: blur(24px) saturate(185%) brightness(1.06);
+  backdrop-filter: blur(24px) saturate(185%) brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.06),
+    0 12px 32px -12px rgba(0, 0, 0, 0.55),
+    0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.4s, box-shadow 0.4s;
+}
+.nav__capsule::before {
+  left: 0; right: 0; top: 0; bottom: 0; height: auto; border-radius: inherit;
+  background: radial-gradient(90% 140% at var(--mx) var(--my), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 55%);
+  mix-blend-mode: screen; transition: background-position 0.3s;
+}
+.nav.is-scrolled .nav__capsule {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.05)),
+    rgba(18, 17, 26, 0.5);
+}
+.nav__capsule > * { position: relative; z-index: 1; }
+.brand { border-right-color: rgba(255, 255, 255, 0.12); }
+.nav__icon, .nav__status, .nav__cmd {
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.nav__icon:hover, .nav__cmd:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.18); }
+.nav__cmd kbd { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.14); }
+.nav__links a { border-radius: 999px; }
+.nav__links a:hover { background: rgba(255, 255, 255, 0.06) !important; }
+.nav__toggle { border-radius: 999px; border-color: rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); }
+.mobile-menu {
+  border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)), rgba(18, 17, 26, 0.55);
+  -webkit-backdrop-filter: blur(28px) saturate(185%); backdrop-filter: blur(28px) saturate(185%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav__capsule, .mobile-menu { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(18, 17, 26, 0.94); }
+}
+
+/* writing: one series at a time, so the tabs and the book sit close together */
+.lib__bar { margin-bottom: 30px; }
+.shelf + .shelf { margin-top: 48px; }
+
+/* lab: tabs over one room at a time */
+.lab__tabs { margin-bottom: 22px; }
+.lab > [role="tabpanel"][hidden] { display: none; }
+.lab__grid, .tokz { margin-top: 0; }
+
+/* hero: the name large, the two lines under it a step smaller */
+.hero__title .hero__sub { font-size: 0.6em; line-height: 1.25; font-weight: 500; color: rgba(var(--fg-rgb), 0.9); }
+.hero__title .hero__sub:nth-child(2) { margin-top: 0.35em; }
+@media (max-width: 680px) { .hero__title .hero__sub { font-size: 0.62em; } }
+
+/* hero arrangement: the words sit up in the open sky on the left, the vertical
+   name level with them, and the two lines small enough to stay off Fuji */
+@media (min-width: 681px) {
+  .hero { justify-content: flex-start; padding-top: clamp(150px, 22vh, 250px); }
+  .hero__title { font-size: clamp(44px, 4.6vw, 72px); }
+  .hero__title .hero__sub { font-size: 0.44em; line-height: 1.4; letter-spacing: 0.005em; }
+  .hero__title .hero__sub:nth-child(2) { margin-top: 0.7em; }
+  .hero__actions { margin-top: 30px; }
+  .hero__jp { padding-top: 0; }
+}

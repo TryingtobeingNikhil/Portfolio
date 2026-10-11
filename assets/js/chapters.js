@@ -41,6 +41,25 @@
     };
   })();
 
+  /* ---------------- Lab: one room at a time ---------------- */
+  (function labTabs() {
+    const tabs = $('[data-lab-tabs]');
+    if (!tabs) return;
+    const btns = $$('[aria-controls]', tabs);
+    tabs.addEventListener('click', e => {
+      const b = e.target.closest('[aria-controls]');
+      if (!b) return;
+      btns.forEach(x => {
+        const on = x === b;
+        x.setAttribute('aria-pressed', String(on)); x.setAttribute('aria-selected', String(on));
+        const panel = document.getElementById(x.getAttribute('aria-controls'));
+        if (panel) panel.hidden = !on;
+      });
+      // canvases inside a panel that was hidden measure themselves again
+      requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+    });
+  })();
+
   /* ---------------- Highlights: five lines, the rest folded ---------------- */
   (function gitlog() {
     const log = $('[data-gitlog]');

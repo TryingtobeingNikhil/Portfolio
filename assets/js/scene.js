@@ -93,7 +93,7 @@
     const host = canvas.parentElement;
     const ctx = canvas.getContext('2d');
     const M = 48; // margin painted around every layer, for parallax
-    let WL = 0, moonX = 0, floats = [], reeds = [], w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
+    let WL = 0, moonX = 0, floats = [], reeds = [], viaY = 0, train = null, trainT = 1.5, chimneys = [], smoke = [], w = 0, h = 0, dpr = 1, ldpr = 1, nLayer = 0, pal, L = {}, stars = [], parts = [], flock = null, meteor = null, rope = null;
     let time = 0, last = 0, raf = 0, visible = true, booted = false, tempo = 1;
     let mx = 0, my = 0, tx = 0, ty = 0, wind = 0, px = -1, py = -1, pt = 0, fade = null, tod = timeOfDay();
     if (!opts.end) document.documentElement.dataset.tod = tod;
@@ -293,9 +293,9 @@
       const glow = s.createRadialGradient(gx, H, 0, gx, H, Math.max(w, h) * 0.7);
       glow.addColorStop(0, A(pal.glow, end ? 0.16 : 0.36)); glow.addColorStop(1, A(pal.glow, 0));
       s.fillStyle = glow; s.fillRect(-M, -M, w + 2 * M, h + 2 * M);
-      if (opts.river) {
+      if (opts.river || (pal.tod === 'night' && wide)) {
         // the Milky Way: a soft band, dark dust lanes along it, and dense star dust
-        const mw = rng(301), ax = -w * 0.05, ay = H * 0.95, bx = w * 1.05, by = h * 0.02;
+        const mw = rng(301), ax = opts.river ? -w * 0.05 : w * 0.36, ay = H * 0.95, bx = w * 1.05, by = h * 0.02;
         const len = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / len, uy = (by - ay) / len, nx = -uy, ny = ux, ang = Math.atan2(uy, ux);
         const gauss = () => (mw() + mw() + mw() - 1.5) / 1.5;
         s.save(); s.filter = `blur(${Math.round(h * 0.03)}px)`;
@@ -509,18 +509,37 @@
       // stone steps down from the torii
       n.fillStyle = A(pal.rim, 0.05);
       for (let i = 0; i < 6; i++) n.fillRect(toriiX - tS * (0.25 + i * 0.06), nf(toriiX) + 6 + i * tS * 0.07, tS * (0.5 + i * 0.12), 1.2);
+      // a low viaduct across the village, for the little local train (hero only)
+      viaY = 0;
+      if (!opts.end && wide) {
+        viaY = h * (wide ? 0.805 : 0.79);
+        const vc = mix(pal.near, pal.fg, 0.45), vs = Math.max(0.75, S * 1.2);
+        n.fillStyle = vc;
+        for (let x = -M; x < w + M; x += 74 * vs) {
+          n.fillRect(x, viaY, 7 * vs, h * 0.06);
+          n.beginPath(); n.moveTo(x + 7 * vs, viaY + 10 * vs); n.quadraticCurveTo(x + 40 * vs, viaY + 2 * vs, x + 74 * vs, viaY + 10 * vs);
+          n.lineTo(x + 74 * vs, viaY + 5 * vs); n.lineTo(x + 7 * vs, viaY + 5 * vs); n.closePath(); n.fill();
+        }
+        n.fillRect(-M, viaY - 1, w + 2 * M, 5 * vs);
+        n.fillStyle = A(pal.rim, 0.32); n.fillRect(-M, viaY - 1, w + 2 * M, 1.2);
+        // catenary poles along the line
+        n.fillStyle = vc;
+        for (let x = -M + 30; x < w + M; x += 190 * vs) { n.fillRect(x, viaY - 30 * vs, 2 * vs, 30 * vs); n.fillRect(x - 6 * vs, viaY - 30 * vs, 14 * vs, 1.6 * vs); }
+        n.strokeStyle = A(vc, 0.8); n.lineWidth = 0.8; n.beginPath(); n.moveTo(-M, viaY - 27 * vs); n.lineTo(w + M, viaY - 27 * vs); n.stroke();
+      }
       L.near = near;
 
       // foreground: the village, poles, wires and lanterns
       const fgL = layer(), v = fgL.g, vr = rng(53);
       const gy = h * 0.93, gn = noise(61);
       const ground = opts.river ? x => WL + 2 + (gn(x / 160) - 0.5) * 3 : x => gy - (gn(x / 160) - 0.5) * h * 0.04;
+      const homes = [];
       const rows = opts.river ? [[0, 0.5, WL - h * 0.04], [1, 0.62, WL + 1]] : [[0, 0.72, h * 0.84], [1, 1, h * 0.95]];
       for (const [row, sc, y0] of rows) {
         let x = -M - vr() * 40;
         while (x < w + M) {
           const hw = (70 + vr() * 70) * sc * Math.max(0.6, S * 1.1), hh = (26 + vr() * 18) * sc * Math.max(0.6, S * 1.1);
-          if (vr() < (row ? 0.82 : 0.9)) house(v, x, y0 + (vr() - 0.5) * h * 0.02, hw, hh, vr, sc);
+          if (vr() < (row ? 0.82 : 0.9)) { const hy = y0 + (vr() - 0.5) * h * 0.02; house(v, x, hy, hw, hh, vr, sc); homes.push({ x, gy: hy, hw, hh, row }); }
           else { const rr = 16 * sc * Math.max(0.7, S); canopy(v, x + hw / 2, y0, rr, mix(pal.fg, pal.near, 0.2), vr); bloom(v, x + hw / 2, y0 - rr * 1.3, rr * 1.3, 70, 0.35, vr); }
           x += hw * (0.9 + vr() * 0.5);
         }
@@ -590,6 +609,16 @@
         };
         limb(bx, h * 0.02, Math.PI * 0.86, 150 * u, 9 * u, 3);
         limb(bx, h * 0.16, Math.PI * 0.92, 95 * u, 6 * u, 2);
+      }
+      // two chimneys on the back row, away from the words on the left
+      chimneys = [];
+      if (!opts.end) {
+        const back = homes.filter(o => o.row === 0 && o.x > w * 0.42 && o.x < w * 0.95);
+        [...new Set([back[1], back[back.length - 2]])].filter(Boolean).forEach(o => {
+          const cx = o.x + o.hw * 0.68, top = o.gy - o.hh - o.hh * 0.5;
+          v.fillStyle = mix(pal.fg, pal.near, 0.18); v.fillRect(cx - 3, top - 6, 6, 12);
+          chimneys.push({ x: cx, y: top - 7, t: Math.random() });
+        });
       }
       L.fg = fgL;
 
@@ -797,6 +826,60 @@
       ctx.restore();
     }
 
+    // A three-car local train along the viaduct every fifteen seconds or so, windows lit.
+    function drawTrain(dt, ox, oy) {
+      if (!viaY) return;
+      trainT -= dt;
+      if (!train && trainT <= 0) train = { x: w + 60, v: 78 + Math.random() * 26 };
+      if (!train) return;
+      train.x -= train.v * dt;
+      const s = Math.max(0.75, Math.min(1.3, w / 1100)), carL = 128 * s, carH = 17 * s, gap = 5 * s, y = viaY + oy - 1, lit = pal.lit ?? 0.68;
+      for (let i = 0; i < 3; i++) {
+        const x0 = train.x + ox + i * (carL + gap);
+        ctx.fillStyle = '#0c0b16';
+        ctx.beginPath(); ctx.moveTo(x0 + (i ? 0 : 10 * s), y - carH); ctx.lineTo(x0 + carL, y - carH); ctx.lineTo(x0 + carL, y); ctx.lineTo(x0, y); ctx.lineTo(x0, y - carH + (i ? 0 : 8 * s)); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = A(pal.rim, 0.25); ctx.fillRect(x0 + (i ? 0 : 10 * s), y - carH, carL - (i ? 0 : 10 * s), 1);
+        for (let k = 0; k < 9; k++) {
+          const wx = x0 + 14 * s + k * 12.4 * s, wy = y - carH + 4.5 * s;
+          ctx.fillStyle = A(mix(pal.light, '#fff4dc', 0.25), 0.25 + 0.7 * Math.min(1, lit + 0.2));
+          ctx.fillRect(wx, wy, 8 * s, 6 * s);
+        }
+        if (i === 0) { // pantograph
+          ctx.strokeStyle = '#0c0b16'; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x0 + 40 * s, y - carH); ctx.lineTo(x0 + 48 * s, y - carH - 9 * s); ctx.lineTo(x0 + 56 * s, y - carH); ctx.stroke();
+        }
+      }
+      // the lit windows throw a little light, and the headlight a lot
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const len = 3 * carL + 2 * gap, gx = train.x + ox + len / 2;
+      const gl = ctx.createRadialGradient(gx, y - carH / 2, 0, gx, y - carH / 2, len * 0.7);
+      gl.addColorStop(0, A(pal.light, 0.12 * (lit + 0.3))); gl.addColorStop(1, A(pal.light, 0));
+      ctx.fillStyle = gl; ctx.fillRect(gx - len, y - carH * 3, len * 2, carH * 5);
+      const hx = train.x + ox + 2 * s, hl = ctx.createLinearGradient(hx, 0, hx - 160 * s, 0);
+      hl.addColorStop(0, A('#fff2cc', 0.45)); hl.addColorStop(1, A('#fff2cc', 0));
+      ctx.fillStyle = hl; ctx.beginPath(); ctx.moveTo(hx, y - carH * 0.55); ctx.lineTo(hx - 160 * s, y - carH * 1.6); ctx.lineTo(hx - 160 * s, y + carH * 0.4); ctx.closePath(); ctx.fill();
+      ctx.restore();
+      if (train.x + 3 * (carL + gap) < -80) { train = null; trainT = 13 + Math.random() * 4; }
+    }
+
+    // Smoke from two chimneys: soft puffs that rise, widen, lean with the breeze and fade.
+    function drawSmoke(dt, ox, oy) {
+      if (!chimneys.length) return;
+      chimneys.forEach(c => {
+        c.t -= dt;
+        if (c.t <= 0) { c.t = 0.3 + Math.random() * 0.2; smoke.push({ x: c.x, y: c.y, r: 3, age: 0, ph: Math.random() * 6 }); }
+      });
+      for (let i = smoke.length - 1; i >= 0; i--) {
+        const p = smoke[i];
+        if (dt) { p.age += dt; p.y -= 12 * dt; p.x += (6 + wind * 0.04 + Math.sin(time * 0.8 + p.ph) * 3) * dt; p.r += 4.2 * dt; }
+        if (p.age > 7) { smoke.splice(i, 1); continue; }
+        const a = 0.42 * Math.min(1, p.age * 2) * (1 - p.age / 7) ** 1.5;
+        const g = ctx.createRadialGradient(p.x + ox, p.y + oy, 0, p.x + ox, p.y + oy, p.r);
+        const sc0 = mix(pal.mist, '#eef0f6', 0.45); g.addColorStop(0, A(sc0, a)); g.addColorStop(1, A(sc0, 0));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x + ox, p.y + oy, p.r, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
     function render(dt) {
       if (!Number.isFinite(tx + ty + mx + my + wind)) tx = ty = mx = my = wind = 0;
       tx += (mx - tx) * Math.min(1, dt * 2.2); ty += (my - ty) * Math.min(1, dt * 2.2);
@@ -813,9 +896,11 @@
       const m0 = L.mist[0], m1 = L.mist[1];
       ctx.drawImage(m0.c, -((time * m0.v) % (m0.w / 2)) - tx * 8, m0.y + sc * 0.3, m0.w, m0.h);
       put(L.near, 0.5, 0.25);
+      drawTrain(dt, -tx * 0.5 * 22, -ty * 0.5 * vy + sc * 0.25);
       ctx.drawImage(m1.c, -((time * m1.v) % (m1.w / 2)) - tx * 14, m1.y + sc * 0.18, m1.w, m1.h);
       drawParts(dt, false);
       put(L.fg, 0.9, 0.08);
+      drawSmoke(dt, -tx * 0.9 * 22, -ty * 0.9 * vy + sc * 0.08);
       drawLanterns(-tx * 0.9 * 22, -ty * 0.9 * 10 + sc * 0.08);
       if (opts.river) drawRiver(dt);
       drawParts(dt, true);

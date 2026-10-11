@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nikhil Mourya · ML Engineer · LLM Inference · Multi-Agent Systems</title>
-  <meta name="description" content="Nikhil Mourya is an ML engineer who builds the parts of AI most people import: PageServe, a vLLM-style inference engine, and RLForge, a from-scratch C++ RL library with its own autograd.">
+  <meta name="description" content="Nikhil Mourya reverse-engineers LLM inference and serving: PageServe, a vLLM-style inference engine, and RLForge, a from-scratch C++ RL library with its own autograd.">
   <meta name="author" content="Nikhil Mourya">
   <meta name="theme-color" content="#0e0d0f">
   <link rel="canonical" href="https://tryingtobenikhil.space/">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://tryingtobenikhil.space/">
-  <meta property="og:title" content="Nikhil Mourya: I build the parts of AI most people import">
+  <meta property="og:title" content="Nikhil Mourya: Reverse-engineering LLM inference and serving. Driving LLMs at 780 tok/s.">
   <meta property="og:description" content="ML engineer working on LLM inference and multi-agent systems. PageServe, a vLLM-style inference engine · RLForge, RL from scratch in C++.">
-  <meta property="og:image" content="https://tryingtobenikhil.space/assets/images/og.png?v=2">
+  <meta property="og:image" content="https://tryingtobenikhil.space/assets/images/og.png?v=4">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Nikhil Mourya. I build the parts of AI most people import. A painted village at dusk below Mount Fuji, with a pagoda, a torii and festival lanterns.">
+  <meta property="og:image:alt" content="Nikhil Mourya. Reverse-engineering LLM inference and serving. Driving LLMs at 780 tok/s. A painted village at dusk below Mount Fuji, with a pagoda, a torii and festival lanterns.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://tryingtobenikhil.space/assets/images/og.png?v=2">
+  <meta name="twitter:image" content="https://tryingtobenikhil.space/assets/images/og.png?v=4">
   <meta name="twitter:site" content="@GonnabeNikhil">
   <meta name="twitter:creator" content="@GonnabeNikhil">
 
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/main.css?v=57">
+  <link rel="stylesheet" href="./assets/css/main.css?v=63">
 
   <script>
     document.documentElement.classList.replace('no-js', 'js');
@@ -103,7 +103,7 @@
 
       <button class="nav__icon nav__season" type="button" data-season-next aria-label="Change the season" title="Change the season"><span data-season-kanji>秋</span></button>
       <button class="nav__icon nav__sound" type="button" data-sound aria-pressed="false" aria-label="Sound" title="Sound: an original score over the village at night, made live in your browser"><svg class="nav__spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 5.6v12.8l-4.4-3.9H4z" fill="currentColor"/><path class="nav__spk-off" d="M16 9.6l4.6 4.8M20.6 9.6 16 14.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="snd" aria-hidden="true"><i></i><i></i><i></i></span></button>
-      <span class="nav__status" title="A lantern lights for each chapter you read"><span class="kvm" data-kvm aria-hidden="true"></span></span>
+      <span class="nav__status nav__time" title="Local time in Jaipur (IST)"><span class="nav__city">Jaipur</span><b data-clock>--:--</b></span>
       <button class="nav__cmd" type="button" data-cmdk aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
@@ -132,11 +132,9 @@
 
           <h1 class="hero__title">
             <span class="line" style="--i:0">Nikhil Mourya.</span>
-            <span class="line" style="--i:1">I build the parts of AI</span>
-            <span class="line" style="--i:2">most people <span class="hero__key">import.</span></span>
+            <span class="line hero__sub" style="--i:1">Reverse-engineering LLM inference and serving.</span>
+            <span class="line hero__sub" style="--i:2">Driving LLMs at <span class="hero__key">780&nbsp;tok/s.</span></span>
           </h1>
-
-          <p class="hero__lede">ML engineer. I build LLM inference engines and RL libraries from scratch, then write up everything that broke.</p>
 
           <div class="hero__actions">
             <a class="btn btn--primary" href="#projects">See the work <span aria-hidden="true">↓</span></a>
@@ -147,23 +145,7 @@
         <div class="hero__jp">
           <span class="hero__kana" aria-hidden="true">ニキル・マウリヤ</span>
           <span class="seal seal--name" aria-hidden="true">ニ<br>キ<br>ル</span>
-          <div class="season" role="group" aria-label="Season">
-            <button type="button" data-season-btn="spring" aria-pressed="false" title="春 haru · spring">春</button>
-            <button type="button" data-season-btn="summer" aria-pressed="false" title="夏 natsu · summer">夏</button>
-            <button type="button" data-season-btn="autumn" aria-pressed="false" title="秋 aki · autumn">秋</button>
-            <button type="button" data-season-btn="winter" aria-pressed="false" title="冬 fuyu · winter">冬</button>
-          </div>
-          <span class="season__cap">season</span>
         </div>
-      </div>
-
-      <div class="wrap">
-        <dl class="facts">
-          <div data-reveal style="--d:.05s"><dt>focus</dt><dd>LLM inference &amp; multi-agent systems</dd></div>
-          <div data-reveal style="--d:.1s"><dt>building</dt><dd><a href="#projects">PageServe</a> &amp; <a href="#projects">RLForge</a></dd></div>
-          <div data-reveal style="--d:.15s"><dt>writing</dt><dd>Deep-dives on <a href="https://x.com/GonnabeNikhil" target="_blank" rel="noopener">X</a><small class="facts__sub">~2M impressions since July</small></dd></div>
-          <div data-reveal style="--d:.2s"><dt>based</dt><dd>Jaipur · <b data-clock>--:--</b> IST<small class="tzdiff" data-tzdiff></small></dd></div>
-        </dl>
       </div>
 
     </section>
@@ -330,6 +312,15 @@
         </header>
 
         <ol class="timeline">
+          <li class="role is-live" data-reveal>
+            <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">Now</span></div>
+            <div class="role__main">
+              <div class="role__head">
+                <h3><a href="https://recrivio.com" target="_blank" rel="noopener">Recrivio <span aria-hidden="true">↗</span></a></h3>
+                <p class="role__title">Growth</p>
+              </div>
+            </div>
+          </li>
           <li class="role" data-reveal>
             <div class="role__gate"><svg class="gate" viewBox="0 0 100 92" aria-hidden="true"><path class="k" d="M1 13 Q50 22 99 13 L100 5 Q50 14 0 5Z"/><rect class="v" x="9" y="18" width="82" height="6"/><rect class="v" x="44.5" y="24" width="11" height="11"/><rect class="v" x="5" y="33" width="90" height="6"/><rect class="v" x="18" y="18" width="9" height="66"/><rect class="v" x="73" y="18" width="9" height="66"/><rect class="k" x="16" y="82" width="13" height="10"/><rect class="k" x="71" y="82" width="13" height="10"/></svg><svg class="toro" viewBox="0 0 24 44" aria-hidden="true"><circle cx="12" cy="3" r="2"/><path d="M1 12 L12 4.5 L23 12Z"/><rect x="5.5" y="12" width="13" height="10"/><rect class="fire" x="8.5" y="14.5" width="7" height="5"/><rect x="3.5" y="22" width="17" height="3"/><rect x="9" y="25" width="6" height="13"/><rect x="5" y="38" width="14" height="5"/></svg><span class="role__when">2025</span></div>
             <div class="role__main">
@@ -675,7 +666,12 @@
           <h2 class="shead__title">Ideas I keep explaining, <span class="dim">so now you can poke them.</span></h2>
         </header>
         <div class="lab" data-reveal>
-          <div class="spec" id="spec">
+          <div class="chips lab__tabs" role="tablist" aria-label="Lab toys" data-lab-tabs>
+            <button type="button" role="tab" aria-pressed="true" aria-selected="true" aria-controls="spec">Speculative decoding</button>
+            <button type="button" role="tab" aria-pressed="false" aria-selected="false" aria-controls="lab-small">Temperature, learning rate, attention</button>
+            <button type="button" role="tab" aria-pressed="false" aria-selected="false" aria-controls="toy-tok">Tokenizer</button>
+          </div>
+          <div class="spec" id="spec" role="tabpanel">
             <div class="spec__head">
               <div>
                 <h4>Speculative decoding <span class="spec__tag">how fast inference cheats, honestly</span></h4>
@@ -699,7 +695,7 @@
             <p class="spec__legend" aria-hidden="true"><span class="k-draft">drafted</span><span class="k-ok">accepted for free</span><span class="k-bad">rejected</span><span class="k-fix">from the target model</span></p>
           </div>
 
-          <div class="lab__grid">
+          <div class="lab__grid" id="lab-small" role="tabpanel" hidden>
             <div class="toy" id="toy-temp">
               <div class="toy__stage">
                 <p class="toy__prompt">The KV cache stores the <span class="toy__blank" data-pick>____</span></p>
@@ -734,12 +730,12 @@
             </div>
           </div>
 
-          <div class="tokz" id="toy-tok">
+          <div class="tokz" id="toy-tok" role="tabpanel" hidden>
             <div class="tokz__head">
               <h4>Tokenizer, the step before BPE <span class="spec__tag">type anything</span></h4>
               <p>The split GPT-2 makes before BPE, live. Your name costs more tokens than "the".</p>
             </div>
-            <label class="tokz__in"><span aria-hidden="true">›</span><input type="text" value="I build the parts of AI most people import." aria-label="Text to tokenize" spellcheck="false" autocomplete="off" data-tok-in></label>
+            <label class="tokz__in"><span aria-hidden="true">›</span><input type="text" value="Driving LLMs at 780 tok/s." aria-label="Text to tokenize" spellcheck="false" autocomplete="off" data-tok-in></label>
             <p class="tokz__out" data-tok-out aria-hidden="true"></p>
             <p class="tokz__stats" aria-live="polite"><span><b data-tok-n>0</b> pre-tokens</span><span><b data-tok-c>0</b> characters</span><span><b data-tok-r>0</b> characters per token</span></p>
           </div>
@@ -756,15 +752,12 @@
           <h2 class="shead__title">I build it, then I write it down. <span class="dim">Usually in that order.</span></h2>
         </header>
         <div class="writing" data-reveal>
-          <p class="writing__stats"><span><b data-article-count>20</b> articles</span><span><b>~2M</b> impressions since July</span><span><b>~120K</b> views on inference posts</span><span><b>~20K</b> on RL posts</span></p>
           <div class="latest" data-latest hidden></div>
           <div class="lib" data-lib>
             <div class="lib__bar">
               <div class="chips" role="group" aria-label="Filter by series" data-lib-chips></div>
               <div class="lib__tools">
                 <button class="writing__add" type="button" data-publish-open hidden><span aria-hidden="true">+</span> Add article</button>
-                <label class="lib__search"><span aria-hidden="true">›</span><input type="search" placeholder="Search articles" aria-label="Search articles" autocomplete="off" spellcheck="false" data-lib-q></label>
-                <label class="lib__sort"><span class="lib__sortk">sort</span><select data-lib-sort aria-label="Sort articles"><option value="order">reading order</option><option value="new">newest</option><option value="top">most read</option></select></label>
               </div>
             </div>
             <div class="lib__list" data-articles>
@@ -891,19 +884,19 @@
   </dialog>
 
   <script src="./assets/js/season.js?v=3" defer></script>
-  <script src="./assets/js/scene.js?v=9" defer></script>
+  <script src="./assets/js/scene.js?v=12" defer></script>
   <script src="./assets/js/inkwash.js?v=2" defer></script>
   <script src="./assets/js/print.js?v=2" defer></script>
   <script src="./assets/js/japan.js?v=3" defer></script>
   <script src="./assets/js/koi.js?v=5" defer></script>
   <script src="./assets/js/ambience.js?v=2" defer></script>
   <script src="./assets/js/trail.js?v=4" defer></script>
-  <script src="./assets/js/main.js?v=18" defer></script>
+  <script src="./assets/js/main.js?v=19" defer></script>
   <script src="./assets/data/articles.js?v=10" defer></script>
   <script src="./assets/data/quotes.js?v=1" defer></script>
-  <script src="./assets/js/extras.js?v=21" defer></script>
-  <script src="./assets/js/chapters.js?v=3" defer></script>
-  <script src="./assets/js/showcase.js?v=4" defer></script>
+  <script src="./assets/js/extras.js?v=23" defer></script>
+  <script src="./assets/js/chapters.js?v=4" defer></script>
+  <script src="./assets/js/showcase.js?v=6" defer></script>
   <script src="./assets/js/ask.js?v=5" defer></script>
   <script src="./assets/js/publish.js?v=1" defer></script>
   <script src="./assets/js/fun.js?v=8" defer></script>

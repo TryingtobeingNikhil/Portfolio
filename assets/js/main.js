@@ -212,6 +212,19 @@
     setTimeout(() => { copy.textContent = 'Copy email'; copy.classList.remove('is-copied'); }, 1800);
   });
 
+  /* ---------------- the glass nav's sheen leans toward the cursor ---------------- */
+  (function sheen() {
+    const cap = $('.nav__capsule');
+    if (!cap || reduce || !window.matchMedia('(hover: hover)').matches) return;
+    let raf = 0, x = 30, y = -40;
+    addEventListener('pointermove', e => {
+      const r = cap.getBoundingClientRect();
+      x = Math.max(-10, Math.min(110, ((e.clientX - r.left) / r.width) * 100));
+      y = Math.max(-80, Math.min(60, ((e.clientY - r.top) / r.height) * 100 - 60));
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; cap.style.setProperty('--mx', `${x.toFixed(1)}%`); cap.style.setProperty('--my', `${y.toFixed(1)}%`); });
+    }, { passive: true });
+  })();
+
   /* ---------------- IST clock ---------------- */
   const clocks = $$('[data-clock]');
   if (clocks.length) {
