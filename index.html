@@ -320,11 +320,8 @@
                 <p class="role__title">Machine Learning Engineer – AI Infrastructure &middot; Remote</p>
               </div>
               <ul class="role__points">
-                <li>Building the platform for an Accel-backed voice-AI lab: real-time <strong>STT → LLM → TTS</strong> agents on Pipecat, FastAPI and PostgreSQL, run on GCP/Kubernetes with Terraform; <strong>13 merged PRs</strong> in two weeks.</li>
-                <li>Cut voice-call handshake latency from <strong>6 s to under 2.5 s (58%+)</strong> by removing serial waits in call bring-up, adapting ideas from OpenAI's real-time engineering write-ups; added per-stage timing to trace every delay.</li>
-                <li>Built the <strong>agent tool-calling runtime</strong>: safe tool authoring, MCP server integration, and a supervisor broker that executes published agents' tools, with call transfer that survives tool failures mid-call.</li>
-                <li>Built an immutable, <strong>versioned knowledge store</strong> for agent grounding, and a data-ingestion pipeline importing agents and call history (audio, transcripts) from external voice providers, with crash-safe retries and full data erasure.</li>
-                <li>Also shipped fault-tolerant background call audio with asset caching, invite-gated closed-beta access, and a <strong>Playwright visual-regression harness</strong> checking every screen against its design (React, TypeScript).</li>
+                <li>Building real-time <strong>STT → LLM → TTS</strong> voice agents for an Accel-backed lab on Pipecat, FastAPI and GCP/Kubernetes; <strong>13 PRs merged in two weeks.</strong></li>
+                <li>Cut call handshake latency <strong>6 s → 2.5 s (58%+)</strong>; shipped tool-calling runtime, versioned knowledge store, and data-ingestion pipeline from scratch.</li>
               </ul>
             </div>
           </li>
